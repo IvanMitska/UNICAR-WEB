@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { motion } from 'framer-motion';
 import {
   User,
@@ -69,8 +69,6 @@ const menuItems = [
 ];
 
 export const ProfilePage: React.FC = () => {
-  const [activeTab, setActiveTab] = useState<'bookings' | 'settings'>('bookings');
-
   const getStatusBadge = (status: string) => {
     switch (status) {
       case 'active':

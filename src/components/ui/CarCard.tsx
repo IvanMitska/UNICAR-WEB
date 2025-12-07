@@ -35,11 +35,6 @@ const CarCardComponent: React.FC<CarCardProps> = ({ car, showRentalPrice = false
     electric: 'Электро',
   };
 
-  const transmissionLabels: Record<string, string> = {
-    automatic: 'Автомат',
-    manual: 'Механика',
-  };
-
   return (
     <Link to={`/cars/${car.id}`} className="block group">
       <div className="relative bg-dark-900/50 rounded-2xl overflow-hidden">
