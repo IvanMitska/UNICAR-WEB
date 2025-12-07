@@ -349,7 +349,7 @@ export const BookingForm: React.FC = () => {
                       className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
                     />
                     {errors.firstName && (
-                      <p className="text-orange-500 text-sm mt-1">{errors.firstName.message}</p>
+                      <p className="text-yellow-500 text-sm mt-1">{errors.firstName.message}</p>
                     )}
                   </div>
                   
@@ -363,7 +363,7 @@ export const BookingForm: React.FC = () => {
                       className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
                     />
                     {errors.lastName && (
-                      <p className="text-orange-500 text-sm mt-1">{errors.lastName.message}</p>
+                      <p className="text-yellow-500 text-sm mt-1">{errors.lastName.message}</p>
                     )}
                   </div>
                 </div>
@@ -380,7 +380,7 @@ export const BookingForm: React.FC = () => {
                       className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
                     />
                     {errors.email && (
-                      <p className="text-orange-500 text-sm mt-1">{errors.email.message}</p>
+                      <p className="text-yellow-500 text-sm mt-1">{errors.email.message}</p>
                     )}
                   </div>
                   
@@ -396,7 +396,7 @@ export const BookingForm: React.FC = () => {
                       className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
                     />
                     {errors.phone && (
-                      <p className="text-orange-500 text-sm mt-1">{errors.phone.message}</p>
+                      <p className="text-yellow-500 text-sm mt-1">{errors.phone.message}</p>
                     )}
                   </div>
                 </div>
@@ -412,7 +412,7 @@ export const BookingForm: React.FC = () => {
                       className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
                     />
                     {errors.birthDate && (
-                      <p className="text-orange-500 text-sm mt-1">{errors.birthDate.message}</p>
+                      <p className="text-yellow-500 text-sm mt-1">{errors.birthDate.message}</p>
                     )}
                   </div>
                   
@@ -426,7 +426,7 @@ export const BookingForm: React.FC = () => {
                       className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
                     />
                     {errors.licenseNumber && (
-                      <p className="text-orange-500 text-sm mt-1">{errors.licenseNumber.message}</p>
+                      <p className="text-yellow-500 text-sm mt-1">{errors.licenseNumber.message}</p>
                     )}
                   </div>
                 </div>
@@ -441,7 +441,7 @@ export const BookingForm: React.FC = () => {
                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
                   />
                   {errors.licenseDate && (
-                    <p className="text-orange-500 text-sm mt-1">{errors.licenseDate.message}</p>
+                    <p className="text-yellow-500 text-sm mt-1">{errors.licenseDate.message}</p>
                   )}
                 </div>
               </form>

@@ -9,68 +9,68 @@ export const locations: Location[] = [
   // Popular locations
   {
     id: '1',
+    name: 'Чалонг',
+    description: 'Крупнейшая бухта Пхукета',
+    popular: true,
+  },
+  {
+    id: '2',
     name: 'Аэропорт Пхукета',
     description: 'Международный аэропорт, круглосуточно',
     popular: true,
   },
   {
-    id: '2', 
+    id: '3',
     name: 'Патонг Бич',
     description: 'Главный туристический район',
     popular: true,
   },
   {
-    id: '3',
+    id: '4',
     name: 'Карон Бич',
     description: 'Тихий пляжный район',
     popular: true,
   },
-  {
-    id: '4',
-    name: 'Ката Бич',
-    description: 'Популярный пляжный курорт',
-    popular: true,
-  },
-  
+
   // Other locations
   {
     id: '5',
+    name: 'Ката Бич',
+    description: 'Популярный пляжный курорт',
+  },
+  {
+    id: '6',
     name: 'Камала Бич',
     description: 'Спокойный пляжный район',
   },
   {
-    id: '6',
+    id: '7',
     name: 'Раваи',
     description: 'Южный район Пхукета',
   },
   {
-    id: '7',
+    id: '8',
     name: 'Пхукет Таун',
     description: 'Исторический центр города',
   },
   {
-    id: '8',
+    id: '9',
     name: 'Най Харн',
     description: 'Красивый южный пляж',
   },
   {
-    id: '9',
+    id: '10',
     name: 'Сурин Бич',
     description: 'Элитный пляжный район',
   },
   {
-    id: '10',
+    id: '11',
     name: 'Бангтао',
     description: 'Длинный пляж с отелями',
   },
   {
-    id: '11',
+    id: '12',
     name: 'Май Као',
     description: 'Северный район у аэропорта',
-  },
-  {
-    id: '12',
-    name: 'Чалонг',
-    description: 'Крупнейшая бухта Пхукета',
   },
 ];

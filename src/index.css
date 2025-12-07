@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&display=swap');
+/* Porsche Design font is loaded via index.html @font-face declarations */
 
 @tailwind base;
 @tailwind components;
@@ -42,15 +42,15 @@
   }
 
   .gradient-text-gold {
-    @apply bg-gradient-to-r from-orange-400 via-orange-300 to-orange-400 bg-clip-text text-transparent;
+    @apply bg-gradient-to-r from-yellow-400 via-yellow-300 to-yellow-400 bg-clip-text text-transparent;
   }
 
   .glass-effect {
-    @apply bg-dark-900/40 backdrop-blur-xl border border-dark-700/50;
+    @apply bg-dark-900/70 border border-dark-700/50;
   }
 
   .glass-effect-light {
-    @apply bg-white/5 backdrop-blur-md border border-white/10;
+    @apply bg-white/5 border border-white/10;
   }
 
   .premium-border {
@@ -59,7 +59,7 @@
 
   .premium-border::before {
     content: '';
-    @apply absolute inset-0 rounded-xl bg-gradient-to-r from-orange-500 via-orange-400 to-orange-500 -z-10;
+    @apply absolute inset-0 rounded-xl bg-gradient-to-r from-yellow-500 via-yellow-400 to-yellow-500 -z-10;
     padding: 1px;
     mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
     mask-composite: xor;
@@ -67,54 +67,40 @@
   }
 
   .shimmer-effect {
-    background: linear-gradient(
-      105deg,
-      transparent 40%,
-      rgba(255, 255, 255, 0.1) 50%,
-      transparent 60%
-    );
-    animation: shimmer 2s infinite;
-    background-size: 200% 100%;
+    /* Disabled for performance */
   }
 
   .glow-effect {
-    filter: drop-shadow(0 0 20px rgba(249, 115, 22, 0.3));
+    /* Disabled for performance */
   }
 
   .premium-gradient {
-    background: linear-gradient(135deg, 
-      rgba(249, 115, 22, 0.1) 0%, 
-      rgba(251, 146, 60, 0.05) 50%, 
-      rgba(249, 115, 22, 0.1) 100%
+    background: linear-gradient(135deg,
+      rgba(234, 179, 8, 0.1) 0%,
+      rgba(250, 204, 21, 0.05) 50%,
+      rgba(234, 179, 8, 0.1) 100%
     );
   }
 
   .mesh-gradient {
-    background-image: 
-      radial-gradient(at 40% 20%, hsla(24, 100%, 50%, 0.1) 0px, transparent 50%),
-      radial-gradient(at 80% 0%, hsla(24, 100%, 50%, 0.08) 0px, transparent 50%),
-      radial-gradient(at 0% 50%, hsla(24, 100%, 50%, 0.08) 0px, transparent 50%);
+    /* Disabled for performance */
   }
 
   .hover-lift {
-    @apply transition-all duration-300 ease-out;
-  }
-
-  .hover-lift:hover {
-    @apply -translate-y-1 shadow-premium;
+    /* Disabled for performance */
   }
 
   .text-shadow-glow {
-    text-shadow: 0 0 20px rgba(249, 115, 22, 0.5);
+    /* Disabled for performance */
   }
 
   .text-shadow-gold {
-    text-shadow: 0 0 20px rgba(251, 146, 60, 0.5);
+    /* Disabled for performance */
   }
 
   .custom-scrollbar {
     scrollbar-width: thin;
-    scrollbar-color: rgba(249, 115, 22, 0.3) transparent;
+    scrollbar-color: rgba(234, 179, 8, 0.3) transparent;
   }
 
   .custom-scrollbar::-webkit-scrollbar {
@@ -126,12 +112,12 @@
   }
 
   .custom-scrollbar::-webkit-scrollbar-thumb {
-    background-color: rgba(249, 115, 22, 0.3);
+    background-color: rgba(234, 179, 8, 0.3);
     border-radius: 3px;
   }
 
   .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-    background-color: rgba(249, 115, 22, 0.5);
+    background-color: rgba(234, 179, 8, 0.5);
   }
 }
 
@@ -172,4 +158,17 @@
   50% {
     background-position: 100% 50%;
   }
+}
+
+@keyframes slide-up {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+.animate-slide-up {
+  animation: slide-up 0.3s ease-out;
 }

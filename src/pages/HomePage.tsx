@@ -3,10 +3,11 @@ import { HeroSection } from '../components/sections/HeroSection';
 import { CarCategories } from '../components/sections/CarCategories';
 import { PopularCars } from '../components/sections/PopularCars';
 import { Features } from '../components/sections/Features';
-import { Statistics } from '../components/sections/Statistics';
-import { CarShowcase3D } from '../components/ui/CarShowcase3D';
 import { Reviews } from '../components/sections/Reviews';
 import { CTA } from '../components/sections/CTA';
+
+// 3D section disabled for performance (24MB model + Three.js rendering)
+// To re-enable, uncomment the lazy import and Suspense block below
 
 export const HomePage: React.FC = () => {
   return (
@@ -15,8 +16,6 @@ export const HomePage: React.FC = () => {
       <CarCategories />
       <PopularCars />
       <Features />
-      <Statistics />
-      <CarShowcase3D />
       <Reviews />
       <CTA />
     </div>

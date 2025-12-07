@@ -1,17 +1,26 @@
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useState, useMemo, useEffect, useCallback, useRef } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { CarCategories } from '../components/sections/CarCategories';
 import { CarFiltersAdvanced } from '../components/sections/CarFiltersAdvanced';
 import { CarGrid } from '../components/sections/CarGrid';
 import { cars } from '../data/cars';
-import { SlidersHorizontal } from 'lucide-react';
+import { SlidersHorizontal, ChevronDown, Check } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+
+const sortOptions = [
+  { value: 'price-asc', label: 'Сначала дешевле' },
+  { value: 'price-desc', label: 'Сначала дороже' },
+  { value: 'rating', label: 'По рейтингу' },
+  { value: 'popular', label: 'По популярности' },
+];
 
 export const CarsPage: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const categoryFromUrl = searchParams.get('category');
   const [isMobileFilterOpen, setIsMobileFilterOpen] = useState(false);
-  
+  const [isSortOpen, setIsSortOpen] = useState(false);
+  const sortRef = useRef<HTMLDivElement>(null);
+
   const [filters, setFilters] = useState({
     category: categoryFromUrl || '',
     priceMin: 0,
@@ -43,15 +52,39 @@ export const CarsPage: React.FC = () => {
     };
   }, [isMobileFilterOpen]);
 
-  const handleCategoryClick = (category: string | null) => {
+  const handleCategoryClick = useCallback((category: string | null) => {
     if (category) {
       setSearchParams({ category });
-      setFilters({ ...filters, category });
+      setFilters(prev => ({ ...prev, category }));
     } else {
       setSearchParams({});
-      setFilters({ ...filters, category: '' });
+      setFilters(prev => ({ ...prev, category: '' }));
     }
-  };
+  }, [setSearchParams]);
+
+  const handleSortChange = useCallback((value: string) => {
+    setFilters(prev => ({ ...prev, sortBy: value }));
+    setIsSortOpen(false);
+  }, []);
+
+  // Close sort dropdown on outside click
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (sortRef.current && !sortRef.current.contains(e.target as Node)) {
+        setIsSortOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  const handleMobileFilterOpen = useCallback(() => {
+    setIsMobileFilterOpen(true);
+  }, []);
+
+  const handleMobileFilterClose = useCallback(() => {
+    setIsMobileFilterOpen(false);
+  }, []);
 
   const filteredCars = useMemo(() => {
     let result = [...cars];
@@ -110,14 +143,14 @@ export const CarsPage: React.FC = () => {
         {/* Mobile Filter Button */}
         <div className="lg:hidden mb-6">
           <button
-            onClick={() => setIsMobileFilterOpen(true)}
+            onClick={handleMobileFilterOpen}
             className="w-full bg-dark-900/50 backdrop-blur-xl border border-dark-800/50 rounded-xl px-4 py-3 flex items-center justify-between text-white hover:bg-dark-800/50 transition-colors"
           >
             <div className="flex items-center gap-2">
-              <SlidersHorizontal className="w-5 h-5 text-orange-500" />
+              <SlidersHorizontal className="w-5 h-5 text-yellow-500" />
               <span className="font-medium">Фильтры</span>
               {[filters.category, filters.brand, filters.transmission, filters.fuel].filter(v => v && v !== '').length > 0 && (
-                <span className="bg-orange-500 text-black text-xs px-2 py-0.5 rounded-full font-semibold">
+                <span className="bg-yellow-500 text-black text-xs px-2 py-0.5 rounded-full font-semibold">
                   {[filters.category, filters.brand, filters.transmission, filters.fuel].filter(v => v && v !== '').length}
                 </span>
               )}
@@ -130,7 +163,7 @@ export const CarsPage: React.FC = () => {
           {filters.category ? (
             <>
               <span className="text-gray-400">Категория: </span>
-              <span className="bg-gradient-to-r from-orange-400 to-orange-500 bg-clip-text text-transparent">
+              <span className="bg-gradient-to-r from-yellow-400 to-yellow-500 bg-clip-text text-transparent">
                 {filters.category === 'suv' ? 'Внедорожники и кроссоверы' :
                  filters.category === 'premium' ? 'Премиум' :
                  filters.category === 'business' ? 'Бизнес' :
@@ -157,7 +190,7 @@ export const CarsPage: React.FC = () => {
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
                 className="lg:hidden fixed inset-0 z-50 bg-black/80 backdrop-blur-sm"
-                onClick={() => setIsMobileFilterOpen(false)}
+                onClick={handleMobileFilterClose}
               >
                 <motion.div
                   initial={{ x: '-100%' }}
@@ -167,10 +200,10 @@ export const CarsPage: React.FC = () => {
                   className="absolute left-0 top-0 h-full w-[85%] max-w-sm overflow-y-auto"
                   onClick={(e) => e.stopPropagation()}
                 >
-                  <CarFiltersAdvanced 
-                    filters={filters} 
+                  <CarFiltersAdvanced
+                    filters={filters}
                     setFilters={setFilters}
-                    onClose={() => setIsMobileFilterOpen(false)}
+                    onClose={handleMobileFilterClose}
                   />
                 </motion.div>
               </motion.div>
@@ -182,20 +215,49 @@ export const CarsPage: React.FC = () => {
               <p className="text-gray-400">
                 Найдено: <span className="font-semibold text-white">{filteredCars.length}</span> автомобилей
               </p>
-              
-              <select
-                value={filters.sortBy}
-                onChange={(e) => setFilters({ ...filters, sortBy: e.target.value })}
-                className="w-full sm:w-auto px-4 py-2 bg-dark-900/50 border border-dark-700 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
-              >
-                <option value="price-asc">Сначала дешевле</option>
-                <option value="price-desc">Сначала дороже</option>
-                <option value="rating">По рейтингу</option>
-                <option value="popular">По популярности</option>
-              </select>
+
+              {/* Custom Sort Dropdown */}
+              <div ref={sortRef} className="relative">
+                <button
+                  onClick={() => setIsSortOpen(!isSortOpen)}
+                  className="w-full sm:w-auto px-4 py-2.5 bg-black/20 backdrop-blur-xl border border-white/10 text-white rounded-xl flex items-center justify-between gap-8 hover:bg-white/5 transition-colors"
+                >
+                  <span className="text-sm">{sortOptions.find(o => o.value === filters.sortBy)?.label}</span>
+                  <ChevronDown className={`w-4 h-4 text-gray-400 transition-transform ${isSortOpen ? 'rotate-180' : ''}`} />
+                </button>
+
+                <AnimatePresence>
+                  {isSortOpen && (
+                    <motion.div
+                      initial={{ opacity: 0, y: -10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -10 }}
+                      transition={{ duration: 0.15 }}
+                      className="absolute right-0 mt-2 w-full sm:w-56 bg-black/90 backdrop-blur-xl border border-white/10 rounded-xl overflow-hidden z-50 shadow-xl"
+                    >
+                      {sortOptions.map((option) => (
+                        <button
+                          key={option.value}
+                          onClick={() => handleSortChange(option.value)}
+                          className={`w-full px-4 py-3 text-left text-sm flex items-center justify-between transition-colors ${
+                            filters.sortBy === option.value
+                              ? 'bg-yellow-500/20 text-yellow-400'
+                              : 'text-gray-300 hover:bg-white/5 hover:text-white'
+                          }`}
+                        >
+                          {option.label}
+                          {filters.sortBy === option.value && (
+                            <Check className="w-4 h-4" />
+                          )}
+                        </button>
+                      ))}
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
             </div>
             
-            <CarGrid cars={filteredCars} />
+            <CarGrid cars={filteredCars} showRentalPrice={true} />
           </div>
         </div>
       </div>

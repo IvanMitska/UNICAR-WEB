@@ -6,7 +6,7 @@ export const TermsHero: React.FC = () => {
   return (
     <section className="relative py-20 bg-gradient-to-br from-black via-gray-900 to-black overflow-hidden">
       <div className="absolute inset-0 opacity-20">
-        <div className="absolute top-20 left-10 w-72 h-72 bg-orange-500 rounded-full blur-3xl"></div>
+        <div className="absolute top-20 left-10 w-72 h-72 bg-yellow-500 rounded-full blur-3xl"></div>
         <div className="absolute bottom-20 right-10 w-96 h-96 bg-blue-600 rounded-full blur-3xl"></div>
       </div>
       
@@ -18,14 +18,14 @@ export const TermsHero: React.FC = () => {
           className="text-center max-w-4xl mx-auto"
         >
           <div className="flex justify-center mb-6">
-            <div className="bg-gradient-to-r from-orange-500 to-red-500 p-4 rounded-full">
+            <div className="bg-gradient-to-r from-yellow-500 to-red-500 p-4 rounded-full">
               <FileText className="w-12 h-12 text-white" />
             </div>
           </div>
           
           <h1 className="text-5xl md:text-7xl font-bold text-white mb-6 font-display">
             Условия
-            <span className="bg-gradient-to-r from-orange-400 to-red-500 bg-clip-text text-transparent block">
+            <span className="bg-gradient-to-r from-yellow-400 to-red-500 bg-clip-text text-transparent block">
               аренды автомобилей
             </span>
           </h1>
@@ -42,7 +42,7 @@ export const TermsHero: React.FC = () => {
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: 0.2 }}
             >
-              <CheckCircle className="w-5 h-5 text-orange-400" />
+              <CheckCircle className="w-5 h-5 text-yellow-400" />
               <span>Честные цены</span>
             </motion.div>
             
@@ -52,7 +52,7 @@ export const TermsHero: React.FC = () => {
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: 0.4 }}
             >
-              <Shield className="w-5 h-5 text-orange-400" />
+              <Shield className="w-5 h-5 text-yellow-400" />
               <span>Полная страховка</span>
             </motion.div>
             
@@ -62,7 +62,7 @@ export const TermsHero: React.FC = () => {
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: 0.6 }}
             >
-              <Clock className="w-5 h-5 text-orange-400" />
+              <Clock className="w-5 h-5 text-yellow-400" />
               <span>24/7 поддержка</span>
             </motion.div>
           </div>

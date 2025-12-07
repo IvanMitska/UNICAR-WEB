@@ -31,7 +31,7 @@ export const BookingCard: React.FC<BookingCardProps> = ({ car }) => {
   };
 
   return (
-    <div className="glass-effect rounded-xl shadow-xl border border-dark-800/50 hover:border-orange-500/30 p-6 transition-all duration-300">
+    <div className="glass-effect rounded-xl shadow-xl border border-dark-800/50 hover:border-yellow-500/30 p-6 transition-all duration-300">
       <div className="mb-6">
         <div className="text-3xl font-bold gradient-text">
           {formatPrice(car.pricePerDay)}
@@ -42,7 +42,7 @@ export const BookingCard: React.FC<BookingCardProps> = ({ car }) => {
       <div className="space-y-4 mb-6">
         <div>
           <label className="block text-sm font-medium text-gray-200 mb-2">
-            <Calendar className="inline w-4 h-4 mr-1 text-orange-400" />
+            <Calendar className="inline w-4 h-4 mr-1 text-yellow-400" />
             Дата получения
           </label>
           <input
@@ -50,13 +50,13 @@ export const BookingCard: React.FC<BookingCardProps> = ({ car }) => {
             value={startDate}
             min={format(new Date(), 'yyyy-MM-dd')}
             onChange={(e) => setStartDate(e.target.value)}
-            className="w-full px-4 py-2 bg-dark-900/50 border border-dark-700 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
+            className="w-full px-4 py-2 bg-dark-900/50 border border-dark-700 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-yellow-500"
           />
         </div>
 
         <div>
           <label className="block text-sm font-medium text-gray-200 mb-2">
-            <Calendar className="inline w-4 h-4 mr-1 text-orange-400" />
+            <Calendar className="inline w-4 h-4 mr-1 text-yellow-400" />
             Дата возврата
           </label>
           <input
@@ -64,19 +64,19 @@ export const BookingCard: React.FC<BookingCardProps> = ({ car }) => {
             value={endDate}
             min={startDate}
             onChange={(e) => setEndDate(e.target.value)}
-            className="w-full px-4 py-2 bg-dark-900/50 border border-dark-700 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
+            className="w-full px-4 py-2 bg-dark-900/50 border border-dark-700 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-yellow-500"
           />
         </div>
 
         <div>
           <label className="block text-sm font-medium text-gray-200 mb-2">
-            <MapPin className="inline w-4 h-4 mr-1 text-orange-400" />
+            <MapPin className="inline w-4 h-4 mr-1 text-yellow-400" />
             Место получения
           </label>
           <select
             value={pickupLocation}
             onChange={(e) => setPickupLocation(e.target.value)}
-            className="w-full px-4 py-2 bg-dark-900/50 border border-dark-700 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 [&>option]:bg-dark-900 [&>option]:text-white"
+            className="w-full px-4 py-2 bg-dark-900/50 border border-dark-700 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-yellow-500 [&>option]:bg-dark-900 [&>option]:text-white"
           >
             <option value="Шереметьево">Шереметьево</option>
             <option value="Домодедово">Домодедово</option>
@@ -88,13 +88,13 @@ export const BookingCard: React.FC<BookingCardProps> = ({ car }) => {
 
         <div>
           <label className="block text-sm font-medium text-gray-200 mb-2">
-            <MapPin className="inline w-4 h-4 mr-1 text-orange-400" />
+            <MapPin className="inline w-4 h-4 mr-1 text-yellow-400" />
             Место возврата
           </label>
           <select
             value={returnLocation}
             onChange={(e) => setReturnLocation(e.target.value)}
-            className="w-full px-4 py-2 bg-dark-900/50 border border-dark-700 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 [&>option]:bg-dark-900 [&>option]:text-white"
+            className="w-full px-4 py-2 bg-dark-900/50 border border-dark-700 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-yellow-500 [&>option]:bg-dark-900 [&>option]:text-white"
           >
             <option value="Шереметьево">Шереметьево</option>
             <option value="Домодедово">Домодедово</option>
@@ -125,12 +125,12 @@ export const BookingCard: React.FC<BookingCardProps> = ({ car }) => {
         {car.available ? 'Забронировать' : 'Недоступен'}
       </Button>
 
-      <div className="mt-4 p-3 bg-gradient-to-r from-orange-500/20 to-orange-600/20 border border-orange-500/30 rounded-lg glass-effect-light">
+      <div className="mt-4 p-3 bg-gradient-to-r from-yellow-500/20 to-yellow-600/20 border border-yellow-500/30 rounded-lg glass-effect-light">
         <div className="flex items-start gap-2">
-          <Info className="w-4 h-4 text-orange-400 mt-0.5" />
+          <Info className="w-4 h-4 text-yellow-400 mt-0.5" />
           <div className="text-sm">
             <p className="font-semibold mb-1 text-white">Бесплатная отмена</p>
-            <p className="text-xs text-orange-300">Отмена бронирования бесплатно за 24 часа до начала аренды</p>
+            <p className="text-xs text-yellow-300">Отмена бронирования бесплатно за 24 часа до начала аренды</p>
           </div>
         </div>
       </div>

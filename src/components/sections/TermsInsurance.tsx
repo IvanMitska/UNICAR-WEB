@@ -48,7 +48,7 @@ export const TermsInsurance: React.FC = () => {
               whileHover={{ y: -8, scale: 1.02 }}
               className="bg-gray-800 rounded-2xl p-8 text-center shadow-xl hover:shadow-2xl transition-all duration-300"
             >
-              <div className="bg-gradient-to-r from-orange-500 to-red-500 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6">
+              <div className="bg-gradient-to-r from-yellow-500 to-red-500 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6">
                 <feature.icon className="w-8 h-8 text-white" />
               </div>
               
@@ -68,11 +68,11 @@ export const TermsInsurance: React.FC = () => {
             initial={{ opacity: 0, x: -30 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.6, delay: 0.4 }}
-            className="bg-gradient-to-r from-orange-500/10 to-red-500/10 border border-orange-500/20 rounded-2xl p-8"
+            className="bg-gradient-to-r from-yellow-500/10 to-red-500/10 border border-yellow-500/20 rounded-2xl p-8"
           >
             <div className="flex items-start gap-4">
-              <div className="bg-orange-500/20 p-3 rounded-full flex-shrink-0">
-                <Info className="w-6 h-6 text-orange-400" />
+              <div className="bg-yellow-500/20 p-3 rounded-full flex-shrink-0">
+                <Info className="w-6 h-6 text-yellow-400" />
               </div>
               <div>
                 <h4 className="text-xl font-bold text-white mb-3">Страховой депозит</h4>
@@ -81,7 +81,7 @@ export const TermsInsurance: React.FC = () => {
                   Депозит блокируется на вашей карте в момент получения автомобиля.
                 </p>
                 <div className="bg-gray-800/50 rounded-lg p-4">
-                  <p className="text-orange-400 font-semibold">Средний размер: от $200 до $800</p>
+                  <p className="text-yellow-400 font-semibold">Средний размер: от $200 до $800</p>
                   <p className="text-gray-400 text-sm mt-1">В зависимости от класса автомобиля</p>
                 </div>
               </div>
@@ -92,11 +92,11 @@ export const TermsInsurance: React.FC = () => {
             initial={{ opacity: 0, x: 30 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.6, delay: 0.6 }}
-            className="bg-gradient-to-r from-orange-500/10 to-red-500/10 border border-orange-500/20 rounded-2xl p-8"
+            className="bg-gradient-to-r from-yellow-500/10 to-red-500/10 border border-yellow-500/20 rounded-2xl p-8"
           >
             <div className="flex items-start gap-4">
-              <div className="bg-orange-500/20 p-3 rounded-full flex-shrink-0">
-                <AlertTriangle className="w-6 h-6 text-orange-400" />
+              <div className="bg-yellow-500/20 p-3 rounded-full flex-shrink-0">
+                <AlertTriangle className="w-6 h-6 text-yellow-400" />
               </div>
               <div>
                 <h4 className="text-xl font-bold text-white mb-3">Франшиза</h4>

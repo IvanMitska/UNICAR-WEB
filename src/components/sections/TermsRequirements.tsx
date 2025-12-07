@@ -57,7 +57,7 @@ export const TermsRequirements: React.FC = () => {
               whileHover={{ y: -8, scale: 1.02 }}
               className="bg-gray-800 rounded-2xl p-8 text-center shadow-xl hover:shadow-2xl transition-all duration-300"
             >
-              <div className="bg-gradient-to-r from-orange-500 to-red-500 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6">
+              <div className="bg-gradient-to-r from-yellow-500 to-red-500 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6">
                 <requirement.icon className="w-8 h-8 text-white" />
               </div>
               
@@ -65,7 +65,7 @@ export const TermsRequirements: React.FC = () => {
                 {requirement.title}
               </h3>
               
-              <div className="text-2xl font-bold text-orange-400 mb-4">
+              <div className="text-2xl font-bold text-yellow-400 mb-4">
                 {requirement.description}
               </div>
               
@@ -80,7 +80,7 @@ export const TermsRequirements: React.FC = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.4 }}
-          className="mt-12 bg-gradient-to-r from-red-500/10 to-orange-500/10 border border-red-500/20 rounded-2xl p-8"
+          className="mt-12 bg-gradient-to-r from-red-500/10 to-yellow-500/10 border border-red-500/20 rounded-2xl p-8"
         >
           <div className="flex items-start gap-4">
             <div className="bg-red-500/20 p-3 rounded-full flex-shrink-0">

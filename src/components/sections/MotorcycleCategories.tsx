@@ -15,7 +15,7 @@ const categories = [
     name: 'Спортбайки',
     icon: Zap,
     description: 'Для любителей скорости',
-    gradient: 'from-red-500 to-orange-500',
+    gradient: 'from-red-500 to-yellow-500',
   },
   {
     id: 'adventure',
@@ -71,7 +71,7 @@ export const MotorcycleCategories: React.FC<MotorcycleCategoriesProps> = ({
             onClick={() => onCategoryClick(null)}
             className={`px-6 py-3 rounded-xl font-semibold transition-all ${
               !selectedCategory
-                ? 'bg-gradient-to-r from-orange-500 to-orange-600 text-white shadow-lg'
+                ? 'bg-gradient-to-r from-yellow-500 to-yellow-600 text-white shadow-lg'
                 : 'bg-dark-800/50 text-gray-300 hover:bg-dark-700/50 border border-dark-700'
             }`}
           >
@@ -91,7 +91,7 @@ export const MotorcycleCategories: React.FC<MotorcycleCategoriesProps> = ({
               onClick={() => onCategoryClick(category.id)}
               className={`group cursor-pointer relative overflow-hidden rounded-2xl p-6 transition-all duration-300 ${
                 selectedCategory === category.id
-                  ? 'ring-2 ring-orange-500 shadow-2xl'
+                  ? 'ring-2 ring-yellow-500 shadow-2xl'
                   : 'hover:shadow-xl'
               }`}
             >
@@ -103,7 +103,7 @@ export const MotorcycleCategories: React.FC<MotorcycleCategoriesProps> = ({
                   <category.icon className="w-8 h-8 text-white" />
                 </div>
                 
-                <h3 className="text-xl font-bold text-white mb-2 group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:from-orange-400 group-hover:to-orange-500 group-hover:bg-clip-text transition-all">
+                <h3 className="text-xl font-bold text-white mb-2 group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:from-yellow-400 group-hover:to-yellow-500 group-hover:bg-clip-text transition-all">
                   {category.name}
                 </h3>
                 
@@ -112,7 +112,7 @@ export const MotorcycleCategories: React.FC<MotorcycleCategoriesProps> = ({
                 </p>
               </div>
               
-              <div className="absolute -bottom-4 -right-4 w-24 h-24 bg-gradient-to-r from-orange-500/20 to-orange-600/20 rounded-full blur-xl group-hover:scale-150 transition-transform"></div>
+              <div className="absolute -bottom-4 -right-4 w-24 h-24 bg-gradient-to-r from-yellow-500/20 to-yellow-600/20 rounded-full blur-xl group-hover:scale-150 transition-transform"></div>
             </motion.div>
           ))}
         </div>

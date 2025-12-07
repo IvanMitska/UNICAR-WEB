@@ -8,17 +8,17 @@ export default {
     extend: {
       colors: {
         primary: {
-          50: '#fff7ed',
-          100: '#ffedd5',
-          200: '#fed7aa',
-          300: '#fdba74',
-          400: '#fb923c',
-          500: '#f97316',
-          600: '#ea580c',
-          700: '#c2410c',
-          800: '#9a3412',
-          900: '#7c2d12',
-          950: '#431407',
+          50: '#fefce8',
+          100: '#fef9c3',
+          200: '#fef08a',
+          300: '#fde047',
+          400: '#facc15',
+          500: '#eab308',
+          600: '#ca8a04',
+          700: '#a16207',
+          800: '#854d0e',
+          900: '#713f12',
+          950: '#422006',
         },
         dark: {
           50: '#f6f6f7',
@@ -48,8 +48,8 @@ export default {
         }
       },
       fontFamily: {
-        sans: ['Orbitron', 'Arial', 'system-ui', 'sans-serif'],
-        display: ['Orbitron', 'Arial', 'system-ui', 'sans-serif'],
+        sans: ['Porsche Design', 'system-ui', '-apple-system', 'sans-serif'],
+        display: ['Porsche Design', 'system-ui', '-apple-system', 'sans-serif'],
       },
       backgroundImage: {
         'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
@@ -87,9 +87,9 @@ export default {
         xs: '2px',
       },
       boxShadow: {
-        'glow': '0 0 20px rgba(249, 115, 22, 0.3)',
-        'glow-lg': '0 0 40px rgba(249, 115, 22, 0.4)',
-        'inner-glow': 'inset 0 0 20px rgba(249, 115, 22, 0.1)',
+        'glow': '0 0 20px rgba(234, 179, 8, 0.3)',
+        'glow-lg': '0 0 40px rgba(234, 179, 8, 0.4)',
+        'inner-glow': 'inset 0 0 20px rgba(234, 179, 8, 0.1)',
         'premium': '0 20px 50px -12px rgba(0, 0, 0, 0.5)',
         'premium-lg': '0 25px 60px -15px rgba(0, 0, 0, 0.7)',
       },

@@ -30,7 +30,7 @@ export const CarGallery: React.FC<CarGalleryProps> = ({ images, has3DModel = fal
               onClick={() => setViewMode('photos')}
               className={`flex items-center gap-2 px-4 py-3 font-medium transition-colors ${
                 viewMode === 'photos'
-                  ? 'bg-orange-500/20 text-orange-400 border-b-2 border-orange-400'
+                  ? 'bg-yellow-500/20 text-yellow-400 border-b-2 border-yellow-400'
                   : 'text-gray-400 hover:text-white'
               }`}
             >
@@ -41,7 +41,7 @@ export const CarGallery: React.FC<CarGalleryProps> = ({ images, has3DModel = fal
               onClick={() => setViewMode('3d')}
               className={`flex items-center gap-2 px-4 py-3 font-medium transition-colors ${
                 viewMode === '3d'
-                  ? 'bg-orange-500/20 text-orange-400 border-b-2 border-orange-400'
+                  ? 'bg-yellow-500/20 text-yellow-400 border-b-2 border-yellow-400'
                   : 'text-gray-400 hover:text-white'
               }`}
             >
@@ -107,7 +107,7 @@ export const CarGallery: React.FC<CarGalleryProps> = ({ images, has3DModel = fal
                 key={index}
                 onClick={() => setCurrentImage(index)}
                 className={`relative aspect-video rounded-lg overflow-hidden border-2 transition-colors ${
-                  index === currentImage ? 'border-orange-400' : 'border-transparent'
+                  index === currentImage ? 'border-yellow-400' : 'border-transparent'
                 }`}
               >
                 <img

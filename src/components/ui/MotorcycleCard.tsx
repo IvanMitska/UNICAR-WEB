@@ -1,15 +1,21 @@
 import React from 'react';
-import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
-import { Star, Zap, Gauge, Fuel } from 'lucide-react';
+import { Star, Zap, Gauge, Fuel, Calendar } from 'lucide-react';
 import type { Motorcycle } from '../../types/index';
-import { formatCurrency } from '../../utils/formatters';
+import { formatCurrency, calculateDays } from '../../utils/formatters';
+import { useBookingStore } from '../../store/useBookingStore';
 
 interface MotorcycleCardProps {
   motorcycle: Motorcycle;
+  showRentalPrice?: boolean;
 }
 
-export const MotorcycleCard: React.FC<MotorcycleCardProps> = ({ motorcycle }) => {
+export const MotorcycleCard: React.FC<MotorcycleCardProps> = ({ motorcycle, showRentalPrice = false }) => {
+  const { startDate, endDate } = useBookingStore();
+
+  // Calculate rental days and total price (only when showRentalPrice is true)
+  const rentalDays = showRentalPrice && startDate && endDate ? calculateDays(new Date(startDate), new Date(endDate)) : 0;
+  const totalPrice = rentalDays > 0 ? motorcycle.pricePerDay * rentalDays : 0;
   const categoryNames = {
     scooter: 'Скутер',
     sport: 'Спорт',
@@ -19,10 +25,7 @@ export const MotorcycleCard: React.FC<MotorcycleCardProps> = ({ motorcycle }) =>
   };
 
   return (
-    <motion.div
-      whileHover={{ y: -5 }}
-      className="group bg-dark-900/50 backdrop-blur-xl border border-dark-800/50 rounded-2xl overflow-hidden hover:border-orange-500/30 transition-all duration-300"
-    >
+    <div className="group bg-dark-900/70 border border-dark-800/50 rounded-2xl overflow-hidden hover:border-yellow-500/50 transition-colors">
       <Link to={`/motorcycle/${motorcycle.id}`} className="block">
         <div className="relative">
           <div className="aspect-[4/3] overflow-hidden">
@@ -34,7 +37,7 @@ export const MotorcycleCard: React.FC<MotorcycleCardProps> = ({ motorcycle }) =>
           </div>
           
           <div className="absolute top-3 left-3">
-            <span className="px-3 py-1 bg-gradient-to-r from-orange-500 to-orange-600 text-white text-xs font-semibold rounded-full">
+            <span className="px-3 py-1 bg-gradient-to-r from-yellow-500 to-yellow-600 text-white text-xs font-semibold rounded-full">
               {categoryNames[motorcycle.category]}
             </span>
           </div>
@@ -51,13 +54,13 @@ export const MotorcycleCard: React.FC<MotorcycleCardProps> = ({ motorcycle }) =>
         <div className="p-6">
           <div className="flex items-start justify-between mb-3">
             <div>
-              <h3 className="text-lg font-bold text-white group-hover:text-orange-400 transition-colors">
+              <h3 className="text-lg font-bold text-white group-hover:text-yellow-400 transition-colors">
                 {motorcycle.brand} {motorcycle.model}
               </h3>
               <p className="text-gray-400 text-sm">{motorcycle.year} год</p>
             </div>
             <div className="text-right">
-              <div className="text-2xl font-bold text-orange-500">
+              <div className="text-2xl font-bold text-yellow-500">
                 {formatCurrency(motorcycle.pricePerDay)}
               </div>
               <div className="text-xs text-gray-400">за день</div>
@@ -72,22 +75,31 @@ export const MotorcycleCard: React.FC<MotorcycleCardProps> = ({ motorcycle }) =>
 
           <div className="grid grid-cols-2 gap-3 mb-4">
             <div className="flex items-center gap-2 text-gray-300">
-              <Gauge className="w-4 h-4 text-orange-400" />
+              <Gauge className="w-4 h-4 text-yellow-400" />
               <span className="text-sm">{motorcycle.engineSize}</span>
             </div>
             <div className="flex items-center gap-2 text-gray-300">
-              <Zap className="w-4 h-4 text-orange-400" />
+              <Zap className="w-4 h-4 text-yellow-400" />
               <span className="text-sm capitalize">{motorcycle.transmission === 'automatic' ? 'Авто' : 'Мех'}</span>
             </div>
             <div className="flex items-center gap-2 text-gray-300">
-              <Fuel className="w-4 h-4 text-orange-400" />
+              <Fuel className="w-4 h-4 text-yellow-400" />
               <span className="text-sm">{motorcycle.fuel === 'petrol' ? 'Бензин' : 'Электро'}</span>
             </div>
           </div>
 
-          <p className="text-gray-400 text-sm line-clamp-2 mb-4">
-            {motorcycle.description}
-          </p>
+          {/* Show total price badge when dates are selected */}
+          {rentalDays > 0 && (
+            <div className="mb-3 p-2.5 bg-yellow-500/10 border border-yellow-500/30 rounded-xl">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-1.5 text-yellow-400">
+                  <Calendar className="w-3.5 h-3.5" />
+                  <span className="text-xs font-medium">{rentalDays} {rentalDays === 1 ? 'день' : rentalDays < 5 ? 'дня' : 'дней'}</span>
+                </div>
+                <span className="text-sm font-bold text-yellow-400">{formatCurrency(totalPrice)}</span>
+              </div>
+            </div>
+          )}
 
           <div className="flex flex-wrap gap-1 mb-4">
             {motorcycle.features.slice(0, 3).map((feature, index) => (
@@ -105,20 +117,18 @@ export const MotorcycleCard: React.FC<MotorcycleCardProps> = ({ motorcycle }) =>
             )}
           </div>
 
-          <motion.button
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
+          <button
             disabled={!motorcycle.available}
-            className={`w-full py-3 rounded-lg font-semibold transition-all ${
+            className={`w-full py-3 rounded-lg font-semibold transition-colors ${
               motorcycle.available
-                ? 'bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white shadow-lg'
+                ? 'bg-yellow-500 hover:bg-yellow-600 text-black'
                 : 'bg-gray-600 text-gray-400 cursor-not-allowed'
             }`}
           >
             {motorcycle.available ? 'Забронировать' : 'Недоступен'}
-          </motion.button>
+          </button>
         </div>
       </Link>
-    </motion.div>
+    </div>
   );
 };

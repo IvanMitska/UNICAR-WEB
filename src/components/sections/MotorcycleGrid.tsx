@@ -1,13 +1,13 @@
 import React from 'react';
-import { motion } from 'framer-motion';
 import { MotorcycleCard } from '../ui/MotorcycleCard';
 import type { Motorcycle } from '../../types/index';
 
 interface MotorcycleGridProps {
   motorcycles: Motorcycle[];
+  showRentalPrice?: boolean;
 }
 
-export const MotorcycleGrid: React.FC<MotorcycleGridProps> = ({ motorcycles }) => {
+export const MotorcycleGrid: React.FC<MotorcycleGridProps> = ({ motorcycles, showRentalPrice = false }) => {
   if (motorcycles.length === 0) {
     return (
       <div className="text-center py-16">
@@ -26,15 +26,8 @@ export const MotorcycleGrid: React.FC<MotorcycleGridProps> = ({ motorcycles }) =
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-      {motorcycles.map((motorcycle, index) => (
-        <motion.div
-          key={motorcycle.id}
-          initial={{ opacity: 0, y: 50 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: index * 0.1 }}
-        >
-          <MotorcycleCard motorcycle={motorcycle} />
-        </motion.div>
+      {motorcycles.map((motorcycle) => (
+        <MotorcycleCard key={motorcycle.id} motorcycle={motorcycle} showRentalPrice={showRentalPrice} />
       ))}
     </div>
   );

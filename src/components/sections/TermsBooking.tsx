@@ -50,17 +50,17 @@ export const TermsBooking: React.FC = () => {
               >
                 {/* Connector line */}
                 {index < bookingSteps.length - 1 && (
-                  <div className="hidden md:block absolute top-12 left-full w-full h-0.5 bg-gradient-to-r from-orange-500 to-transparent z-0">
-                    <div className="absolute right-0 top-1/2 transform -translate-y-1/2 w-2 h-2 bg-orange-500 rounded-full"></div>
+                  <div className="hidden md:block absolute top-12 left-full w-full h-0.5 bg-gradient-to-r from-yellow-500 to-transparent z-0">
+                    <div className="absolute right-0 top-1/2 transform -translate-y-1/2 w-2 h-2 bg-yellow-500 rounded-full"></div>
                   </div>
                 )}
                 
                 <div className="bg-gray-900 rounded-2xl p-8 text-center relative z-10 shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105">
                   <div className="relative">
-                    <div className="bg-gradient-to-r from-orange-500 to-red-500 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6">
+                    <div className="bg-gradient-to-r from-yellow-500 to-red-500 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6">
                       <step.icon className="w-8 h-8 text-white" />
                     </div>
-                    <div className="absolute -top-2 -right-2 bg-orange-500 w-8 h-8 rounded-full flex items-center justify-center text-white font-bold text-sm">
+                    <div className="absolute -top-2 -right-2 bg-yellow-500 w-8 h-8 rounded-full flex items-center justify-center text-white font-bold text-sm">
                       {index + 1}
                     </div>
                   </div>
@@ -81,11 +81,11 @@ export const TermsBooking: React.FC = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.6 }}
-            className="bg-gradient-to-r from-orange-500/10 to-red-500/10 border border-orange-500/20 rounded-2xl p-8"
+            className="bg-gradient-to-r from-yellow-500/10 to-red-500/10 border border-yellow-500/20 rounded-2xl p-8"
           >
             <div className="flex items-start gap-4">
-              <div className="bg-orange-500/20 p-3 rounded-full flex-shrink-0">
-                <CheckCircle className="w-6 h-6 text-orange-400" />
+              <div className="bg-yellow-500/20 p-3 rounded-full flex-shrink-0">
+                <CheckCircle className="w-6 h-6 text-yellow-400" />
               </div>
               <div>
                 <h4 className="text-xl font-bold text-white mb-3">Быстрое подтверждение</h4>

@@ -35,7 +35,7 @@ export const CarFilters: React.FC<CarFiltersProps> = ({ filters, setFilters }) =
         <h3 className="text-lg font-semibold text-white">Фильтры</h3>
         <button
           onClick={handleReset}
-          className="text-sm text-orange-500 hover:text-orange-400 transition-colors"
+          className="text-sm text-yellow-500 hover:text-yellow-400 transition-colors"
         >
           Сбросить
         </button>
@@ -53,7 +53,7 @@ export const CarFilters: React.FC<CarFiltersProps> = ({ filters, setFilters }) =
               value={filters.searchQuery}
               onChange={(e) => setFilters({ ...filters, searchQuery: e.target.value })}
               placeholder="Марка или модель"
-              className="w-full pl-10 pr-3 py-2 bg-dark-900/50 border border-dark-700 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 placeholder-gray-500"
+              className="w-full pl-10 pr-3 py-2 bg-dark-900/50 border border-dark-700 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500 placeholder-gray-500"
             />
           </div>
         </div>

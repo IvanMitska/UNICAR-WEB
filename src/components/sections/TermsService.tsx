@@ -58,7 +58,7 @@ export const TermsService: React.FC = () => {
             transition={{ duration: 0.6, delay: 0.1 }}
             className="bg-gray-800 rounded-2xl p-6 text-center"
           >
-            <div className="bg-gradient-to-r from-orange-500 to-red-500 w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-4">
+            <div className="bg-gradient-to-r from-yellow-500 to-red-500 w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-4">
               <Clock className="w-6 h-6 text-white" />
             </div>
             <h3 className="text-lg font-bold text-white mb-2">Аренда от суток</h3>
@@ -71,7 +71,7 @@ export const TermsService: React.FC = () => {
             transition={{ duration: 0.6, delay: 0.2 }}
             className="bg-gray-800 rounded-2xl p-6 text-center"
           >
-            <div className="bg-gradient-to-r from-orange-500 to-red-500 w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-4">
+            <div className="bg-gradient-to-r from-yellow-500 to-red-500 w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-4">
               <FileText className="w-6 h-6 text-white" />
             </div>
             <h3 className="text-lg font-bold text-white mb-2">Официальный договор</h3>
@@ -84,7 +84,7 @@ export const TermsService: React.FC = () => {
             transition={{ duration: 0.6, delay: 0.3 }}
             className="bg-gray-800 rounded-2xl p-6 text-center"
           >
-            <div className="bg-gradient-to-r from-orange-500 to-red-500 w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-4">
+            <div className="bg-gradient-to-r from-yellow-500 to-red-500 w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-4">
               <Headphones className="w-6 h-6 text-white" />
             </div>
             <h3 className="text-lg font-bold text-white mb-2">Поддержка 24/7</h3>
@@ -97,7 +97,7 @@ export const TermsService: React.FC = () => {
             transition={{ duration: 0.6, delay: 0.4 }}
             className="bg-gray-800 rounded-2xl p-6 text-center"
           >
-            <div className="bg-gradient-to-r from-orange-500 to-red-500 w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-4">
+            <div className="bg-gradient-to-r from-yellow-500 to-red-500 w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-4">
               <CreditCard className="w-6 h-6 text-white" />
             </div>
             <h3 className="text-lg font-bold text-white mb-2">Удобная оплата</h3>
@@ -122,7 +122,7 @@ export const TermsService: React.FC = () => {
                 key={option.currency}
                 className="bg-gray-700 rounded-lg p-4 text-center"
               >
-                <div className="text-2xl font-bold text-orange-400 mb-1">
+                <div className="text-2xl font-bold text-yellow-400 mb-1">
                   {option.currency}
                 </div>
                 <div className="text-gray-400 text-sm">
@@ -153,7 +153,7 @@ export const TermsService: React.FC = () => {
                 transition={{ duration: 0.4, delay: 0.1 * index }}
                 className="flex items-center gap-3 p-4 bg-gray-700/50 rounded-lg hover:bg-gray-700 transition-colors"
               >
-                <div className="bg-gradient-to-r from-orange-500 to-red-500 p-2 rounded-full flex-shrink-0">
+                <div className="bg-gradient-to-r from-yellow-500 to-red-500 p-2 rounded-full flex-shrink-0">
                   <feature.icon className="w-4 h-4 text-white" />
                 </div>
                 <div>
@@ -170,10 +170,10 @@ export const TermsService: React.FC = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.7 }}
-          className="bg-gradient-to-r from-orange-500/10 to-red-500/10 border border-orange-500/20 rounded-2xl p-8 text-center"
+          className="bg-gradient-to-r from-yellow-500/10 to-red-500/10 border border-yellow-500/20 rounded-2xl p-8 text-center"
         >
           <div className="flex items-center justify-center gap-4 mb-4">
-            <div className="bg-gradient-to-r from-orange-500 to-red-500 p-3 rounded-full">
+            <div className="bg-gradient-to-r from-yellow-500 to-red-500 p-3 rounded-full">
               <Gift className="w-6 h-6 text-white" />
             </div>
             <h4 className="text-2xl font-bold text-white font-display">Подарок каждому клиенту</h4>
@@ -184,8 +184,8 @@ export const TermsService: React.FC = () => {
           </p>
           
           <div className="flex items-center justify-center gap-2 mt-4">
-            <MapPin className="w-5 h-5 text-orange-400" />
-            <span className="text-orange-400 font-semibold">Эксклюзивные места для фото</span>
+            <MapPin className="w-5 h-5 text-yellow-400" />
+            <span className="text-yellow-400 font-semibold">Эксклюзивные места для фото</span>
           </div>
         </motion.div>
       </div>
