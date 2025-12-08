@@ -1,5 +1,5 @@
 import { Suspense, lazy, useEffect } from 'react';
-import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, useLocation, Navigate } from 'react-router-dom';
 import { Layout } from './components/layout/Layout';
 import { HomePage } from './pages/HomePage';
 import { CarsPage } from './pages/CarsPage';
@@ -52,6 +52,7 @@ function App() {
             <Route path="contacts" element={<ContactsPage />} />
             <Route path="terms" element={<TermsPage />} />
             <Route path="profile" element={<ProfilePage />} />
+            <Route path="favorites" element={<Navigate to="/profile" replace />} />
           </Route>
         </Routes>
       </Suspense>

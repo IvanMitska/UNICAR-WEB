@@ -209,7 +209,7 @@ export const Header: React.FC = () => {
 
           <div className="hidden lg:flex items-center gap-3">
             <Link
-              to="/favorites"
+              to="/profile"
               className="relative p-2.5 bg-white/5 rounded-xl hover:bg-white/10 transition-colors"
             >
               <Heart className="w-5 h-5 text-gray-100" />
@@ -310,7 +310,7 @@ export const Header: React.FC = () => {
             <div className="p-4 space-y-3">
               <div className="flex gap-3">
                 <Link
-                  to="/favorites"
+                  to="/profile"
                   className="flex-1 flex items-center justify-center gap-2 bg-white/5 text-white py-3 rounded-xl font-medium active:bg-white/10 transition-colors"
                   onClick={() => setIsMenuOpen(false)}
                 >
