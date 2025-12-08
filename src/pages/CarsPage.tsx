@@ -1,6 +1,5 @@
 import React, { useState, useMemo, useEffect, useCallback, useRef } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { CarCategories } from '../components/sections/CarCategories';
 import { CarFiltersAdvanced } from '../components/sections/CarFiltersAdvanced';
 import { CarGrid } from '../components/sections/CarGrid';
 import { cars } from '../data/cars';
@@ -15,7 +14,7 @@ const sortOptions = [
 ];
 
 export const CarsPage: React.FC = () => {
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchParams] = useSearchParams();
   const categoryFromUrl = searchParams.get('category');
   const [isMobileFilterOpen, setIsMobileFilterOpen] = useState(false);
   const [isSortOpen, setIsSortOpen] = useState(false);
@@ -51,16 +50,6 @@ export const CarsPage: React.FC = () => {
       document.body.style.overflow = '';
     };
   }, [isMobileFilterOpen]);
-
-  const handleCategoryClick = useCallback((category: string | null) => {
-    if (category) {
-      setSearchParams({ category });
-      setFilters(prev => ({ ...prev, category }));
-    } else {
-      setSearchParams({});
-      setFilters(prev => ({ ...prev, category: '' }));
-    }
-  }, [setSearchParams]);
 
   const handleSortChange = useCallback((value: string) => {
     setFilters(prev => ({ ...prev, sortBy: value }));
@@ -132,14 +121,8 @@ export const CarsPage: React.FC = () => {
   }, [filters]);
 
   return (
-    <div className="bg-black min-h-screen">
-      <CarCategories 
-        selectedCategory={filters.category || null}
-        onCategoryClick={handleCategoryClick}
-        showTitle={false}
-      />
-      
-      <div className="container mx-auto px-4 py-6 lg:py-8">
+    <div className="bg-black min-h-screen pt-6 lg:pt-8">
+      <div className="container mx-auto px-4">
         {/* Mobile Filter Button */}
         <div className="lg:hidden mb-6">
           <button
