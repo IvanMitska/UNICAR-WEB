@@ -1,14 +1,38 @@
 import React, { useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { Link, NavLink, useNavigate } from 'react-router-dom';
-import { Menu, X, Phone, Heart, User, ChevronRight } from 'lucide-react';
+import { Menu, X, Phone, Heart, User, ChevronRight, Plus } from 'lucide-react';
 import { Logo } from '../ui/Logo';
 import { Button } from '../ui/Button';
 import { cn } from '../../utils/cn';
 import { useFavoritesStore } from '../../store/useFavoritesStore';
 
+const carCategories = [
+  { id: 'suv', name: 'Внедорожники', icon: '/images/categories/suv.png' },
+  { id: 'premium', name: 'Премиум', icon: '/images/categories/premium.png' },
+  { id: 'business', name: 'Бизнес', icon: '/images/categories/business.png' },
+  { id: 'sport', name: 'Спорткары', icon: '/images/categories/sport.png' },
+  { id: 'minivan', name: 'Минивэны', icon: '/images/categories/minivan.png' },
+  { id: 'comfort', name: 'Комфорт', icon: '/images/categories/comfort.png' },
+  { id: 'electric', name: 'Электро', icon: '/images/categories/electric.png' },
+];
+
+const carBrands = [
+  { id: 'toyota', name: 'Toyota', logo: '/images/brands/toyota.png' },
+  { id: 'honda', name: 'Honda', logo: '/images/brands/honda.png' },
+  { id: 'bmw', name: 'BMW', logo: '/images/brands/bmw.png' },
+  { id: 'mercedes', name: 'Mercedes', logo: '/images/brands/mercedes.png' },
+  { id: 'audi', name: 'Audi', logo: '/images/brands/audi.png' },
+  { id: 'lexus', name: 'Lexus', logo: '/images/brands/lexus.svg' },
+  { id: 'mazda', name: 'Mazda', logo: '/images/brands/mazda.png' },
+  { id: 'nissan', name: 'Nissan', logo: '/images/brands/nissan.png' },
+  { id: 'porsche', name: 'Porsche', logo: '/images/brands/porsche.png' },
+  { id: 'tesla', name: 'Tesla', logo: '/images/brands/tesla.png' },
+];
+
 export const Header: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isCarsDropdownOpen, setIsCarsDropdownOpen] = useState(false);
   const favorites = useFavoritesStore(state => state.favorites);
   const navigate = useNavigate();
 
@@ -44,28 +68,122 @@ export const Header: React.FC = () => {
 
           <nav className="hidden lg:flex items-center gap-1">
             {navLinks.map((link) => (
-              <NavLink
-                key={link.to}
-                to={link.to}
-                end={link.to === '/'}
-                className={({ isActive }) =>
-                  cn(
-                    'relative px-4 py-2 text-sm font-semibold transition-colors duration-200',
-                    isActive 
-                      ? 'text-yellow-500' 
-                      : 'text-gray-100 hover:text-white'
-                  )
-                }
-              >
-                {({ isActive }) => (
-                  <>
-                    <span className="relative z-10">{link.label}</span>
-                    {isActive && (
-                      <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-8 h-0.5 bg-yellow-500" />
+              link.to === '/cars' ? (
+                <div
+                  key={link.to}
+                  className="relative"
+                  onMouseEnter={() => setIsCarsDropdownOpen(true)}
+                  onMouseLeave={() => setIsCarsDropdownOpen(false)}
+                >
+                  <NavLink
+                    to={link.to}
+                    className={({ isActive }) =>
+                      cn(
+                        'relative px-4 py-2 text-sm font-semibold transition-colors duration-200 flex items-center gap-1',
+                        isActive
+                          ? 'text-yellow-500'
+                          : 'text-gray-100 hover:text-white'
+                      )
+                    }
+                  >
+                    {({ isActive }) => (
+                      <>
+                        <span className="relative z-10">{link.label}</span>
+                        <ChevronRight className={cn(
+                          'w-4 h-4 transition-transform',
+                          isCarsDropdownOpen ? 'rotate-90' : ''
+                        )} />
+                        {isActive && (
+                          <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-8 h-0.5 bg-yellow-500" />
+                        )}
+                      </>
                     )}
-                  </>
-                )}
-              </NavLink>
+                  </NavLink>
+
+                  {/* Mega Menu Dropdown */}
+                  {isCarsDropdownOpen && (
+                    <div className="absolute top-full left-0 pt-2 z-50">
+                      <div className="bg-zinc-900/95 backdrop-blur-xl border border-white/10 rounded-2xl shadow-2xl p-6 min-w-[600px]">
+                        <div className="flex gap-8">
+                          {/* Categories */}
+                          <div className="flex-shrink-0">
+                            <h4 className="text-sm font-semibold text-gray-400 mb-4">Класс</h4>
+                            <div className="space-y-1">
+                              {carCategories.map((cat) => (
+                                <Link
+                                  key={cat.id}
+                                  to={`/cars?category=${cat.id}`}
+                                  className="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-white/5 transition-colors group"
+                                  onClick={() => setIsCarsDropdownOpen(false)}
+                                >
+                                  <img src={cat.icon} alt={cat.name} className="w-10 h-6 object-contain opacity-60 group-hover:opacity-100 transition-opacity" />
+                                  <span className="text-sm text-gray-300 group-hover:text-white transition-colors">{cat.name}</span>
+                                </Link>
+                              ))}
+                            </div>
+                          </div>
+
+                          {/* Brands */}
+                          <div className="flex-1 border-l border-white/10 pl-8">
+                            <h4 className="text-sm font-semibold text-gray-400 mb-4">Марки</h4>
+                            <div className="grid grid-cols-2 gap-x-6 gap-y-1">
+                              {carBrands.map((brand) => (
+                                <Link
+                                  key={brand.id}
+                                  to={`/cars?brand=${brand.id}`}
+                                  className="flex items-center justify-between gap-3 px-3 py-2 rounded-lg hover:bg-white/5 transition-colors group"
+                                  onClick={() => setIsCarsDropdownOpen(false)}
+                                >
+                                  <div className="flex items-center gap-3">
+                                    <img src={brand.logo} alt={brand.name} className="w-5 h-5 object-contain opacity-60 group-hover:opacity-100 transition-opacity" />
+                                    <span className="text-sm text-gray-300 group-hover:text-white transition-colors">{brand.name}</span>
+                                  </div>
+                                  <Plus className="w-4 h-4 text-gray-600 group-hover:text-yellow-500 transition-colors" />
+                                </Link>
+                              ))}
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* Footer */}
+                        <div className="mt-6 pt-4 border-t border-white/10">
+                          <Link
+                            to="/cars"
+                            className="inline-flex items-center gap-2 px-4 py-2 bg-white/5 hover:bg-white/10 rounded-lg text-sm text-white transition-colors"
+                            onClick={() => setIsCarsDropdownOpen(false)}
+                          >
+                            Весь автопарк
+                            <ChevronRight className="w-4 h-4" />
+                          </Link>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              ) : (
+                <NavLink
+                  key={link.to}
+                  to={link.to}
+                  end={link.to === '/'}
+                  className={({ isActive }) =>
+                    cn(
+                      'relative px-4 py-2 text-sm font-semibold transition-colors duration-200',
+                      isActive
+                        ? 'text-yellow-500'
+                        : 'text-gray-100 hover:text-white'
+                    )
+                  }
+                >
+                  {({ isActive }) => (
+                    <>
+                      <span className="relative z-10">{link.label}</span>
+                      {isActive && (
+                        <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-8 h-0.5 bg-yellow-500" />
+                      )}
+                    </>
+                  )}
+                </NavLink>
+              )
             ))}
           </nav>
 
