@@ -1,134 +1,124 @@
-import React from 'react';
+import React, { memo, useCallback } from 'react';
 import { Link } from 'react-router-dom';
-import { Star, Zap, Gauge, Fuel, Calendar } from 'lucide-react';
+import { Heart, Calendar } from 'lucide-react';
 import type { Motorcycle } from '../../types/index';
 import { formatCurrency, calculateDays } from '../../utils/formatters';
+import { cn } from '../../utils/cn';
+import { useFavoritesStore } from '../../store/useFavoritesStore';
 import { useBookingStore } from '../../store/useBookingStore';
 
 interface MotorcycleCardProps {
   motorcycle: Motorcycle;
+  index?: number;
   showRentalPrice?: boolean;
 }
 
-export const MotorcycleCard: React.FC<MotorcycleCardProps> = ({ motorcycle, showRentalPrice = false }) => {
+const categoryNames: Record<string, string> = {
+  scooter: 'Скутер',
+  sport: 'Спорт',
+  touring: 'Туринг',
+  cruiser: 'Круизер',
+  adventure: 'Адвенчер',
+};
+
+const fuelLabels: Record<string, string> = {
+  petrol: 'Бензин',
+  electric: 'Электро',
+};
+
+const MotorcycleCardComponent: React.FC<MotorcycleCardProps> = ({ motorcycle, showRentalPrice = false }) => {
+  const { toggleFavorite, isFavorite } = useFavoritesStore();
   const { startDate, endDate } = useBookingStore();
+  const favorite = isFavorite(motorcycle.id);
 
   // Calculate rental days and total price (only when showRentalPrice is true)
   const rentalDays = showRentalPrice && startDate && endDate ? calculateDays(new Date(startDate), new Date(endDate)) : 0;
   const totalPrice = rentalDays > 0 ? motorcycle.pricePerDay * rentalDays : 0;
-  const categoryNames = {
-    scooter: 'Скутер',
-    sport: 'Спорт',
-    touring: 'Туринг',
-    cruiser: 'Круизер',
-    adventure: 'Адвенчер',
-  };
+
+  const handleFavoriteClick = useCallback((e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    toggleFavorite(motorcycle.id);
+  }, [motorcycle.id, toggleFavorite]);
 
   return (
-    <div className="group bg-dark-900/70 border border-dark-800/50 rounded-2xl overflow-hidden hover:border-yellow-500/50 transition-colors">
-      <Link to={`/motorcycle/${motorcycle.id}`} className="block">
-        <div className="relative">
-          <div className="aspect-[4/3] overflow-hidden">
-            <img
-              src={motorcycle.image}
-              alt={`${motorcycle.brand} ${motorcycle.model}`}
-              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-            />
-          </div>
-          
-          <div className="absolute top-3 left-3">
-            <span className="px-3 py-1 bg-gradient-to-r from-yellow-500 to-yellow-600 text-white text-xs font-semibold rounded-full">
-              {categoryNames[motorcycle.category]}
-            </span>
-          </div>
-
-          {!motorcycle.available && (
-            <div className="absolute inset-0 bg-black/60 flex items-center justify-center">
-              <span className="px-4 py-2 bg-red-600 text-white rounded-lg font-semibold">
-                Недоступен
+    <Link to={`/motorcycle/${motorcycle.id}`} className="block group">
+      <div className="relative bg-dark-900/50 rounded-2xl overflow-hidden">
+        {/* Header - always visible */}
+        <div className="absolute top-0 left-0 right-0 z-20 p-6 flex justify-between items-start">
+          <div>
+            <div className="mb-2">
+              <span className="px-3 py-1 bg-gradient-to-r from-yellow-500 to-yellow-600 text-black text-xs font-semibold rounded-full">
+                {categoryNames[motorcycle.category]}
               </span>
             </div>
-          )}
-        </div>
-
-        <div className="p-6">
-          <div className="flex items-start justify-between mb-3">
-            <div>
-              <h3 className="text-lg font-bold text-white group-hover:text-yellow-400 transition-colors">
-                {motorcycle.brand} {motorcycle.model}
-              </h3>
-              <p className="text-gray-400 text-sm">{motorcycle.year} год</p>
-            </div>
-            <div className="text-right">
-              <div className="text-2xl font-bold text-yellow-500">
-                {formatCurrency(motorcycle.pricePerDay)}
-              </div>
-              <div className="text-xs text-gray-400">за день</div>
-            </div>
+            <h3 className="text-2xl font-bold text-white drop-shadow-lg">
+              {motorcycle.brand} {motorcycle.model}
+            </h3>
+            <p className="text-xl text-white/90 font-medium drop-shadow-lg mt-1">
+              {formatCurrency(motorcycle.pricePerDay)}<span className="text-lg font-normal">/сут.</span>
+            </p>
           </div>
-
-          <div className="flex items-center gap-1 mb-4">
-            <Star className="w-4 h-4 text-yellow-500 fill-current" />
-            <span className="text-white font-medium">{motorcycle.rating}</span>
-            <span className="text-gray-400 text-sm">({motorcycle.reviews} отзывов)</span>
-          </div>
-
-          <div className="grid grid-cols-2 gap-3 mb-4">
-            <div className="flex items-center gap-2 text-gray-300">
-              <Gauge className="w-4 h-4 text-yellow-400" />
-              <span className="text-sm">{motorcycle.engineSize}</span>
-            </div>
-            <div className="flex items-center gap-2 text-gray-300">
-              <Zap className="w-4 h-4 text-yellow-400" />
-              <span className="text-sm capitalize">{motorcycle.transmission === 'automatic' ? 'Авто' : 'Мех'}</span>
-            </div>
-            <div className="flex items-center gap-2 text-gray-300">
-              <Fuel className="w-4 h-4 text-yellow-400" />
-              <span className="text-sm">{motorcycle.fuel === 'petrol' ? 'Бензин' : 'Электро'}</span>
-            </div>
-          </div>
-
-          {/* Show total price badge when dates are selected */}
-          {rentalDays > 0 && (
-            <div className="mb-3 p-2.5 bg-yellow-500/10 border border-yellow-500/30 rounded-xl">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-1.5 text-yellow-400">
-                  <Calendar className="w-3.5 h-3.5" />
-                  <span className="text-xs font-medium">{rentalDays} {rentalDays === 1 ? 'день' : rentalDays < 5 ? 'дня' : 'дней'}</span>
-                </div>
-                <span className="text-sm font-bold text-yellow-400">{formatCurrency(totalPrice)}</span>
-              </div>
-            </div>
-          )}
-
-          <div className="flex flex-wrap gap-1 mb-4">
-            {motorcycle.features.slice(0, 3).map((feature, index) => (
-              <span
-                key={index}
-                className="px-2 py-1 bg-dark-800/50 text-gray-300 text-xs rounded-md"
-              >
-                {feature}
-              </span>
-            ))}
-            {motorcycle.features.length > 3 && (
-              <span className="px-2 py-1 bg-dark-800/50 text-gray-300 text-xs rounded-md">
-                +{motorcycle.features.length - 3}
-              </span>
-            )}
-          </div>
-
           <button
-            disabled={!motorcycle.available}
-            className={`w-full py-3 rounded-lg font-semibold transition-colors ${
-              motorcycle.available
-                ? 'bg-yellow-500 hover:bg-yellow-600 text-black'
-                : 'bg-gray-600 text-gray-400 cursor-not-allowed'
-            }`}
+            onClick={handleFavoriteClick}
+            className={cn(
+              "p-2 rounded-xl transition-colors",
+              favorite ? "text-yellow-500" : "text-white/80 hover:text-yellow-400"
+            )}
           >
-            {motorcycle.available ? 'Забронировать' : 'Недоступен'}
+            <Heart className={cn("w-8 h-8 drop-shadow-lg", favorite && "fill-current")} />
           </button>
         </div>
-      </Link>
-    </div>
+
+        {/* Image - large, fills the card */}
+        <div className="aspect-[3/4] relative">
+          <img
+            src={motorcycle.image}
+            alt={`${motorcycle.brand} ${motorcycle.model}`}
+            loading="lazy"
+            decoding="async"
+            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+          />
+
+          {/* Gradient overlays */}
+          <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-transparent to-black/80" />
+
+          {/* Unavailable overlay */}
+          {!motorcycle.available && (
+            <div className="absolute inset-0 bg-black/70 flex items-center justify-center z-10">
+              <span className="text-white font-semibold text-lg">Недоступен</span>
+            </div>
+          )}
+        </div>
+
+        {/* Rental period badge - fixed position */}
+        {rentalDays > 0 && (
+          <div className="absolute bottom-20 left-6 right-6 z-20 p-3 bg-black/60 backdrop-blur-md border border-white/10 rounded-xl">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2 text-white/70">
+                <Calendar className="w-4 h-4" />
+                <span className="text-sm">
+                  {rentalDays} {rentalDays === 1 ? 'день' : rentalDays < 5 ? 'дня' : 'дней'}
+                </span>
+              </div>
+              <span className="text-lg font-semibold text-yellow-400">{formatCurrency(totalPrice)}</span>
+            </div>
+          </div>
+        )}
+
+        {/* Specs row - appears on hover at bottom */}
+        <div className="absolute bottom-0 left-0 right-0 z-20 p-6">
+          <div className="flex items-center justify-between gap-3 text-white text-base opacity-0 group-hover:opacity-100 transition-opacity duration-300 whitespace-nowrap overflow-hidden">
+            <span className="drop-shadow-lg">{motorcycle.specifications?.engine || motorcycle.engineSize}</span>
+            <span className="drop-shadow-lg">{motorcycle.specifications?.power || ''}</span>
+            <span className="drop-shadow-lg">{motorcycle.year} г.</span>
+            <span className="drop-shadow-lg">{fuelLabels[motorcycle.fuel]}</span>
+          </div>
+        </div>
+      </div>
+    </Link>
   );
 };
+
+// Memoize to prevent unnecessary re-renders when parent updates
+export const MotorcycleCard = memo(MotorcycleCardComponent);

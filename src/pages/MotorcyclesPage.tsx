@@ -3,7 +3,6 @@ import { useSearchParams } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { SlidersHorizontal, ChevronDown, Check } from 'lucide-react';
 import { motorcycles } from '../data/motorcycles';
-import { MotorcycleCategories } from '../components/sections/MotorcycleCategories';
 import { MotorcycleFiltersAdvanced } from '../components/sections/MotorcycleFiltersAdvanced';
 import { MotorcycleGrid } from '../components/sections/MotorcycleGrid';
 
@@ -15,7 +14,7 @@ const sortOptions = [
 ];
 
 export const MotorcyclesPage: React.FC = () => {
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchParams] = useSearchParams();
   const categoryFromUrl = searchParams.get('category');
   const [isMobileFilterOpen, setIsMobileFilterOpen] = useState(false);
   const [isSortOpen, setIsSortOpen] = useState(false);
@@ -49,16 +48,6 @@ export const MotorcyclesPage: React.FC = () => {
       document.body.style.overflow = '';
     };
   }, [isMobileFilterOpen]);
-
-  const handleCategoryClick = (category: string | null) => {
-    if (category) {
-      setSearchParams({ category });
-      setFilters({ ...filters, category });
-    } else {
-      setSearchParams({});
-      setFilters({ ...filters, category: '' });
-    }
-  };
 
   const handleSortChange = useCallback((value: string) => {
     setFilters(prev => ({ ...prev, sortBy: value }));
@@ -126,14 +115,8 @@ export const MotorcyclesPage: React.FC = () => {
   }, [filters]);
 
   return (
-    <div className="bg-black min-h-screen">
-      <MotorcycleCategories 
-        selectedCategory={filters.category || null}
-        onCategoryClick={handleCategoryClick}
-        showTitle={false}
-      />
-      
-      <div className="container mx-auto px-4 py-6 lg:py-8">
+    <div className="bg-black min-h-screen pt-6 lg:pt-8">
+      <div className="container mx-auto px-4">
         {/* Mobile Filter Button */}
         <div className="lg:hidden mb-6">
           <button
