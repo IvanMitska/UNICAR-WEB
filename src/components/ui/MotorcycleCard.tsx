@@ -1,10 +1,11 @@
 import React, { memo, useCallback } from 'react';
 import { Link } from 'react-router-dom';
-import { Heart, Fuel, Gauge, Settings2 } from 'lucide-react';
+import { Heart, Calendar } from 'lucide-react';
 import type { Motorcycle } from '../../types/index';
-import { formatCurrency } from '../../utils/formatters';
+import { formatCurrency, calculateDays } from '../../utils/formatters';
 import { cn } from '../../utils/cn';
 import { useFavoritesStore } from '../../store/useFavoritesStore';
+import { useBookingStore } from '../../store/useBookingStore';
 
 interface MotorcycleCardProps {
   motorcycle: Motorcycle;
@@ -14,7 +15,7 @@ interface MotorcycleCardProps {
 
 const categoryNames: Record<string, string> = {
   scooter: 'Скутер',
-  sport: 'Спортбайк',
+  sport: 'Спорт',
   touring: 'Туринг',
   cruiser: 'Круизер',
   adventure: 'Адвенчер',
@@ -25,14 +26,14 @@ const fuelLabels: Record<string, string> = {
   electric: 'Электро',
 };
 
-const transmissionLabels: Record<string, string> = {
-  automatic: 'Авто',
-  manual: 'Механика',
-};
-
-const MotorcycleCardComponent: React.FC<MotorcycleCardProps> = ({ motorcycle }) => {
+const MotorcycleCardComponent: React.FC<MotorcycleCardProps> = ({ motorcycle, showRentalPrice = false }) => {
   const { toggleFavorite, isFavorite } = useFavoritesStore();
+  const { startDate, endDate } = useBookingStore();
   const favorite = isFavorite(motorcycle.id);
+
+  // Calculate rental days and total price (only when showRentalPrice is true)
+  const rentalDays = showRentalPrice && startDate && endDate ? calculateDays(new Date(startDate), new Date(endDate)) : 0;
+  const totalPrice = rentalDays > 0 ? motorcycle.pricePerDay * rentalDays : 0;
 
   const handleFavoriteClick = useCallback((e: React.MouseEvent) => {
     e.preventDefault();
@@ -42,9 +43,35 @@ const MotorcycleCardComponent: React.FC<MotorcycleCardProps> = ({ motorcycle }) 
 
   return (
     <Link to={`/motorcycle/${motorcycle.id}`} className="block group">
-      <div className="bg-dark-900/50 rounded-2xl overflow-hidden border border-dark-800/50 hover:border-yellow-500/30 transition-all duration-300">
-        {/* Image Container - Horizontal */}
-        <div className="relative aspect-[16/10] overflow-hidden">
+      <div className="relative bg-dark-900/50 rounded-2xl overflow-hidden">
+        {/* Header - always visible */}
+        <div className="absolute top-0 left-0 right-0 z-20 p-6 flex justify-between items-start">
+          <div>
+            <div className="mb-2">
+              <span className="px-3 py-1 bg-gradient-to-r from-yellow-500 to-yellow-600 text-black text-xs font-semibold rounded-full">
+                {categoryNames[motorcycle.category]}
+              </span>
+            </div>
+            <h3 className="text-2xl font-bold text-white drop-shadow-lg">
+              {motorcycle.brand} {motorcycle.model}
+            </h3>
+            <p className="text-xl text-white/90 font-medium drop-shadow-lg mt-1">
+              {formatCurrency(motorcycle.pricePerDay)}<span className="text-lg font-normal">/сут.</span>
+            </p>
+          </div>
+          <button
+            onClick={handleFavoriteClick}
+            className={cn(
+              "p-2 rounded-xl transition-colors",
+              favorite ? "text-yellow-500" : "text-white/80 hover:text-yellow-400"
+            )}
+          >
+            <Heart className={cn("w-8 h-8 drop-shadow-lg", favorite && "fill-current")} />
+          </button>
+        </div>
+
+        {/* Image - large, fills the card */}
+        <div className="aspect-[3/4] relative">
           <img
             src={motorcycle.image}
             alt={`${motorcycle.brand} ${motorcycle.model}`}
@@ -53,61 +80,39 @@ const MotorcycleCardComponent: React.FC<MotorcycleCardProps> = ({ motorcycle }) 
             className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
           />
 
-          {/* Category Badge */}
-          <div className="absolute top-3 left-3">
-            <span className="px-2.5 py-1 bg-yellow-500 text-black text-xs font-semibold rounded-lg">
-              {categoryNames[motorcycle.category]}
-            </span>
-          </div>
-
-          {/* Favorite Button */}
-          <button
-            onClick={handleFavoriteClick}
-            className={cn(
-              "absolute top-3 right-3 p-2.5 rounded-xl bg-black/40 backdrop-blur-sm transition-all",
-              favorite ? "text-yellow-500" : "text-white/70 hover:text-white"
-            )}
-          >
-            <Heart className={cn("w-5 h-5", favorite && "fill-current")} />
-          </button>
+          {/* Gradient overlays */}
+          <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-transparent to-black/80" />
 
           {/* Unavailable overlay */}
           {!motorcycle.available && (
-            <div className="absolute inset-0 bg-black/70 flex items-center justify-center">
+            <div className="absolute inset-0 bg-black/70 flex items-center justify-center z-10">
               <span className="text-white font-semibold text-lg">Недоступен</span>
             </div>
           )}
         </div>
 
-        {/* Content */}
-        <div className="p-4">
-          {/* Title & Price Row */}
-          <div className="flex items-start justify-between gap-3 mb-3">
-            <h3 className="text-lg font-bold text-white group-hover:text-yellow-400 transition-colors">
-              {motorcycle.brand} {motorcycle.model}
-            </h3>
-            <div className="text-right flex-shrink-0">
-              <div className="text-lg font-bold text-yellow-500">
-                {formatCurrency(motorcycle.pricePerDay)}
+        {/* Rental period badge - fixed position */}
+        {rentalDays > 0 && (
+          <div className="absolute bottom-20 left-6 right-6 z-20 p-3 bg-black/60 backdrop-blur-md border border-white/10 rounded-xl">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2 text-white/70">
+                <Calendar className="w-4 h-4" />
+                <span className="text-sm">
+                  {rentalDays} {rentalDays === 1 ? 'день' : rentalDays < 5 ? 'дня' : 'дней'}
+                </span>
               </div>
-              <div className="text-xs text-gray-500">в сутки</div>
+              <span className="text-lg font-semibold text-yellow-400">{formatCurrency(totalPrice)}</span>
             </div>
           </div>
+        )}
 
-          {/* Specs Row */}
-          <div className="flex items-center gap-4 text-sm text-gray-400">
-            <div className="flex items-center gap-1.5">
-              <Gauge className="w-4 h-4 text-gray-500" />
-              <span>{motorcycle.engineSize}</span>
-            </div>
-            <div className="flex items-center gap-1.5">
-              <Settings2 className="w-4 h-4 text-gray-500" />
-              <span>{transmissionLabels[motorcycle.transmission]}</span>
-            </div>
-            <div className="flex items-center gap-1.5">
-              <Fuel className="w-4 h-4 text-gray-500" />
-              <span>{fuelLabels[motorcycle.fuel]}</span>
-            </div>
+        {/* Specs row - appears on hover at bottom */}
+        <div className="absolute bottom-0 left-0 right-0 z-20 p-6">
+          <div className="flex items-center justify-between gap-3 text-white text-base opacity-0 group-hover:opacity-100 transition-opacity duration-300 whitespace-nowrap overflow-hidden">
+            <span className="drop-shadow-lg">{motorcycle.specifications?.engine || motorcycle.engineSize}</span>
+            <span className="drop-shadow-lg">{motorcycle.specifications?.power || ''}</span>
+            <span className="drop-shadow-lg">{motorcycle.year} г.</span>
+            <span className="drop-shadow-lg">{fuelLabels[motorcycle.fuel]}</span>
           </div>
         </div>
       </div>
