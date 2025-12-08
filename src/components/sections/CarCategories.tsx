@@ -48,7 +48,7 @@ export const CarCategories: React.FC<CarCategoriesProps> = ({
           <div className="text-center mb-10">
             <h2 className="text-3xl lg:text-4xl font-bold mb-3">
               <span className="text-white">Категории </span>
-              <span className="bg-gradient-to-r from-yellow-400 to-yellow-500 bg-clip-text text-transparent">автомобилей</span>
+              <span className="text-yellow-400">автомобилей</span>
             </h2>
           </div>
         )}

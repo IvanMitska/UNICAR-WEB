@@ -103,7 +103,7 @@ export const MotorcycleCategories: React.FC<MotorcycleCategoriesProps> = ({
                   <category.icon className="w-8 h-8 text-white" />
                 </div>
                 
-                <h3 className="text-xl font-bold text-white mb-2 group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:from-yellow-400 group-hover:to-yellow-500 group-hover:bg-clip-text transition-all">
+                <h3 className="text-xl font-bold text-white mb-2 group-hover:text-yellow-400 transition-all">
                   {category.name}
                 </h3>
                 

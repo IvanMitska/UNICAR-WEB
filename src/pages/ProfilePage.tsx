@@ -110,7 +110,7 @@ export const ProfilePage: React.FC = () => {
           >
             <h1 className="text-3xl lg:text-4xl font-bold mb-2">
               <span className="text-white">Личный </span>
-              <span className="bg-gradient-to-r from-yellow-500 to-yellow-600 bg-clip-text text-transparent">
+              <span className="text-yellow-500">
                 кабинет
               </span>
             </h1>

@@ -15,7 +15,7 @@ export const Statistics: React.FC = () => {
       <div className="container mx-auto px-4">
         <div className="text-center mb-12">
           <h2 className="text-3xl lg:text-5xl font-bold mb-4">
-            <span className="bg-gradient-to-r from-yellow-500 to-yellow-600 bg-clip-text text-transparent">ShibaCars</span>
+            <span className="text-yellow-500">ShibaCars</span>
             <span className="text-white ml-3">в цифрах</span>
           </h2>
           <p className="text-lg text-gray-400">
@@ -27,7 +27,7 @@ export const Statistics: React.FC = () => {
           {stats.map((stat, index) => (
             <div key={index} className="text-center">
               <div className="glass-effect-light rounded-2xl p-8 border border-dark-800/50 hover:border-yellow-500/30 transition-colors duration-300">
-                <div className="text-4xl lg:text-5xl font-bold mb-3 bg-gradient-to-r from-yellow-400 to-yellow-600 bg-clip-text text-transparent">
+                <div className="text-4xl lg:text-5xl font-bold mb-3 text-yellow-400">
                   {stat.value}
                 </div>
                 <div className="text-gray-400">

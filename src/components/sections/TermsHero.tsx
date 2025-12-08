@@ -25,7 +25,7 @@ export const TermsHero: React.FC = () => {
           
           <h1 className="text-5xl md:text-7xl font-bold text-white mb-6 font-display">
             Условия
-            <span className="bg-gradient-to-r from-yellow-400 to-red-500 bg-clip-text text-transparent block">
+            <span className="text-yellow-400 block">
               аренды автомобилей
             </span>
           </h1>

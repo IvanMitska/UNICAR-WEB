@@ -71,11 +71,11 @@ export const HeroSection: React.FC = () => {
           </div>
 
           <h1 className="mb-8">
-            <span className="block text-6xl lg:text-8xl font-bold tracking-tight">
-              <span className="bg-gradient-to-r from-yellow-400 to-yellow-500 bg-clip-text text-transparent">SHIBA</span>
+            <span className="block text-6xl lg:text-8xl font-bold tracking-tight font-display">
+              <span className="text-yellow-400">SHIBA</span>
               <span className="text-white ml-4">CARS</span>
             </span>
-            <span className="block text-2xl lg:text-3xl text-gray-300 mt-4 font-light tracking-wide">
+            <span className="block text-2xl lg:text-3xl text-gray-300 mt-4 font-light tracking-wide font-display">
               Аренда премиальных автомобилей
             </span>
           </h1>

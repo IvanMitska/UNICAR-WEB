@@ -34,9 +34,9 @@ export const Features: React.FC = () => {
     <section className="py-16 lg:py-24 bg-black relative">
       <div className="container mx-auto px-4">
         <div className="text-center mb-16">
-          <h2 className="text-3xl lg:text-5xl font-bold italic">
+          <h2 className="text-3xl lg:text-5xl font-bold">
             <span className="text-white">ВЫ САДИТЕСЬ В АРЕНДНУЮ МАШИНУ, </span>
-            <span className="bg-gradient-to-r from-yellow-400 to-yellow-500 bg-clip-text text-transparent">КАК В СВОЮ!</span>
+            <span className="text-yellow-400">КАК В СВОЮ!</span>
           </h2>
         </div>
 

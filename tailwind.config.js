@@ -48,8 +48,8 @@ export default {
         }
       },
       fontFamily: {
-        sans: ['Porsche Design', 'system-ui', '-apple-system', 'sans-serif'],
-        display: ['Porsche Design', 'system-ui', '-apple-system', 'sans-serif'],
+        sans: ['Orbitron', 'system-ui', '-apple-system', 'sans-serif'],
+        display: ['Orbitron', 'system-ui', '-apple-system', 'sans-serif'],
       },
       backgroundImage: {
         'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',

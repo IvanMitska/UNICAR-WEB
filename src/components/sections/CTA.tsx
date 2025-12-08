@@ -16,7 +16,7 @@ export const CTA: React.FC = () => {
 
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-6 leading-tight">
             <span className="block sm:inline text-white">Готовы арендовать </span>
-            <span className="block sm:inline bg-gradient-to-r from-yellow-500 to-yellow-600 bg-clip-text text-transparent">автомобиль?</span>
+            <span className="block sm:inline text-yellow-500">автомобиль?</span>
           </h2>
           <p className="text-lg sm:text-xl text-gray-400 mb-10 max-w-2xl mx-auto">
             Выберите идеальный автомобиль для ваших потребностей прямо сейчас

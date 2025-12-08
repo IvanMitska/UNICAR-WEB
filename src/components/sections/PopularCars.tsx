@@ -13,7 +13,7 @@ export const PopularCars: React.FC = () => {
       <div className="container mx-auto px-4">
         <div className="text-center mb-12">
           <h2 className="text-3xl lg:text-5xl font-bold mb-4">
-            <span className="bg-gradient-to-r from-yellow-500 to-yellow-600 bg-clip-text text-transparent">Популярные</span>
+            <span className="text-yellow-500">Популярные</span>
             <span className="text-white ml-3">автомобили</span>
           </h2>
           <p className="text-lg text-gray-400">

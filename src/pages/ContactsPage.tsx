@@ -9,7 +9,7 @@ export const ContactsPage: React.FC = () => {
         <div className="text-center mb-16">
           <h1 className="text-4xl lg:text-6xl font-bold mb-6">
             <span className="text-white">Свяжитесь </span>
-            <span className="bg-gradient-to-r from-yellow-400 to-yellow-500 bg-clip-text text-transparent">с нами</span>
+            <span className="text-yellow-400">с нами</span>
           </h1>
           <p className="text-lg text-gray-400 max-w-2xl mx-auto">
             Мы всегда на связи и готовы помочь вам с арендой

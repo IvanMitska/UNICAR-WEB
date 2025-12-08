@@ -140,7 +140,7 @@ export const MotorcyclesPage: React.FC = () => {
           {filters.category ? (
             <>
               <span className="text-gray-400">Категория: </span>
-              <span className="bg-gradient-to-r from-yellow-400 to-yellow-500 bg-clip-text text-transparent">
+              <span className="text-yellow-400">
                 {filters.category === 'scooter' ? 'Скутеры' :
                  filters.category === 'sport' ? 'Спортбайки' :
                  filters.category === 'touring' ? 'Туринги' :

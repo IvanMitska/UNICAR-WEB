@@ -1,5 +1,3 @@
-/* Porsche Design font is loaded via index.html @font-face declarations */
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -8,7 +6,7 @@
   html {
     scroll-behavior: smooth;
   }
-  
+
   body {
     @apply antialiased bg-black text-gray-100;
   }
@@ -38,11 +36,11 @@
 
 @layer components {
   .gradient-text {
-    @apply bg-gradient-to-r from-primary-400 to-primary-600 bg-clip-text text-transparent;
+    @apply text-yellow-500;
   }
 
   .gradient-text-gold {
-    @apply bg-gradient-to-r from-yellow-400 via-yellow-300 to-yellow-400 bg-clip-text text-transparent;
+    @apply text-yellow-400;
   }
 
   .glass-effect {
