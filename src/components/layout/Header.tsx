@@ -50,9 +50,27 @@ const carBrands = [
   { id: 'tesla', name: 'Tesla', logo: '/images/brands/tesla.png' },
 ];
 
+const motorcycleCategories = [
+  { id: 'scooter', name: 'Скутеры', icon: '/images/moto-categories/scooter.png' },
+  { id: 'sport', name: 'Спортбайки', icon: '/images/moto-categories/sport.png' },
+  { id: 'touring', name: 'Туринги', icon: '/images/moto-categories/touring.png' },
+  { id: 'cruiser', name: 'Круизеры', icon: '/images/moto-categories/cruiser.png' },
+  { id: 'adventure', name: 'Адвенчер', icon: '/images/moto-categories/adventure.png' },
+];
+
+const motorcycleBrands = [
+  { id: 'honda', name: 'Honda', logo: '/images/brands/honda.png' },
+  { id: 'yamaha', name: 'Yamaha', logo: '/images/brands/yamaha.png' },
+  { id: 'kawasaki', name: 'Kawasaki', logo: '/images/brands/kawasaki.png' },
+  { id: 'vespa', name: 'Vespa', logo: '/images/brands/vespa.png' },
+  { id: 'bmw', name: 'BMW', logo: '/images/brands/bmw.png' },
+  { id: 'niu', name: 'NIU', logo: '/images/brands/niu.png' },
+];
+
 export const Header: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isCarsDropdownOpen, setIsCarsDropdownOpen] = useState(false);
+  const [isMotosDropdownOpen, setIsMotosDropdownOpen] = useState(false);
   const favorites = useFavoritesStore(state => state.favorites);
   const navigate = useNavigate();
 
@@ -87,100 +105,193 @@ export const Header: React.FC = () => {
           </Link>
 
           <nav className="hidden lg:flex items-center gap-1">
-            {navLinks.map((link) => (
-              link.to === '/cars' ? (
-                <div
-                  key={link.to}
-                  className="relative"
-                  onMouseEnter={() => setIsCarsDropdownOpen(true)}
-                  onMouseLeave={() => setIsCarsDropdownOpen(false)}
-                >
-                  <NavLink
-                    to={link.to}
-                    className={({ isActive }) =>
-                      cn(
-                        'relative px-4 py-2 text-sm font-semibold transition-colors duration-200 flex items-center gap-1',
-                        isActive
-                          ? 'text-yellow-500'
-                          : 'text-gray-100 hover:text-white'
-                      )
-                    }
+            {navLinks.map((link) => {
+              // Cars dropdown
+              if (link.to === '/cars') {
+                return (
+                  <div
+                    key={link.to}
+                    className="relative"
+                    onMouseEnter={() => setIsCarsDropdownOpen(true)}
+                    onMouseLeave={() => setIsCarsDropdownOpen(false)}
                   >
-                    {({ isActive }) => (
-                      <>
-                        <span className="relative z-10">{link.label}</span>
-                        <ChevronRight className={cn(
-                          'w-4 h-4 transition-transform',
-                          isCarsDropdownOpen ? 'rotate-90' : ''
-                        )} />
-                        {isActive && (
-                          <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-8 h-0.5 bg-yellow-500" />
-                        )}
-                      </>
-                    )}
-                  </NavLink>
+                    <NavLink
+                      to={link.to}
+                      className={({ isActive }) =>
+                        cn(
+                          'relative px-4 py-2 text-sm font-semibold transition-colors duration-200 flex items-center gap-1',
+                          isActive
+                            ? 'text-yellow-500'
+                            : 'text-gray-100 hover:text-white'
+                        )
+                      }
+                    >
+                      {({ isActive }) => (
+                        <>
+                          <span className="relative z-10">{link.label}</span>
+                          <ChevronRight className={cn(
+                            'w-4 h-4 transition-transform',
+                            isCarsDropdownOpen ? 'rotate-90' : ''
+                          )} />
+                          {isActive && (
+                            <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-8 h-0.5 bg-yellow-500" />
+                          )}
+                        </>
+                      )}
+                    </NavLink>
 
-                  {/* Mega Menu Dropdown */}
-                  {isCarsDropdownOpen && (
-                    <div className="absolute top-full left-0 pt-2 z-50">
-                      <div className="bg-black border border-white/15 rounded-2xl shadow-2xl p-6 min-w-[600px]">
-                        <div className="flex gap-8">
-                          {/* Categories */}
-                          <div className="flex-shrink-0">
-                            <h4 className="text-sm font-semibold text-gray-400 mb-4">Класс</h4>
-                            <div className="space-y-1">
-                              {carCategories.map((cat) => (
-                                <Link
-                                  key={cat.id}
-                                  to={`/cars?category=${cat.id}`}
-                                  className="flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-white/10 transition-colors group"
-                                  onClick={() => setIsCarsDropdownOpen(false)}
-                                >
-                                  <img src={cat.icon} alt={cat.name} className="w-12 h-7 object-contain opacity-80 group-hover:opacity-100 transition-opacity" />
-                                  <span className="text-sm text-gray-200 group-hover:text-white transition-colors">{cat.name}</span>
-                                </Link>
-                              ))}
+                    {/* Cars Mega Menu */}
+                    {isCarsDropdownOpen && (
+                      <div className="absolute top-full left-0 pt-2 z-50">
+                        <div className="bg-black border border-white/15 rounded-2xl shadow-2xl p-6 min-w-[600px]">
+                          <div className="flex gap-8">
+                            <div className="flex-shrink-0">
+                              <h4 className="text-sm font-semibold text-gray-400 mb-4">Класс</h4>
+                              <div className="space-y-1">
+                                {carCategories.map((cat) => (
+                                  <Link
+                                    key={cat.id}
+                                    to={`/cars?category=${cat.id}`}
+                                    className="flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-white/10 transition-colors group"
+                                    onClick={() => setIsCarsDropdownOpen(false)}
+                                  >
+                                    <img src={cat.icon} alt={cat.name} className="w-12 h-7 object-contain opacity-80 group-hover:opacity-100 transition-opacity" />
+                                    <span className="text-sm text-gray-200 group-hover:text-white transition-colors">{cat.name}</span>
+                                  </Link>
+                                ))}
+                              </div>
+                            </div>
+                            <div className="flex-1 border-l border-white/10 pl-8">
+                              <h4 className="text-sm font-semibold text-gray-400 mb-4">Марки</h4>
+                              <div className="grid grid-cols-2 gap-x-6 gap-y-1">
+                                {carBrands.map((brand) => (
+                                  <Link
+                                    key={brand.id}
+                                    to={`/cars?brand=${brand.id}`}
+                                    className="flex items-center justify-between gap-3 px-3 py-2.5 rounded-lg hover:bg-white/10 transition-colors group"
+                                    onClick={() => setIsCarsDropdownOpen(false)}
+                                  >
+                                    <div className="flex items-center gap-3">
+                                      <img src={brand.logo} alt={brand.name} className="w-6 h-6 object-contain opacity-80 group-hover:opacity-100 transition-opacity" />
+                                      <span className="text-sm text-gray-200 group-hover:text-white transition-colors">{brand.name}</span>
+                                    </div>
+                                    <Plus className="w-4 h-4 text-gray-500 group-hover:text-yellow-500 transition-colors" />
+                                  </Link>
+                                ))}
+                              </div>
                             </div>
                           </div>
-
-                          {/* Brands */}
-                          <div className="flex-1 border-l border-white/10 pl-8">
-                            <h4 className="text-sm font-semibold text-gray-400 mb-4">Марки</h4>
-                            <div className="grid grid-cols-2 gap-x-6 gap-y-1">
-                              {carBrands.map((brand) => (
-                                <Link
-                                  key={brand.id}
-                                  to={`/cars?brand=${brand.id}`}
-                                  className="flex items-center justify-between gap-3 px-3 py-2.5 rounded-lg hover:bg-white/10 transition-colors group"
-                                  onClick={() => setIsCarsDropdownOpen(false)}
-                                >
-                                  <div className="flex items-center gap-3">
-                                    <img src={brand.logo} alt={brand.name} className="w-6 h-6 object-contain opacity-80 group-hover:opacity-100 transition-opacity" />
-                                    <span className="text-sm text-gray-200 group-hover:text-white transition-colors">{brand.name}</span>
-                                  </div>
-                                  <Plus className="w-4 h-4 text-gray-500 group-hover:text-yellow-500 transition-colors" />
-                                </Link>
-                              ))}
-                            </div>
+                          <div className="mt-6 pt-4 border-t border-white/10">
+                            <Link
+                              to="/cars"
+                              className="inline-flex items-center gap-2 px-4 py-2 bg-white/5 hover:bg-white/10 rounded-lg text-sm text-white transition-colors"
+                              onClick={() => setIsCarsDropdownOpen(false)}
+                            >
+                              Весь автопарк
+                              <ChevronRight className="w-4 h-4" />
+                            </Link>
                           </div>
-                        </div>
-
-                        {/* Footer */}
-                        <div className="mt-6 pt-4 border-t border-white/10">
-                          <Link
-                            to="/cars"
-                            className="inline-flex items-center gap-2 px-4 py-2 bg-white/5 hover:bg-white/10 rounded-lg text-sm text-white transition-colors"
-                            onClick={() => setIsCarsDropdownOpen(false)}
-                          >
-                            Весь автопарк
-                            <ChevronRight className="w-4 h-4" />
-                          </Link>
                         </div>
                       </div>
-                    </div>
-                  )}
-                </div>
-              ) : (
+                    )}
+                  </div>
+                );
+              }
+
+              // Motorcycles dropdown
+              if (link.to === '/motorcycles') {
+                return (
+                  <div
+                    key={link.to}
+                    className="relative"
+                    onMouseEnter={() => setIsMotosDropdownOpen(true)}
+                    onMouseLeave={() => setIsMotosDropdownOpen(false)}
+                  >
+                    <NavLink
+                      to={link.to}
+                      className={({ isActive }) =>
+                        cn(
+                          'relative px-4 py-2 text-sm font-semibold transition-colors duration-200 flex items-center gap-1',
+                          isActive
+                            ? 'text-yellow-500'
+                            : 'text-gray-100 hover:text-white'
+                        )
+                      }
+                    >
+                      {({ isActive }) => (
+                        <>
+                          <span className="relative z-10">{link.label}</span>
+                          <ChevronRight className={cn(
+                            'w-4 h-4 transition-transform',
+                            isMotosDropdownOpen ? 'rotate-90' : ''
+                          )} />
+                          {isActive && (
+                            <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-8 h-0.5 bg-yellow-500" />
+                          )}
+                        </>
+                      )}
+                    </NavLink>
+
+                    {/* Motorcycles Mega Menu */}
+                    {isMotosDropdownOpen && (
+                      <div className="absolute top-full left-0 pt-2 z-50">
+                        <div className="bg-black border border-white/15 rounded-2xl shadow-2xl p-6 min-w-[500px]">
+                          <div className="flex gap-8">
+                            <div className="flex-shrink-0">
+                              <h4 className="text-sm font-semibold text-gray-400 mb-4">Тип</h4>
+                              <div className="space-y-1">
+                                {motorcycleCategories.map((cat) => (
+                                  <Link
+                                    key={cat.id}
+                                    to={`/motorcycles?category=${cat.id}`}
+                                    className="flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-white/10 transition-colors group"
+                                    onClick={() => setIsMotosDropdownOpen(false)}
+                                  >
+                                    <img src={cat.icon} alt={cat.name} className="w-12 h-7 object-contain opacity-80 group-hover:opacity-100 transition-opacity" />
+                                    <span className="text-sm text-gray-200 group-hover:text-white transition-colors">{cat.name}</span>
+                                  </Link>
+                                ))}
+                              </div>
+                            </div>
+                            <div className="flex-1 border-l border-white/10 pl-8">
+                              <h4 className="text-sm font-semibold text-gray-400 mb-4">Марки</h4>
+                              <div className="space-y-1">
+                                {motorcycleBrands.map((brand) => (
+                                  <Link
+                                    key={brand.id}
+                                    to={`/motorcycles?brand=${brand.name}`}
+                                    className="flex items-center justify-between gap-3 px-3 py-2.5 rounded-lg hover:bg-white/10 transition-colors group"
+                                    onClick={() => setIsMotosDropdownOpen(false)}
+                                  >
+                                    <div className="flex items-center gap-3">
+                                      <img src={brand.logo} alt={brand.name} className="w-6 h-6 object-contain opacity-80 group-hover:opacity-100 transition-opacity" />
+                                      <span className="text-sm text-gray-200 group-hover:text-white transition-colors">{brand.name}</span>
+                                    </div>
+                                    <Plus className="w-4 h-4 text-gray-500 group-hover:text-yellow-500 transition-colors" />
+                                  </Link>
+                                ))}
+                              </div>
+                            </div>
+                          </div>
+                          <div className="mt-6 pt-4 border-t border-white/10">
+                            <Link
+                              to="/motorcycles"
+                              className="inline-flex items-center gap-2 px-4 py-2 bg-white/5 hover:bg-white/10 rounded-lg text-sm text-white transition-colors"
+                              onClick={() => setIsMotosDropdownOpen(false)}
+                            >
+                              Все мотоциклы
+                              <ChevronRight className="w-4 h-4" />
+                            </Link>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                );
+              }
+
+              // Regular nav link
+              return (
                 <NavLink
                   key={link.to}
                   to={link.to}
@@ -203,8 +314,8 @@ export const Header: React.FC = () => {
                     </>
                   )}
                 </NavLink>
-              )
-            ))}
+              );
+            })}
           </nav>
 
           <div className="hidden lg:flex items-center gap-3">
