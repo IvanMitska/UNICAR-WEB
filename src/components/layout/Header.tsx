@@ -103,7 +103,7 @@ export const Header: React.FC = () => {
                   {/* Mega Menu Dropdown */}
                   {isCarsDropdownOpen && (
                     <div className="absolute top-full left-0 pt-2 z-50">
-                      <div className="bg-zinc-900/95 backdrop-blur-xl border border-white/10 rounded-2xl shadow-2xl p-6 min-w-[600px]">
+                      <div className="bg-black border border-white/15 rounded-2xl shadow-2xl p-6 min-w-[600px]">
                         <div className="flex gap-8">
                           {/* Categories */}
                           <div className="flex-shrink-0">
@@ -113,11 +113,11 @@ export const Header: React.FC = () => {
                                 <Link
                                   key={cat.id}
                                   to={`/cars?category=${cat.id}`}
-                                  className="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-white/5 transition-colors group"
+                                  className="flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-white/10 transition-colors group"
                                   onClick={() => setIsCarsDropdownOpen(false)}
                                 >
-                                  <img src={cat.icon} alt={cat.name} className="w-10 h-6 object-contain opacity-60 group-hover:opacity-100 transition-opacity" />
-                                  <span className="text-sm text-gray-300 group-hover:text-white transition-colors">{cat.name}</span>
+                                  <img src={cat.icon} alt={cat.name} className="w-12 h-7 object-contain opacity-80 group-hover:opacity-100 transition-opacity" />
+                                  <span className="text-sm text-gray-200 group-hover:text-white transition-colors">{cat.name}</span>
                                 </Link>
                               ))}
                             </div>
@@ -131,14 +131,14 @@ export const Header: React.FC = () => {
                                 <Link
                                   key={brand.id}
                                   to={`/cars?brand=${brand.id}`}
-                                  className="flex items-center justify-between gap-3 px-3 py-2 rounded-lg hover:bg-white/5 transition-colors group"
+                                  className="flex items-center justify-between gap-3 px-3 py-2.5 rounded-lg hover:bg-white/10 transition-colors group"
                                   onClick={() => setIsCarsDropdownOpen(false)}
                                 >
                                   <div className="flex items-center gap-3">
-                                    <img src={brand.logo} alt={brand.name} className="w-5 h-5 object-contain opacity-60 group-hover:opacity-100 transition-opacity" />
-                                    <span className="text-sm text-gray-300 group-hover:text-white transition-colors">{brand.name}</span>
+                                    <img src={brand.logo} alt={brand.name} className="w-6 h-6 object-contain opacity-80 group-hover:opacity-100 transition-opacity" />
+                                    <span className="text-sm text-gray-200 group-hover:text-white transition-colors">{brand.name}</span>
                                   </div>
-                                  <Plus className="w-4 h-4 text-gray-600 group-hover:text-yellow-500 transition-colors" />
+                                  <Plus className="w-4 h-4 text-gray-500 group-hover:text-yellow-500 transition-colors" />
                                 </Link>
                               ))}
                             </div>
