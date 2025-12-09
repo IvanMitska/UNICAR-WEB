@@ -91,7 +91,7 @@ export const Header: React.FC = () => {
     { to: '/', label: 'Главная' },
     { to: '/cars', label: 'Автомобили' },
     { to: '/motorcycles', label: 'Мотоциклы' },
-    { to: '/about', label: 'О компании' },
+    { to: '/services', label: 'Услуги' },
     { to: '/terms', label: 'Условия' },
     { to: '/contacts', label: 'Контакты' },
   ];

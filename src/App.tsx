@@ -24,10 +24,10 @@ const ScrollToTop = () => {
 const CarDetailsPage = lazy(() => import('./pages/CarDetailsPage').then(m => ({ default: m.CarDetailsPage })));
 const MotorcyclesPage = lazy(() => import('./pages/MotorcyclesPage').then(m => ({ default: m.MotorcyclesPage })));
 const BookingPage = lazy(() => import('./pages/BookingPage').then(m => ({ default: m.BookingPage })));
-const AboutPage = lazy(() => import('./pages/AboutPage').then(m => ({ default: m.AboutPage })));
 const ContactsPage = lazy(() => import('./pages/ContactsPage').then(m => ({ default: m.ContactsPage })));
 const TermsPage = lazy(() => import('./pages/TermsPage').then(m => ({ default: m.TermsPage })));
 const ProfilePage = lazy(() => import('./pages/ProfilePage').then(m => ({ default: m.ProfilePage })));
+const ServicesPage = lazy(() => import('./pages/ServicesPage').then(m => ({ default: m.ServicesPage })));
 
 // Loading fallback component
 const PageLoader = () => (
@@ -48,9 +48,9 @@ function App() {
             <Route path="cars/:id" element={<CarDetailsPage />} />
             <Route path="motorcycles" element={<MotorcyclesPage />} />
             <Route path="booking" element={<BookingPage />} />
-            <Route path="about" element={<AboutPage />} />
             <Route path="contacts" element={<ContactsPage />} />
             <Route path="terms" element={<TermsPage />} />
+            <Route path="services" element={<ServicesPage />} />
             <Route path="profile" element={<ProfilePage />} />
             <Route path="favorites" element={<Navigate to="/profile" replace />} />
           </Route>

@@ -14,7 +14,6 @@ import {
   Fuel,
   Settings,
   X,
-  Star,
   Shield,
   Phone,
   MessageCircle
@@ -50,6 +49,7 @@ export const CarDetailsPage: React.FC = () => {
   // Gallery state
   const [currentImage, setCurrentImage] = useState(0);
   const [isFullscreen, setIsFullscreen] = useState(false);
+  const [imageAspect, setImageAspect] = useState<'landscape' | 'portrait' | 'square'>('landscape');
 
   // Pricing state
   const [activeTab, setActiveTab] = useState<PricingTab>('daily');
@@ -66,6 +66,24 @@ export const CarDetailsPage: React.FC = () => {
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [id]);
+
+  // Detect image aspect ratio
+  useEffect(() => {
+    if (car && car.images[currentImage]) {
+      const img = new Image();
+      img.onload = () => {
+        const ratio = img.width / img.height;
+        if (ratio > 1.2) {
+          setImageAspect('landscape');
+        } else if (ratio < 0.8) {
+          setImageAspect('portrait');
+        } else {
+          setImageAspect('square');
+        }
+      };
+      img.src = car.images[currentImage];
+    }
+  }, [car, currentImage]);
 
   const nextImage = useCallback(() => {
     if (car) {
@@ -153,48 +171,65 @@ export const CarDetailsPage: React.FC = () => {
       </div>
 
       {/* Image Gallery - Carousel with side previews */}
-      <div className="relative bg-dark-900 h-[50vh] md:h-[70vh] overflow-hidden">
-        {/* Side images - previous */}
-        {car.images.length > 1 && (
+      <div className={cn(
+        "relative bg-dark-950 overflow-hidden transition-all duration-300",
+        // Mobile: always 60vh with object-cover | Desktop: adaptive based on aspect
+        "h-[60vh]",
+        "lg:h-auto",
+        imageAspect === 'portrait' ? "lg:h-[85vh]" : imageAspect === 'square' ? "lg:h-[70vh]" : "lg:h-[65vh]"
+      )}>
+        {/* Side images - previous (only for landscape) */}
+        {car.images.length > 1 && imageAspect === 'landscape' && (
           <div
-            className="hidden md:block absolute left-0 top-0 bottom-0 w-[15%] z-10 cursor-pointer"
+            className="hidden lg:block absolute left-0 top-0 bottom-0 w-[12%] z-10 cursor-pointer overflow-hidden"
             onClick={prevImage}
           >
             <img
               src={car.images[(currentImage - 1 + car.images.length) % car.images.length]}
               alt="Previous"
-              className="w-full h-full object-cover opacity-40 hover:opacity-60 transition-opacity"
+              className="w-full h-full object-cover object-center opacity-50 hover:opacity-70 transition-opacity scale-110"
             />
-            <div className="absolute inset-0 bg-gradient-to-r from-black/60 to-transparent" />
+            <div className="absolute inset-0 bg-gradient-to-r from-black/70 to-black/30" />
           </div>
         )}
 
         {/* Main image - centered */}
-        <div className="absolute inset-0 md:left-[15%] md:right-[15%]">
+        <div className={cn(
+          "absolute inset-0 flex items-center justify-center",
+          imageAspect === 'landscape' && "lg:left-[12%] lg:right-[12%]"
+        )}>
           <motion.img
             key={currentImage}
-            initial={{ opacity: 0, scale: 0.95 }}
+            initial={{ opacity: 0, scale: 0.98 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.3 }}
             src={car.images[currentImage]}
             alt={`${car.brand} ${car.model}`}
-            className="w-full h-full object-cover cursor-pointer"
+            className={cn(
+              "cursor-pointer transition-all w-full h-full",
+              // Mobile: always object-cover to fill space
+              "object-cover",
+              // Desktop: adaptive based on aspect ratio
+              imageAspect === 'portrait' ? "lg:object-contain lg:w-auto lg:h-full" :
+              imageAspect === 'square' ? "lg:object-contain lg:w-auto lg:h-full" :
+              "lg:object-cover lg:object-center"
+            )}
             onClick={() => setIsFullscreen(true)}
           />
         </div>
 
-        {/* Side images - next */}
-        {car.images.length > 1 && (
+        {/* Side images - next (only for landscape) */}
+        {car.images.length > 1 && imageAspect === 'landscape' && (
           <div
-            className="hidden md:block absolute right-0 top-0 bottom-0 w-[15%] z-10 cursor-pointer"
+            className="hidden lg:block absolute right-0 top-0 bottom-0 w-[12%] z-10 cursor-pointer overflow-hidden"
             onClick={nextImage}
           >
             <img
               src={car.images[(currentImage + 1) % car.images.length]}
               alt="Next"
-              className="w-full h-full object-cover opacity-40 hover:opacity-60 transition-opacity"
+              className="w-full h-full object-cover object-center opacity-50 hover:opacity-70 transition-opacity scale-110"
             />
-            <div className="absolute inset-0 bg-gradient-to-l from-black/60 to-transparent" />
+            <div className="absolute inset-0 bg-gradient-to-l from-black/70 to-black/30" />
           </div>
         )}
 
@@ -203,13 +238,19 @@ export const CarDetailsPage: React.FC = () => {
           <>
             <button
               onClick={prevImage}
-              className="absolute left-2 md:left-[16%] top-1/2 -translate-y-1/2 p-3 bg-black/40 hover:bg-black/60 backdrop-blur-sm rounded-full transition-colors z-20"
+              className={cn(
+                "absolute top-1/2 -translate-y-1/2 p-3 bg-black/50 hover:bg-black/70 backdrop-blur-sm rounded-full transition-colors z-20",
+                imageAspect === 'landscape' ? "left-4 lg:left-[14%]" : "left-4"
+              )}
             >
               <ChevronLeft className="w-6 h-6 text-white" />
             </button>
             <button
               onClick={nextImage}
-              className="absolute right-2 md:right-[16%] top-1/2 -translate-y-1/2 p-3 bg-black/40 hover:bg-black/60 backdrop-blur-sm rounded-full transition-colors z-20"
+              className={cn(
+                "absolute top-1/2 -translate-y-1/2 p-3 bg-black/50 hover:bg-black/70 backdrop-blur-sm rounded-full transition-colors z-20",
+                imageAspect === 'landscape' ? "right-4 lg:right-[14%]" : "right-4"
+              )}
             >
               <ChevronRight className="w-6 h-6 text-white" />
             </button>
@@ -217,7 +258,10 @@ export const CarDetailsPage: React.FC = () => {
         )}
 
         {/* Image counter */}
-        <div className="absolute bottom-4 right-4 md:right-[16%] px-3 py-1 bg-black/60 backdrop-blur-sm rounded-full text-white text-sm z-20">
+        <div className={cn(
+          "absolute bottom-4 px-3 py-1.5 bg-black/60 backdrop-blur-sm rounded-full text-white text-sm z-20",
+          imageAspect === 'landscape' ? "right-4 lg:right-[14%]" : "right-4"
+        )}>
           {currentImage + 1} / {car.images.length}
         </div>
 
@@ -251,231 +295,214 @@ export const CarDetailsPage: React.FC = () => {
       </div>
 
       {/* Content */}
-      <div className="container mx-auto px-4 py-8 max-w-5xl">
+      <div className="container mx-auto px-4 py-8 max-w-6xl">
         {/* Back button - desktop */}
         <button
           onClick={() => navigate(-1)}
-          className="hidden lg:flex items-center gap-2 text-gray-500 hover:text-white mb-4 transition-colors text-sm"
+          className="hidden lg:flex items-center gap-2 text-gray-400 hover:text-yellow-500 mb-6 transition-colors text-sm group"
         >
-          <ArrowLeft className="w-4 h-4" />
+          <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
           Назад к каталогу
         </button>
 
-        {/* Car title and favorite */}
-        <div className="flex items-start justify-between gap-4 mb-8">
-          <div>
-            <h1 className="text-3xl md:text-4xl font-bold text-white mb-2">
-              {car.brand} {car.model}
-            </h1>
-            <div className="flex items-center gap-3 text-sm text-gray-500">
-              <div className="flex items-center gap-1">
-                <Star className="w-4 h-4 text-yellow-500 fill-current" />
-                <span className="text-white">{car.rating}</span>
-                <span>({car.reviews} отзывов)</span>
-              </div>
-              <span>•</span>
-              <span>{car.year} год</span>
-            </div>
-          </div>
-          <button
-            onClick={handleFavoriteClick}
-            className={cn(
-              "p-3 rounded-full border transition-all",
-              favorite
-                ? "bg-yellow-500/10 border-yellow-500/50 text-yellow-500"
-                : "border-dark-700 text-gray-500 hover:text-white hover:border-gray-500"
-            )}
-          >
-            <Heart className={cn("w-6 h-6", favorite && "fill-current")} />
-          </button>
-        </div>
+        {/* Main Glass Card */}
+        <div className="bg-white/[0.03] backdrop-blur-xl rounded-3xl border border-white/10 overflow-hidden">
 
-        {/* Pricing tabs */}
-        <div className="mb-4">
-          <div className="inline-flex gap-1 p-1 bg-dark-800/80 rounded-lg">
-            {pricingTabs.map((tab) => (
+          {/* Header - Compact */}
+          <div className="p-4 md:p-8 border-b border-white/5">
+            <div className="flex items-center justify-between gap-3">
+              <div className="min-w-0">
+                <h1 className="text-2xl md:text-4xl font-bold text-white truncate">
+                  {car.brand} {car.model}
+                </h1>
+                <div className="flex items-center gap-3 text-sm mt-1">
+                  <span className="text-gray-500">{car.year}</span>
+                  <span className={cn(
+                    "px-2 py-0.5 rounded text-xs",
+                    car.available ? "bg-green-500/20 text-green-400" : "bg-red-500/20 text-red-400"
+                  )}>
+                    {car.available ? 'Доступен' : 'Занят'}
+                  </span>
+                </div>
+              </div>
               <button
-                key={tab.id}
-                onClick={() => setActiveTab(tab.id)}
+                onClick={handleFavoriteClick}
                 className={cn(
-                  "px-5 py-2.5 rounded-md font-medium transition-all text-sm",
-                  activeTab === tab.id
-                    ? "bg-yellow-500 text-black"
-                    : "text-gray-400 hover:text-white"
+                  "p-2.5 rounded-xl border transition-all flex-shrink-0",
+                  favorite
+                    ? "bg-yellow-500/20 border-yellow-500/50 text-yellow-500"
+                    : "bg-white/5 border-white/10 text-gray-500"
                 )}
               >
-                {tab.label}
+                <Heart className={cn("w-5 h-5", favorite && "fill-current")} />
               </button>
-            ))}
-          </div>
-        </div>
-
-        {/* Pricing tiers */}
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3 mb-10">
-          {pricingTiers[activeTab].map((tier, index) => (
-            <div
-              key={index}
-              className={cn(
-                "p-4 rounded-xl transition-all cursor-pointer hover:scale-[1.02]",
-                index === 0
-                  ? "bg-dark-800 ring-1 ring-yellow-500/50"
-                  : "bg-dark-800/60 hover:bg-dark-800"
-              )}
-            >
-              <div className="text-xs text-gray-500 mb-2 uppercase tracking-wide">{tier.duration}</div>
-              <div className="text-2xl font-bold text-white">
-                {formatPrice(tier.price)}
-                <span className="text-xs font-normal text-gray-500 ml-1">
-                  {activeTab === 'daily' ? '/сут' : activeTab === 'monthly' ? '/мес' : ''}
-                </span>
-              </div>
             </div>
-          ))}
-        </div>
+          </div>
 
-        {/* Specs row */}
-        <div className="flex flex-wrap items-center gap-6 py-4 px-5 bg-dark-800/60 rounded-xl mb-10 text-sm">
-          <div className="flex items-center gap-2 text-gray-300">
-            <Users className="w-4 h-4 text-gray-500" />
-            <span>{car.seats} мест</span>
+          {/* Specs - Simple line on mobile */}
+          <div className="px-4 md:px-8 py-3 border-b border-white/5 flex items-center gap-4 text-sm text-gray-400 overflow-x-auto">
+            <span className="flex items-center gap-1.5 whitespace-nowrap">
+              <Users className="w-4 h-4 text-yellow-500" />
+              {car.seats}
+            </span>
+            <span className="text-white/20">•</span>
+            <span className="whitespace-nowrap">{car.transmission === 'automatic' ? 'Автомат' : 'Механика'}</span>
+            <span className="text-white/20">•</span>
+            <span className="whitespace-nowrap">{fuelLabels[car.fuel]}</span>
+            {car.specifications?.power && (
+              <>
+                <span className="text-white/20">•</span>
+                <span className="whitespace-nowrap">{car.specifications.power}</span>
+              </>
+            )}
           </div>
-          <div className="flex items-center gap-2 text-gray-300">
-            <Settings className="w-4 h-4 text-gray-500" />
-            <span>{car.transmission === 'automatic' ? 'Автомат' : 'Механика'}</span>
-          </div>
-          <div className="flex items-center gap-2 text-gray-300">
-            <Fuel className="w-4 h-4 text-gray-500" />
-            <span>{fuelLabels[car.fuel]}</span>
-          </div>
-          {car.specifications?.engine && (
-            <div className="flex items-center gap-2 text-gray-300">
-              <span className="text-gray-500">⛽</span>
-              <span>{car.specifications.engine}</span>
-            </div>
-          )}
-          {car.specifications?.power && (
-            <div className="flex items-center gap-2 text-gray-300">
-              <span className="text-gray-500 text-xs font-bold">л.с.</span>
-              <span>{car.specifications.power}</span>
-            </div>
-          )}
-        </div>
 
-        {/* Description */}
-        {car.description && (
-          <div className="mb-10">
-            <h2 className="text-lg font-semibold text-white mb-3">Описание</h2>
-            <p className="text-gray-400 leading-relaxed">{car.description}</p>
-          </div>
-        )}
-
-        {/* Features */}
-        {car.features && car.features.length > 0 && (
-          <div className="mb-10">
-            <h2 className="text-lg font-semibold text-white mb-4">Особенности</h2>
-            <div className="flex flex-wrap gap-2">
-              {car.features.map((feature, index) => (
-                <span
-                  key={index}
-                  className="px-4 py-2 bg-dark-800/80 text-gray-300 rounded-lg text-sm border border-dark-700/50"
+          {/* Pricing Section */}
+          <div className="p-4 md:p-8 border-b border-white/5">
+            {/* Pricing tabs - horizontal scroll on mobile */}
+            <div className="flex gap-2 mb-4 overflow-x-auto pb-2 -mx-1 px-1">
+              {pricingTabs.map((tab) => (
+                <button
+                  key={tab.id}
+                  onClick={() => setActiveTab(tab.id)}
+                  className={cn(
+                    "px-4 py-2 rounded-lg font-medium transition-all text-sm whitespace-nowrap",
+                    activeTab === tab.id
+                      ? "bg-yellow-500 text-black"
+                      : "bg-white/5 text-gray-400"
+                  )}
                 >
-                  {feature}
-                </span>
+                  {tab.label}
+                </button>
+              ))}
+            </div>
+
+            {/* Pricing tiers - simpler on mobile */}
+            <div className="space-y-2">
+              {pricingTiers[activeTab].map((tier, index) => (
+                <div
+                  key={index}
+                  className={cn(
+                    "flex items-center justify-between p-3 rounded-xl",
+                    index === 0
+                      ? "bg-yellow-500/10 border border-yellow-500/20"
+                      : "bg-white/5"
+                  )}
+                >
+                  <span className="text-sm text-gray-400">{tier.duration}</span>
+                  <span className="text-lg font-bold text-white">
+                    {formatPrice(tier.price)}
+                    <span className="text-xs font-normal text-gray-500 ml-1">
+                      {activeTab === 'daily' ? '/сут' : activeTab === 'monthly' ? '/мес' : ''}
+                    </span>
+                  </span>
+                </div>
               ))}
             </div>
           </div>
-        )}
 
-        {/* Insurance info */}
-        <div className="flex items-center gap-4 p-5 bg-dark-800/60 border border-dark-700/50 rounded-xl mb-10">
-          <div className="w-10 h-10 rounded-full bg-green-500/10 flex items-center justify-center flex-shrink-0">
-            <Shield className="w-5 h-5 text-green-500" />
-          </div>
-          <div>
-            <div className="font-medium text-white">Полная страховка включена</div>
-            <div className="text-sm text-gray-500">КАСКО и ОСАГО уже включены в стоимость аренды</div>
-          </div>
-        </div>
+          {/* Description & Features - Compact on mobile */}
+          {(car.description || (car.features && car.features.length > 0)) && (
+            <div className="p-4 md:p-8 border-b border-white/5">
+              {car.description && (
+                <p className="text-gray-400 text-sm leading-relaxed mb-4">{car.description}</p>
+              )}
 
-        {/* Booking section */}
-        <div className="bg-dark-800/60 border border-dark-700/50 rounded-2xl p-6 mb-10">
-          <h2 className="text-lg font-semibold text-white mb-6">Забронировать</h2>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mb-6">
-            {/* Start date */}
-            <CustomDatePicker
-              value={startDate}
-              onChange={setStartDate}
-              label="Дата получения"
-              minDate={new Date()}
-            />
-
-            {/* End date */}
-            <CustomDatePicker
-              value={endDate}
-              onChange={setEndDate}
-              label="Дата возврата"
-              minDate={new Date(startDate)}
-            />
-
-            {/* Pickup location */}
-            <CustomLocationSelector
-              value={pickupLocation}
-              onChange={setPickupLocation}
-              label="Место получения"
-              locations={locations}
-            />
-
-            {/* Return location */}
-            <CustomLocationSelector
-              value={returnLocation}
-              onChange={setReturnLocation}
-              label="Место возврата"
-              locations={locations}
-            />
-          </div>
-
-          {/* Price calculation */}
-          <div className="flex items-center justify-between p-5 bg-dark-900/80 rounded-xl mb-6">
-            <div>
-              <div className="text-sm text-gray-500 mb-1">Итого за {days} {days === 1 ? 'день' : days < 5 ? 'дня' : 'дней'}</div>
-              <div className="text-3xl font-bold text-yellow-500">{formatPrice(totalPrice)}</div>
+              {car.features && car.features.length > 0 && (
+                <div className="flex flex-wrap gap-1.5">
+                  {car.features.map((feature, index) => (
+                    <span
+                      key={index}
+                      className="px-2.5 py-1 bg-white/5 text-gray-400 rounded-md text-xs"
+                    >
+                      {feature}
+                    </span>
+                  ))}
+                </div>
+              )}
             </div>
-            <div className="text-right">
-              <div className="text-sm text-gray-500 mb-1">Цена за день</div>
-              <div className="text-xl text-white">{formatPrice(car.pricePerDay)}</div>
-            </div>
+          )}
+
+          {/* Insurance Badge - Compact */}
+          <div className="mx-4 md:mx-8 my-4 flex items-center gap-3 p-3 bg-green-500/5 border border-green-500/20 rounded-xl">
+            <Shield className="w-5 h-5 text-green-400 flex-shrink-0" />
+            <span className="text-sm text-gray-300">Страховка КАСКО и ОСАГО включена</span>
           </div>
 
-          {/* Action buttons */}
-          <div className="flex flex-col md:flex-row gap-3">
+          {/* Booking Section */}
+          <div className="p-4 md:p-8 bg-white/[0.02]">
+            <div className="grid grid-cols-2 gap-3 mb-4">
+              <CustomDatePicker
+                value={startDate}
+                onChange={setStartDate}
+                label="Получение"
+                minDate={new Date()}
+              />
+              <CustomDatePicker
+                value={endDate}
+                onChange={setEndDate}
+                label="Возврат"
+                minDate={new Date(startDate)}
+              />
+              <CustomLocationSelector
+                value={pickupLocation}
+                onChange={setPickupLocation}
+                label="Откуда"
+                locations={locations}
+              />
+              <CustomLocationSelector
+                value={returnLocation}
+                onChange={setReturnLocation}
+                label="Куда"
+                locations={locations}
+              />
+            </div>
+
+            {/* Price Summary - Compact */}
+            <div className="flex items-center justify-between p-4 bg-yellow-500/10 rounded-xl border border-yellow-500/20 mb-4">
+              <div>
+                <div className="text-xs text-gray-400">{days} {days === 1 ? 'день' : days < 5 ? 'дня' : 'дней'}</div>
+                <div className="text-2xl font-bold text-yellow-500">{formatPrice(totalPrice)}</div>
+              </div>
+              <div className="text-right">
+                <div className="text-xs text-gray-400">за день</div>
+                <div className="text-lg text-white">{formatPrice(car.pricePerDay)}</div>
+              </div>
+            </div>
+
+            {/* Action buttons - Stack on mobile */}
             <button
               onClick={handleBooking}
               disabled={!car.available}
-              className="flex-1 py-4 px-8 bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-400 hover:to-yellow-500 text-black font-semibold rounded-xl transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-yellow-500/20 hover:shadow-yellow-500/30"
+              className="w-full py-3.5 bg-yellow-500 hover:bg-yellow-400 text-black font-bold rounded-xl transition-all disabled:opacity-50 disabled:cursor-not-allowed mb-3"
             >
               {car.available ? 'Забронировать' : 'Недоступен'}
             </button>
-            <button
-              onClick={() => window.open('tel:+66123456789')}
-              className="flex items-center justify-center gap-2 py-4 px-6 bg-white/5 backdrop-blur-sm border border-yellow-500/30 hover:border-yellow-500/60 hover:bg-yellow-500/10 text-yellow-500 font-medium rounded-xl transition-all duration-300"
-            >
-              <Phone className="w-5 h-5" />
-              Позвонить
-            </button>
-            <button
-              onClick={() => window.open('https://wa.me/66123456789')}
-              className="flex items-center justify-center gap-2 py-4 px-6 bg-white/5 backdrop-blur-sm border border-yellow-500/30 hover:border-yellow-500/60 hover:bg-yellow-500/10 text-yellow-500 font-medium rounded-xl transition-all duration-300"
-            >
-              <MessageCircle className="w-5 h-5" />
-              WhatsApp
-            </button>
+
+            <div className="grid grid-cols-2 gap-3">
+              <button
+                onClick={() => window.open('tel:+66959651805')}
+                className="flex items-center justify-center gap-2 py-3 bg-white/5 border border-white/10 text-gray-300 rounded-xl transition-all"
+              >
+                <Phone className="w-4 h-4" />
+                <span className="text-sm">Позвонить</span>
+              </button>
+              <button
+                onClick={() => window.open('https://wa.me/66959651805')}
+                className="flex items-center justify-center gap-2 py-3 bg-green-500/10 border border-green-500/20 text-green-400 rounded-xl transition-all"
+              >
+                <MessageCircle className="w-4 h-4" />
+                <span className="text-sm">WhatsApp</span>
+              </button>
+            </div>
           </div>
         </div>
 
         {/* Similar cars */}
         {similarCars.length > 0 && (
-          <SimilarCars cars={similarCars} />
+          <div className="mt-12">
+            <SimilarCars cars={similarCars} />
+          </div>
         )}
       </div>
 
