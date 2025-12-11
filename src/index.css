@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -8,153 +10,128 @@
   }
 
   body {
-    @apply antialiased bg-black text-gray-100;
+    @apply antialiased bg-white text-primary-900;
+    font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
   }
 
   ::selection {
-    @apply bg-primary-500 text-white;
+    @apply bg-primary-900 text-white;
   }
 
+  /* Minimal scrollbar - Tesla style */
   ::-webkit-scrollbar {
-    width: 10px;
-    height: 10px;
+    width: 8px;
+    height: 8px;
   }
 
   ::-webkit-scrollbar-track {
-    @apply bg-dark-900;
+    @apply bg-transparent;
   }
 
   ::-webkit-scrollbar-thumb {
-    @apply bg-dark-600 rounded-full;
-    transition: background-color 0.3s;
+    @apply bg-primary-300 rounded-full;
+    transition: background-color 0.2s;
   }
 
   ::-webkit-scrollbar-thumb:hover {
-    @apply bg-dark-500;
+    @apply bg-primary-400;
   }
 }
 
 @layer components {
-  .gradient-text {
-    @apply text-yellow-500;
+  /* Clean button styles */
+  .btn-primary {
+    @apply bg-primary-900 text-white px-8 py-3 rounded-md font-medium
+           hover:bg-primary-800 transition-all duration-200;
   }
 
-  .gradient-text-gold {
-    @apply text-yellow-400;
+  .btn-secondary {
+    @apply bg-white text-primary-900 px-8 py-3 rounded-md font-medium
+           border border-primary-200 hover:border-primary-400 transition-all duration-200;
   }
 
-  .glass-effect {
-    @apply bg-dark-900/70 border border-dark-700/50;
+  .btn-ghost {
+    @apply text-primary-900 px-6 py-2 font-medium
+           hover:bg-primary-100 rounded-md transition-all duration-200;
   }
 
-  .glass-effect-light {
-    @apply bg-white/5 border border-white/10;
+  /* Glass effect - light version */
+  .glass-light {
+    @apply bg-white/80 backdrop-blur-xl;
   }
 
-  .premium-border {
-    @apply relative;
+  /* Card styles */
+  .card {
+    @apply bg-white rounded-lg overflow-hidden;
   }
 
-  .premium-border::before {
-    content: '';
-    @apply absolute inset-0 rounded-xl bg-gradient-to-r from-yellow-500 via-yellow-400 to-yellow-500 -z-10;
-    padding: 1px;
-    mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-    mask-composite: xor;
-    mask-composite: exclude;
+  .card-elevated {
+    @apply bg-white rounded-lg shadow-soft overflow-hidden;
   }
 
-  .shimmer-effect {
-    /* Disabled for performance */
+  /* Section spacing */
+  .section {
+    @apply py-20 lg:py-32;
   }
 
-  .glow-effect {
-    /* Disabled for performance */
+  .section-tight {
+    @apply py-12 lg:py-20;
   }
 
-  .premium-gradient {
-    background: linear-gradient(135deg,
-      rgba(234, 179, 8, 0.1) 0%,
-      rgba(250, 204, 21, 0.05) 50%,
-      rgba(234, 179, 8, 0.1) 100%
-    );
+  /* Container */
+  .container-narrow {
+    @apply max-w-5xl mx-auto px-4;
   }
 
-  .mesh-gradient {
-    /* Disabled for performance */
+  /* Text styles */
+  .text-balance {
+    text-wrap: balance;
   }
 
-  .hover-lift {
-    /* Disabled for performance */
-  }
-
-  .text-shadow-glow {
-    /* Disabled for performance */
-  }
-
-  .text-shadow-gold {
-    /* Disabled for performance */
-  }
-
-  .custom-scrollbar {
+  /* Minimal scrollbar for containers */
+  .scrollbar-minimal {
     scrollbar-width: thin;
-    scrollbar-color: rgba(234, 179, 8, 0.3) transparent;
+    scrollbar-color: rgba(0, 0, 0, 0.15) transparent;
   }
 
-  .custom-scrollbar::-webkit-scrollbar {
-    width: 6px;
+  .scrollbar-minimal::-webkit-scrollbar {
+    width: 4px;
+    height: 4px;
   }
 
-  .custom-scrollbar::-webkit-scrollbar-track {
+  .scrollbar-minimal::-webkit-scrollbar-track {
     background: transparent;
   }
 
-  .custom-scrollbar::-webkit-scrollbar-thumb {
-    background-color: rgba(234, 179, 8, 0.3);
-    border-radius: 3px;
+  .scrollbar-minimal::-webkit-scrollbar-thumb {
+    background-color: rgba(0, 0, 0, 0.15);
+    border-radius: 2px;
   }
 
-  .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-    background-color: rgba(234, 179, 8, 0.5);
+  .scrollbar-minimal::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(0, 0, 0, 0.25);
   }
 }
 
 @layer utilities {
+  .animation-delay-100 {
+    animation-delay: 100ms;
+  }
+
   .animation-delay-200 {
     animation-delay: 200ms;
+  }
+
+  .animation-delay-300 {
+    animation-delay: 300ms;
   }
 
   .animation-delay-400 {
     animation-delay: 400ms;
   }
 
-  .animation-delay-600 {
-    animation-delay: 600ms;
-  }
-
-  .animation-delay-800 {
-    animation-delay: 800ms;
-  }
-
-  .animation-delay-1000 {
-    animation-delay: 1000ms;
-  }
-
-  .bg-size-200 {
-    background-size: 200% 100%;
-  }
-
-  .animate-gradient-x {
-    animation: gradient-x 3s ease infinite;
-  }
-}
-
-@keyframes gradient-x {
-  0%, 100% {
-    background-position: 0% 50%;
-  }
-  50% {
-    background-position: 100% 50%;
+  .animation-delay-500 {
+    animation-delay: 500ms;
   }
 }
 

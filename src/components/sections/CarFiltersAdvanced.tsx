@@ -1,5 +1,6 @@
 import React, { useState, useCallback } from 'react';
-import { Search, ChevronDown, SlidersHorizontal } from 'lucide-react';
+import { Search, ChevronDown } from 'lucide-react';
+import { cn } from '../../utils/cn';
 
 interface Filters {
   category: string;
@@ -20,30 +21,14 @@ interface CarFiltersAdvancedProps {
   onClose?: () => void;
 }
 
-const carBrands = [
-  { id: 'toyota', name: 'Toyota', logo: '/images/brands/toyota.png' },
-  { id: 'honda', name: 'Honda', logo: '/images/brands/honda.png' },
-  { id: 'bmw', name: 'BMW', logo: '/images/brands/bmw.png' },
-  { id: 'mercedes', name: 'Mercedes', logo: '/images/brands/mercedes.png' },
-  { id: 'audi', name: 'Audi', logo: '/images/brands/audi.png' },
-  { id: 'lexus', name: 'Lexus', logo: '/images/brands/lexus.svg' },
-  { id: 'mazda', name: 'Mazda', logo: '/images/brands/mazda.png' },
-  { id: 'nissan', name: 'Nissan', logo: '/images/brands/nissan.png' },
-  { id: 'ford', name: 'Ford', logo: '/images/brands/ford.png' },
-  { id: 'porsche', name: 'Porsche', logo: '/images/brands/porsche.png' },
-  { id: 'tesla', name: 'Tesla', logo: '/images/brands/tesla.png' },
-  { id: 'byd', name: 'BYD', logo: '/images/brands/byd.png' },
-];
-
 const categories = [
-  { id: '', name: 'Все', icon: '/images/categories/suv.png' },
-  { id: 'suv', name: 'Внедорожники', icon: '/images/categories/suv.png' },
-  { id: 'premium', name: 'Премиум', icon: '/images/categories/premium.png' },
-  { id: 'business', name: 'Бизнес', icon: '/images/categories/business.png' },
-  { id: 'sport', name: 'Спорткары', icon: '/images/categories/sport.png' },
-  { id: 'minivan', name: 'Минивэны', icon: '/images/categories/minivan.png' },
-  { id: 'comfort', name: 'Комфорт', icon: '/images/categories/comfort.png' },
-  { id: 'electric', name: 'Электро', icon: '/images/categories/electric.png' },
+  { id: '', name: 'Все' },
+  { id: 'suv', name: 'Внедорожники' },
+  { id: 'premium', name: 'Премиум' },
+  { id: 'business', name: 'Бизнес' },
+  { id: 'sport', name: 'Спорткары' },
+  { id: 'comfort', name: 'Комфорт' },
+  { id: 'electric', name: 'Электро' },
 ];
 
 const transmissionOptions = [
@@ -63,9 +48,8 @@ const fuelOptions = [
 export const CarFiltersAdvanced: React.FC<CarFiltersAdvancedProps> = ({ filters, setFilters, onClose }) => {
   const [expanded, setExpanded] = useState({
     categories: true,
-    brands: true,
     price: true,
-    transmission: false,
+    transmission: true,
     fuel: false,
   });
 
@@ -93,103 +77,44 @@ export const CarFiltersAdvanced: React.FC<CarFiltersAdvancedProps> = ({ filters,
   }, [setFilters]);
 
   return (
-    <div className="bg-black/20 backdrop-blur-xl rounded-2xl border border-white/10 overflow-hidden">
-      {/* Header */}
-      <div className="p-5 border-b border-white/5">
-        <div className="flex items-center justify-between mb-4">
-          <h3 className="text-lg font-semibold text-white flex items-center gap-2">
-            <SlidersHorizontal className="w-5 h-5 text-yellow-500" />
-            Фильтры
-          </h3>
-          <button
-            onClick={handleReset}
-            className="text-xs text-gray-400 hover:text-white px-3 py-1.5 rounded-lg bg-white/5 hover:bg-white/10 transition-colors"
-          >
-            Сбросить
-          </button>
-        </div>
-
-        {/* Search */}
+    <div className="bg-white">
+      {/* Search */}
+      <div className="p-4 lg:p-0 lg:pb-6">
         <div className="relative">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-primary-400" />
           <input
             type="text"
             value={filters.searchQuery}
             onChange={(e) => updateFilter('searchQuery', e.target.value)}
-            placeholder="Поиск..."
-            className="w-full pl-10 pr-4 py-2.5 bg-white/5 border border-white/10 text-white text-sm rounded-xl focus:outline-none focus:border-yellow-500/50 placeholder-gray-500 transition-colors"
+            placeholder="Поиск по марке..."
+            className="w-full pl-10 pr-4 py-3 bg-primary-50 border border-primary-200 text-primary-900 text-sm rounded-md focus:outline-none focus:border-primary-400 placeholder-primary-400 transition-colors"
           />
         </div>
       </div>
 
       {/* Categories */}
-      <div className="border-b border-white/5">
+      <div className="border-t border-primary-100">
         <button
           onClick={() => toggle('categories')}
-          className="w-full px-5 py-4 flex items-center justify-between hover:bg-white/5 transition-colors"
+          className="w-full px-4 lg:px-0 py-4 flex items-center justify-between hover:bg-primary-50 lg:hover:bg-transparent transition-colors"
         >
-          <span className="text-sm font-medium text-white">Категория</span>
-          <ChevronDown className={`w-4 h-4 text-gray-400 transition-transform ${expanded.categories ? 'rotate-180' : ''}`} />
+          <span className="text-sm font-medium text-primary-900">Категория</span>
+          <ChevronDown className={cn('w-4 h-4 text-primary-400 transition-transform', expanded.categories && 'rotate-180')} />
         </button>
         {expanded.categories && (
-          <div className="px-5 pb-5 grid grid-cols-2 gap-2">
+          <div className="px-4 lg:px-0 pb-4 space-y-1">
             {categories.map((cat) => (
               <button
                 key={cat.id}
                 onClick={() => updateFilter('category', cat.id)}
-                className={`flex flex-col items-center gap-2 p-3 rounded-xl transition-all ${
+                className={cn(
+                  'w-full text-left px-3 py-2 rounded-md text-sm transition-colors',
                   filters.category === cat.id
-                    ? 'bg-yellow-500/20 border border-yellow-500/40'
-                    : 'bg-white/5 border border-white/5 hover:bg-white/10'
-                }`}
+                    ? 'bg-primary-900 text-white'
+                    : 'text-primary-600 hover:bg-primary-50'
+                )}
               >
-                <img
-                  src={cat.icon}
-                  alt={cat.name}
-                  className="h-8 w-auto object-contain"
-                  style={{ filter: filters.category === cat.id ? 'brightness(1.2)' : 'brightness(0.8)' }}
-                />
-                <span className={`text-xs font-medium ${filters.category === cat.id ? 'text-yellow-400' : 'text-gray-300'}`}>
-                  {cat.name}
-                </span>
-              </button>
-            ))}
-          </div>
-        )}
-      </div>
-
-      {/* Brands */}
-      <div className="border-b border-white/5">
-        <button
-          onClick={() => toggle('brands')}
-          className="w-full px-5 py-4 flex items-center justify-between hover:bg-white/5 transition-colors"
-        >
-          <span className="text-sm font-medium text-white">Марка</span>
-          <ChevronDown className={`w-4 h-4 text-gray-400 transition-transform ${expanded.brands ? 'rotate-180' : ''}`} />
-        </button>
-        {expanded.brands && (
-          <div className="px-5 pb-5 grid grid-cols-3 gap-2">
-            {carBrands.map((brand) => (
-              <button
-                key={brand.id}
-                onClick={() => updateFilter('brand', filters.brand === brand.id ? '' : brand.id)}
-                className={`flex flex-col items-center gap-1.5 p-2.5 rounded-xl transition-all ${
-                  filters.brand === brand.id
-                    ? 'bg-yellow-500/20 border border-yellow-500/40'
-                    : 'bg-white/5 border border-white/5 hover:bg-white/10'
-                }`}
-              >
-                <div className="h-7 w-7 flex items-center justify-center">
-                  <img
-                    src={brand.logo}
-                    alt={brand.name}
-                    className="max-h-full max-w-full object-contain"
-                    style={{ filter: filters.brand === brand.id ? 'brightness(1.2)' : 'brightness(0.7)' }}
-                  />
-                </div>
-                <span className={`text-[10px] font-medium ${filters.brand === brand.id ? 'text-yellow-400' : 'text-gray-400'}`}>
-                  {brand.name}
-                </span>
+                {cat.name}
               </button>
             ))}
           </div>
@@ -197,31 +122,31 @@ export const CarFiltersAdvanced: React.FC<CarFiltersAdvancedProps> = ({ filters,
       </div>
 
       {/* Price */}
-      <div className="border-b border-white/5">
+      <div className="border-t border-primary-100">
         <button
           onClick={() => toggle('price')}
-          className="w-full px-5 py-4 flex items-center justify-between hover:bg-white/5 transition-colors"
+          className="w-full px-4 lg:px-0 py-4 flex items-center justify-between hover:bg-primary-50 lg:hover:bg-transparent transition-colors"
         >
-          <span className="text-sm font-medium text-white">Цена за день</span>
-          <ChevronDown className={`w-4 h-4 text-gray-400 transition-transform ${expanded.price ? 'rotate-180' : ''}`} />
+          <span className="text-sm font-medium text-primary-900">Цена за день</span>
+          <ChevronDown className={cn('w-4 h-4 text-primary-400 transition-transform', expanded.price && 'rotate-180')} />
         </button>
         {expanded.price && (
-          <div className="px-5 pb-5 space-y-4">
+          <div className="px-4 lg:px-0 pb-4 space-y-4">
             <div className="flex items-center gap-3">
               <input
                 type="number"
                 value={filters.priceMin || ''}
                 onChange={(e) => updateFilter('priceMin', Number(e.target.value) || 0)}
                 placeholder="От"
-                className="w-full px-3 py-2 bg-white/5 border border-white/10 text-white text-sm rounded-lg focus:outline-none focus:border-yellow-500/50 transition-colors"
+                className="w-full px-3 py-2 bg-primary-50 border border-primary-200 text-primary-900 text-sm rounded-md focus:outline-none focus:border-primary-400 transition-colors"
               />
-              <span className="text-gray-500">—</span>
+              <span className="text-primary-300">—</span>
               <input
                 type="number"
                 value={filters.priceMax || ''}
                 onChange={(e) => updateFilter('priceMax', Number(e.target.value) || 20000)}
                 placeholder="До"
-                className="w-full px-3 py-2 bg-white/5 border border-white/10 text-white text-sm rounded-lg focus:outline-none focus:border-yellow-500/50 transition-colors"
+                className="w-full px-3 py-2 bg-primary-50 border border-primary-200 text-primary-900 text-sm rounded-md focus:outline-none focus:border-primary-400 transition-colors"
               />
             </div>
 
@@ -232,36 +157,37 @@ export const CarFiltersAdvanced: React.FC<CarFiltersAdvancedProps> = ({ filters,
               step={500}
               value={filters.priceMax}
               onChange={(e) => updateFilter('priceMax', Number(e.target.value))}
-              className="w-full accent-yellow-500 cursor-pointer"
+              className="w-full accent-primary-900 cursor-pointer"
             />
-            <div className="flex justify-between text-xs text-gray-500">
-              <span>฿0</span>
-              <span className="text-yellow-500 font-medium">฿{filters.priceMax.toLocaleString()}</span>
+            <div className="flex justify-between text-xs text-primary-500">
+              <span>0 ฿</span>
+              <span className="font-medium text-primary-900">{filters.priceMax.toLocaleString()} ฿</span>
             </div>
           </div>
         )}
       </div>
 
       {/* Transmission */}
-      <div className="border-b border-white/5">
+      <div className="border-t border-primary-100">
         <button
           onClick={() => toggle('transmission')}
-          className="w-full px-5 py-4 flex items-center justify-between hover:bg-white/5 transition-colors"
+          className="w-full px-4 lg:px-0 py-4 flex items-center justify-between hover:bg-primary-50 lg:hover:bg-transparent transition-colors"
         >
-          <span className="text-sm font-medium text-white">Коробка передач</span>
-          <ChevronDown className={`w-4 h-4 text-gray-400 transition-transform ${expanded.transmission ? 'rotate-180' : ''}`} />
+          <span className="text-sm font-medium text-primary-900">Коробка передач</span>
+          <ChevronDown className={cn('w-4 h-4 text-primary-400 transition-transform', expanded.transmission && 'rotate-180')} />
         </button>
         {expanded.transmission && (
-          <div className="px-5 pb-5 flex flex-wrap gap-2">
+          <div className="px-4 lg:px-0 pb-4 flex flex-wrap gap-2">
             {transmissionOptions.map((option) => (
               <button
                 key={option.value}
                 onClick={() => updateFilter('transmission', option.value)}
-                className={`px-4 py-2 rounded-lg text-sm transition-all ${
+                className={cn(
+                  'px-4 py-2 rounded-md text-sm transition-colors border',
                   filters.transmission === option.value
-                    ? 'bg-yellow-500/20 text-yellow-400 border border-yellow-500/40'
-                    : 'bg-white/5 text-gray-300 border border-white/5 hover:bg-white/10'
-                }`}
+                    ? 'bg-primary-900 text-white border-primary-900'
+                    : 'text-primary-600 border-primary-200 hover:border-primary-400'
+                )}
               >
                 {option.label}
               </button>
@@ -271,25 +197,26 @@ export const CarFiltersAdvanced: React.FC<CarFiltersAdvancedProps> = ({ filters,
       </div>
 
       {/* Fuel */}
-      <div className="border-b border-white/5">
+      <div className="border-t border-primary-100">
         <button
           onClick={() => toggle('fuel')}
-          className="w-full px-5 py-4 flex items-center justify-between hover:bg-white/5 transition-colors"
+          className="w-full px-4 lg:px-0 py-4 flex items-center justify-between hover:bg-primary-50 lg:hover:bg-transparent transition-colors"
         >
-          <span className="text-sm font-medium text-white">Топливо</span>
-          <ChevronDown className={`w-4 h-4 text-gray-400 transition-transform ${expanded.fuel ? 'rotate-180' : ''}`} />
+          <span className="text-sm font-medium text-primary-900">Топливо</span>
+          <ChevronDown className={cn('w-4 h-4 text-primary-400 transition-transform', expanded.fuel && 'rotate-180')} />
         </button>
         {expanded.fuel && (
-          <div className="px-5 pb-5 flex flex-wrap gap-2">
+          <div className="px-4 lg:px-0 pb-4 flex flex-wrap gap-2">
             {fuelOptions.map((option) => (
               <button
                 key={option.value}
                 onClick={() => updateFilter('fuel', option.value)}
-                className={`px-4 py-2 rounded-lg text-sm transition-all ${
+                className={cn(
+                  'px-4 py-2 rounded-md text-sm transition-colors border',
                   filters.fuel === option.value
-                    ? 'bg-yellow-500/20 text-yellow-400 border border-yellow-500/40'
-                    : 'bg-white/5 text-gray-300 border border-white/5 hover:bg-white/10'
-                }`}
+                    ? 'bg-primary-900 text-white border-primary-900'
+                    : 'text-primary-600 border-primary-200 hover:border-primary-400'
+                )}
               >
                 {option.label}
               </button>
@@ -298,12 +225,22 @@ export const CarFiltersAdvanced: React.FC<CarFiltersAdvancedProps> = ({ filters,
         )}
       </div>
 
+      {/* Reset */}
+      <div className="border-t border-primary-100 px-4 lg:px-0 py-4">
+        <button
+          onClick={handleReset}
+          className="text-sm text-primary-500 hover:text-primary-900 transition-colors"
+        >
+          Сбросить фильтры
+        </button>
+      </div>
+
       {/* Apply Button - mobile only */}
       {onClose && (
-        <div className="p-5">
+        <div className="p-4 border-t border-primary-100">
           <button
             onClick={onClose}
-            className="w-full bg-yellow-500 hover:bg-yellow-600 text-black py-3 rounded-xl text-sm font-semibold transition-colors"
+            className="w-full bg-primary-900 text-white py-3 rounded-md text-sm font-medium hover:bg-primary-800 transition-colors"
           >
             Показать результаты
           </button>

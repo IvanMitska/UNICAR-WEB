@@ -10,11 +10,11 @@ interface CarGridProps {
 export const CarGrid: React.FC<CarGridProps> = ({ cars, showRentalPrice = false }) => {
   if (cars.length === 0) {
     return (
-      <div className="glass-effect rounded-2xl p-12 text-center border border-dark-800/50">
-        <p className="text-gray-400 text-lg">
+      <div className="bg-primary-50 rounded-lg p-12 text-center">
+        <p className="text-primary-600 text-lg">
           По вашему запросу автомобилей не найдено
         </p>
-        <p className="text-gray-500 mt-2">
+        <p className="text-primary-400 mt-2 text-sm">
           Попробуйте изменить параметры поиска
         </p>
       </div>
@@ -22,7 +22,7 @@ export const CarGrid: React.FC<CarGridProps> = ({ cars, showRentalPrice = false 
   }
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+    <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
       {cars.map((car, index) => (
         <CarCard key={car.id} car={car} index={index} showRentalPrice={showRentalPrice} />
       ))}

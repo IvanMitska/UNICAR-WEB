@@ -1,26 +1,32 @@
 import React from 'react';
 import { cn } from '../../utils/cn';
-import { ShibaLogo } from './ShibaLogo';
 
 interface LogoProps {
   className?: string;
-  size?: 'sm' | 'md' | 'lg';
+  size?: 'sm' | 'md' | 'lg' | 'xl';
+  variant?: 'dark' | 'light';
 }
 
-export const Logo: React.FC<LogoProps> = ({ className, size = 'md' }) => {
-  const textSizes = {
-    sm: 'text-xl',
-    md: 'text-2xl',
-    lg: 'text-3xl',
+export const Logo: React.FC<LogoProps> = ({
+  className,
+  size = 'md',
+  variant = 'dark'
+}) => {
+  const sizes = {
+    sm: 'text-lg tracking-[0.2em]',
+    md: 'text-xl tracking-[0.25em]',
+    lg: 'text-2xl tracking-[0.3em]',
+    xl: 'text-3xl tracking-[0.35em]',
+  };
+
+  const colors = {
+    dark: 'text-primary-900',
+    light: 'text-white',
   };
 
   return (
-    <div className={cn('flex items-center gap-3', className)}>
-      <ShibaLogo size={size} />
-      <div className={cn('font-display font-bold tracking-wider', textSizes[size])}>
-        <span className="text-white">SHIBA</span>
-        <span className="text-yellow-500">CARS</span>
-      </div>
+    <div className={cn('font-medium', sizes[size], colors[variant], className)}>
+      UNICAR
     </div>
   );
 };

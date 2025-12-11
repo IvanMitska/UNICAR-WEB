@@ -1,65 +1,34 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Button } from '../ui/Button';
-import { Phone, ArrowRight, Sparkles } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 
 export const CTA: React.FC = () => {
   return (
-    <section className="py-16 lg:py-24 bg-black relative overflow-hidden">
-      <div className="absolute inset-0 bg-gradient-to-r from-yellow-600/5 via-transparent to-yellow-600/5 pointer-events-none"></div>
-
-      <div className="container mx-auto px-4 relative z-10">
-        <div className="max-w-4xl mx-auto text-center">
-          <div className="inline-block mb-6">
-            <Sparkles className="w-12 h-12 text-yellow-500 mx-auto mb-4" />
-          </div>
-
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-6 leading-tight">
-            <span className="block sm:inline text-white">Готовы арендовать </span>
-            <span className="block sm:inline text-yellow-500">автомобиль?</span>
+    <section className="py-20 lg:py-32 bg-primary-900">
+      <div className="container mx-auto px-6">
+        <div className="max-w-3xl mx-auto text-center">
+          <h2 className="text-3xl lg:text-5xl font-medium text-white mb-6">
+            Готовы начать?
           </h2>
-          <p className="text-lg sm:text-xl text-gray-400 mb-10 max-w-2xl mx-auto">
-            Выберите идеальный автомобиль для ваших потребностей прямо сейчас
+          <p className="text-lg text-primary-300 mb-10 max-w-xl mx-auto">
+            Выберите автомобиль и отправляйтесь в путь уже сегодня
           </p>
 
-          <div className="flex flex-col sm:flex-row gap-4 justify-center mb-16">
-            <Link to="/cars">
-              <Button
-                size="lg"
-                className="bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-black px-6 sm:px-8 py-3 sm:py-4 rounded-xl font-semibold shadow-lg shadow-yellow-500/30 transition-colors duration-300"
-              >
-                Выбрать автомобиль
-                <ArrowRight className="w-5 h-5 ml-2" />
-              </Button>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <Link
+              to="/cars"
+              className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-white text-primary-900 rounded-md font-medium hover:bg-primary-100 transition-colors"
+            >
+              Смотреть автомобили
+              <ArrowRight className="w-5 h-5" />
             </Link>
 
-            <a href="tel:+74951234567">
-              <Button
-                size="lg"
-                className="bg-white/5 border border-white/20 text-white hover:bg-white/10 px-6 sm:px-8 py-3 sm:py-4 rounded-xl font-semibold transition-colors duration-300"
-              >
-                <Phone className="w-5 h-5 mr-2" />
-                Позвонить нам
-              </Button>
+            <a
+              href="tel:+66959657805"
+              className="inline-flex items-center justify-center px-8 py-4 border border-white/30 text-white rounded-md font-medium hover:bg-white/10 transition-colors"
+            >
+              +66 95-965-7805
             </a>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-8">
-            {[
-              { value: 'От 2500₽', label: 'в день' },
-              { value: '15 минут', label: 'на оформление' },
-              { value: '0₽', label: 'скрытых платежей' }
-            ].map((stat, index) => (
-              <div
-                key={index}
-                className="bg-white/5 rounded-2xl p-4 sm:p-6 border border-dark-800/50 hover:border-yellow-500/30 transition-colors duration-300"
-              >
-                <div className="text-2xl sm:text-3xl font-bold mb-2 text-yellow-500">
-                  {stat.value}
-                </div>
-                <div className="text-gray-400">{stat.label}</div>
-              </div>
-            ))}
           </div>
         </div>
       </div>

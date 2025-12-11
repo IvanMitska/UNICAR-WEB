@@ -1,7 +1,7 @@
 import React, { useState, useMemo, useEffect, useCallback, useRef } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { SlidersHorizontal, ChevronDown, Check } from 'lucide-react';
+import { SlidersHorizontal, ChevronDown, Check, X } from 'lucide-react';
 import { motorcycles } from '../data/motorcycles';
 import { MotorcycleFiltersAdvanced } from '../components/sections/MotorcycleFiltersAdvanced';
 import { MotorcycleGrid } from '../components/sections/MotorcycleGrid';
@@ -54,7 +54,6 @@ export const MotorcyclesPage: React.FC = () => {
     setIsSortOpen(false);
   }, []);
 
-  // Close sort dropdown on outside click
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
       if (sortRef.current && !sortRef.current.contains(e.target as Node)) {
@@ -64,6 +63,17 @@ export const MotorcyclesPage: React.FC = () => {
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
+
+  const getCategoryName = (cat: string) => {
+    const names: Record<string, string> = {
+      scooter: 'Скутеры',
+      sport: 'Спортбайки',
+      touring: 'Туринги',
+      cruiser: 'Круизеры',
+      adventure: 'Адвенчер',
+    };
+    return names[cat] || cat;
+  };
 
   const filteredMotorcycles = useMemo(() => {
     let result = [...motorcycles];
@@ -115,43 +125,38 @@ export const MotorcyclesPage: React.FC = () => {
   }, [filters]);
 
   return (
-    <div className="bg-black min-h-screen pt-6 lg:pt-8">
-      <div className="container mx-auto px-4">
+    <div className="bg-white min-h-screen pt-20">
+      <div className="container mx-auto px-6">
+        {/* Header */}
+        <div className="py-8 lg:py-12 border-b border-primary-100 mb-8">
+          <h1 className="text-3xl lg:text-4xl font-medium text-primary-900 mb-2">
+            {filters.category ? getCategoryName(filters.category) : 'Мотоциклы'}
+          </h1>
+          <p className="text-primary-500">
+            {filteredMotorcycles.length} {filteredMotorcycles.length === 1 ? 'мотоцикл' :
+              filteredMotorcycles.length < 5 ? 'мотоцикла' : 'мотоциклов'} в наличии
+          </p>
+        </div>
+
         {/* Mobile Filter Button */}
         <div className="lg:hidden mb-6">
           <button
             onClick={() => setIsMobileFilterOpen(true)}
-            className="w-full bg-dark-900/50 backdrop-blur-xl border border-dark-800/50 rounded-xl px-4 py-3 flex items-center justify-between text-white hover:bg-dark-800/50 transition-colors"
+            className="w-full border border-primary-200 rounded-md px-4 py-3 flex items-center justify-between text-primary-900 hover:border-primary-400 transition-colors"
           >
             <div className="flex items-center gap-2">
-              <SlidersHorizontal className="w-5 h-5 text-yellow-500" />
+              <SlidersHorizontal className="w-5 h-5" />
               <span className="font-medium">Фильтры</span>
               {[filters.category, filters.brand, filters.transmission, filters.fuel].filter(v => v && v !== '').length > 0 && (
-                <span className="bg-yellow-500 text-black text-xs px-2 py-0.5 rounded-full font-semibold">
+                <span className="bg-primary-900 text-white text-xs px-2 py-0.5 rounded-full">
                   {[filters.category, filters.brand, filters.transmission, filters.fuel].filter(v => v && v !== '').length}
                 </span>
               )}
             </div>
-            <span className="text-sm text-gray-400">Нажмите для открытия</span>
           </button>
         </div>
 
-        <h1 className="text-2xl lg:text-3xl font-bold text-white mb-6 lg:mb-8">
-          {filters.category ? (
-            <>
-              <span className="text-gray-400">Категория: </span>
-              <span className="text-yellow-400">
-                {filters.category === 'scooter' ? 'Скутеры' :
-                 filters.category === 'sport' ? 'Спортбайки' :
-                 filters.category === 'touring' ? 'Туринги' :
-                 filters.category === 'cruiser' ? 'Круизеры' :
-                 filters.category === 'adventure' ? 'Адвенчер' : filters.category}
-              </span>
-            </>
-          ) : 'Все мотоциклы'}
-        </h1>
-        
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 lg:gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
           {/* Desktop Filters */}
           <div className="hidden lg:block lg:col-span-1">
             <MotorcycleFiltersAdvanced filters={filters} setFilters={setFilters} />
@@ -164,7 +169,7 @@ export const MotorcyclesPage: React.FC = () => {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
-                className="lg:hidden fixed inset-0 z-50 bg-black/80 backdrop-blur-sm"
+                className="lg:hidden fixed inset-0 z-50 bg-black/50"
                 onClick={() => setIsMobileFilterOpen(false)}
               >
                 <motion.div
@@ -172,11 +177,17 @@ export const MotorcyclesPage: React.FC = () => {
                   animate={{ x: 0 }}
                   exit={{ x: '-100%' }}
                   transition={{ type: 'spring', damping: 30, stiffness: 300 }}
-                  className="absolute left-0 top-0 h-full w-[85%] max-w-sm overflow-y-auto"
+                  className="absolute left-0 top-0 h-full w-[85%] max-w-sm bg-white overflow-y-auto"
                   onClick={(e) => e.stopPropagation()}
                 >
-                  <MotorcycleFiltersAdvanced 
-                    filters={filters} 
+                  <div className="sticky top-0 bg-white border-b border-primary-100 px-4 py-4 flex items-center justify-between">
+                    <span className="font-medium text-primary-900">Фильтры</span>
+                    <button onClick={() => setIsMobileFilterOpen(false)} className="p-2 -mr-2">
+                      <X className="w-5 h-5 text-primary-500" />
+                    </button>
+                  </div>
+                  <MotorcycleFiltersAdvanced
+                    filters={filters}
                     setFilters={setFilters}
                     onClose={() => setIsMobileFilterOpen(false)}
                   />
@@ -184,21 +195,17 @@ export const MotorcyclesPage: React.FC = () => {
               </motion.div>
             )}
           </AnimatePresence>
-          
-          <div className="lg:col-span-3">
-            <div className="mb-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-              <p className="text-gray-400">
-                Найдено: <span className="font-semibold text-white">{filteredMotorcycles.length}</span> мотоциклов
-              </p>
 
-              {/* Custom Sort Dropdown */}
+          <div className="lg:col-span-3">
+            {/* Sort */}
+            <div className="mb-6 flex justify-end">
               <div ref={sortRef} className="relative">
                 <button
                   onClick={() => setIsSortOpen(!isSortOpen)}
-                  className="w-full sm:w-auto px-4 py-2.5 bg-black/20 backdrop-blur-xl border border-white/10 text-white rounded-xl flex items-center justify-between gap-8 hover:bg-white/5 transition-colors"
+                  className="px-4 py-2.5 border border-primary-200 text-primary-900 rounded-md flex items-center gap-3 hover:border-primary-400 transition-colors"
                 >
                   <span className="text-sm">{sortOptions.find(o => o.value === filters.sortBy)?.label}</span>
-                  <ChevronDown className={`w-4 h-4 text-gray-400 transition-transform ${isSortOpen ? 'rotate-180' : ''}`} />
+                  <ChevronDown className={`w-4 h-4 text-primary-400 transition-transform ${isSortOpen ? 'rotate-180' : ''}`} />
                 </button>
 
                 <AnimatePresence>
@@ -208,7 +215,7 @@ export const MotorcyclesPage: React.FC = () => {
                       animate={{ opacity: 1, y: 0 }}
                       exit={{ opacity: 0, y: -10 }}
                       transition={{ duration: 0.15 }}
-                      className="absolute right-0 mt-2 w-full sm:w-56 bg-black/90 backdrop-blur-xl border border-white/10 rounded-xl overflow-hidden z-50 shadow-xl"
+                      className="absolute right-0 mt-2 w-56 bg-white border border-primary-200 rounded-md overflow-hidden z-50 shadow-soft-lg"
                     >
                       {sortOptions.map((option) => (
                         <button
@@ -216,8 +223,8 @@ export const MotorcyclesPage: React.FC = () => {
                           onClick={() => handleSortChange(option.value)}
                           className={`w-full px-4 py-3 text-left text-sm flex items-center justify-between transition-colors ${
                             filters.sortBy === option.value
-                              ? 'bg-yellow-500/20 text-yellow-400'
-                              : 'text-gray-300 hover:bg-white/5 hover:text-white'
+                              ? 'bg-primary-50 text-primary-900'
+                              : 'text-primary-600 hover:bg-primary-50'
                           }`}
                         >
                           {option.label}
@@ -231,7 +238,7 @@ export const MotorcyclesPage: React.FC = () => {
                 </AnimatePresence>
               </div>
             </div>
-            
+
             <MotorcycleGrid motorcycles={filteredMotorcycles} showRentalPrice={true} />
           </div>
         </div>
