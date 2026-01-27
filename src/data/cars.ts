@@ -1,8 +1,5 @@
 import type { Car } from '../types/index';
 
-// Placeholder image for cars without photos yet
-const PLACEHOLDER = '/images/cars/placeholder.jpg';
-
 export const cars: Car[] = [
   // ============================================================================
   // PREMIUM / SPORT CLASS
