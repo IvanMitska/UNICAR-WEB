@@ -142,6 +142,7 @@ export const BookingForm: React.FC = () => {
   const onSubmit = async (data: CustomerFormData) => {
     if (!selectedCar) return;
 
+    console.log('BookingForm: onSubmit called with data:', data);
     setIsSubmitting(true);
     setSubmitError(null);
 
@@ -157,12 +158,12 @@ export const BookingForm: React.FC = () => {
         };
       });
 
-      // Get vehicle ID (extract numeric ID if present, or use string ID)
-      const vehicleId = parseInt(selectedCar.id) || 0;
+      // Get vehicle ID - try to parse as number, fallback to string-based ID
+      const vehicleId = parseInt(selectedCar.id) || selectedCar.id;
+      console.log('BookingForm: vehicleId =', vehicleId, 'from selectedCar.id =', selectedCar.id);
 
-      // Submit to API
-      const response = await carsApi.createBooking({
-        vehicleId: vehicleId,
+      const bookingData = {
+        vehicleId: typeof vehicleId === 'number' ? vehicleId : parseInt(vehicleId) || 1,
         customerFirstName: data.firstName,
         customerLastName: data.lastName,
         customerEmail: data.email,
@@ -176,7 +177,13 @@ export const BookingForm: React.FC = () => {
         returnLocation: locations.return,
         additionalServices: additionalServicesData,
         totalPrice: calculateTotal,
-      });
+      };
+
+      console.log('BookingForm: sending booking data:', bookingData);
+
+      // Submit to API
+      const response = await carsApi.createBooking(bookingData);
+      console.log('BookingForm: API response:', response);
 
       // Save customer info to store
       setCustomer({
@@ -572,6 +579,22 @@ export const BookingForm: React.FC = () => {
                   <div className="bg-red-50 border border-red-200 rounded-lg p-4 flex items-start gap-3">
                     <AlertCircle className="w-5 h-5 text-red-500 flex-shrink-0 mt-0.5" />
                     <p className="text-sm text-red-800">{submitError}</p>
+                  </div>
+                )}
+
+                {/* Show validation errors from step 3 */}
+                {Object.keys(errors).length > 0 && (
+                  <div className="bg-red-50 border border-red-200 rounded-lg p-4">
+                    <p className="text-sm text-red-800 font-medium mb-2">Пожалуйста, заполните все поля на шаге 3:</p>
+                    <ul className="text-sm text-red-700 list-disc list-inside">
+                      {errors.firstName && <li>{errors.firstName.message}</li>}
+                      {errors.lastName && <li>{errors.lastName.message}</li>}
+                      {errors.email && <li>{errors.email.message}</li>}
+                      {errors.phone && <li>{errors.phone.message}</li>}
+                      {errors.birthDate && <li>{errors.birthDate.message}</li>}
+                      {errors.licenseNumber && <li>{errors.licenseNumber.message}</li>}
+                      {errors.licenseDate && <li>{errors.licenseDate.message}</li>}
+                    </ul>
                   </div>
                 )}
               </div>
