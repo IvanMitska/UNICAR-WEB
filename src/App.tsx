@@ -53,6 +53,8 @@ function App() {
             <Route path="services" element={<ServicesPage />} />
             <Route path="profile" element={<ProfilePage />} />
             <Route path="favorites" element={<Navigate to="/profile" replace />} />
+            <Route path="buy" element={<Navigate to="/cars" replace />} />
+            <Route path="about" element={<Navigate to="/" replace />} />
           </Route>
         </Routes>
       </Suspense>

@@ -1,54 +1,48 @@
 import React, { useState, useMemo, useEffect, useCallback, useRef } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { CarFiltersAdvanced } from '../components/sections/CarFiltersAdvanced';
 import { CarGrid } from '../components/sections/CarGrid';
 import { cars } from '../data/cars';
-import { SlidersHorizontal, ChevronDown, Check, X } from 'lucide-react';
+import { ChevronDown, Check } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { cn } from '../utils/cn';
 
 const sortOptions = [
-  { value: 'price-asc', label: 'Сначала дешевле' },
-  { value: 'price-desc', label: 'Сначала дороже' },
-  { value: 'rating', label: 'По рейтингу' },
-  { value: 'popular', label: 'По популярности' },
+  { value: 'price-asc', label: 'Price: Low to High' },
+  { value: 'price-desc', label: 'Price: High to Low' },
+  { value: 'rating', label: 'Top Rated' },
+  { value: 'popular', label: 'Most Popular' },
+];
+
+const categoryTabs = [
+  { value: '', label: 'All' },
+  { value: 'premium', label: 'Luxury Cars' },
+  { value: 'suv', label: 'Luxury SUVs' },
+  { value: 'sport', label: 'Sports Cars' },
 ];
 
 export const CarsPage: React.FC = () => {
-  const [searchParams] = useSearchParams();
-  const categoryFromUrl = searchParams.get('category');
-  const [isMobileFilterOpen, setIsMobileFilterOpen] = useState(false);
+  const [searchParams, setSearchParams] = useSearchParams();
+  const categoryFromUrl = searchParams.get('category') || '';
   const [isSortOpen, setIsSortOpen] = useState(false);
   const sortRef = useRef<HTMLDivElement>(null);
 
   const [filters, setFilters] = useState({
-    category: categoryFromUrl || '',
-    priceMin: 0,
-    priceMax: 20000,
-    transmission: '',
-    fuel: '',
-    searchQuery: '',
+    category: categoryFromUrl,
     sortBy: 'price-asc',
-    brand: '',
-    year: { min: 2015, max: 2024 },
-    seats: 0,
   });
 
   useEffect(() => {
-    if (categoryFromUrl) {
-      setFilters(prev => ({ ...prev, category: categoryFromUrl }));
-    }
+    setFilters(prev => ({ ...prev, category: categoryFromUrl }));
   }, [categoryFromUrl]);
 
-  useEffect(() => {
-    if (isMobileFilterOpen) {
-      document.body.style.overflow = 'hidden';
+  const handleCategoryChange = useCallback((category: string) => {
+    setFilters(prev => ({ ...prev, category }));
+    if (category) {
+      setSearchParams({ category });
     } else {
-      document.body.style.overflow = '';
+      setSearchParams({});
     }
-    return () => {
-      document.body.style.overflow = '';
-    };
-  }, [isMobileFilterOpen]);
+  }, [setSearchParams]);
 
   const handleSortChange = useCallback((value: string) => {
     setFilters(prev => ({ ...prev, sortBy: value }));
@@ -65,189 +59,127 @@ export const CarsPage: React.FC = () => {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  const handleMobileFilterOpen = useCallback(() => {
-    setIsMobileFilterOpen(true);
-  }, []);
-
-  const handleMobileFilterClose = useCallback(() => {
-    setIsMobileFilterOpen(false);
-  }, []);
-
   const filteredCars = useMemo(() => {
     let result = [...cars];
 
+    // Filter by category
     if (filters.category) {
       result = result.filter(car => car.category === filters.category);
     }
 
-    if (filters.transmission) {
-      result = result.filter(car => car.transmission === filters.transmission);
-    }
+    // Sort
+    const sortFns: Record<string, (a: typeof cars[0], b: typeof cars[0]) => number> = {
+      'price-asc': (a, b) => a.pricePerDay - b.pricePerDay,
+      'price-desc': (a, b) => b.pricePerDay - a.pricePerDay,
+      'rating': (a, b) => b.rating - a.rating,
+      'popular': (a, b) => b.reviews - a.reviews,
+    };
 
-    if (filters.fuel) {
-      result = result.filter(car => car.fuel === filters.fuel);
-    }
-
-    if (filters.searchQuery) {
-      const query = filters.searchQuery.toLowerCase();
-      result = result.filter(car =>
-        car.brand.toLowerCase().includes(query) ||
-        car.model.toLowerCase().includes(query)
-      );
-    }
-
-    result = result.filter(car =>
-      car.pricePerDay >= filters.priceMin && car.pricePerDay <= filters.priceMax
-    );
-
-    switch (filters.sortBy) {
-      case 'price-asc':
-        result.sort((a, b) => a.pricePerDay - b.pricePerDay);
-        break;
-      case 'price-desc':
-        result.sort((a, b) => b.pricePerDay - a.pricePerDay);
-        break;
-      case 'rating':
-        result.sort((a, b) => b.rating - a.rating);
-        break;
-      case 'popular':
-        result.sort((a, b) => b.reviews - a.reviews);
-        break;
-    }
+    const sortFn = sortFns[filters.sortBy];
+    if (sortFn) result.sort(sortFn);
 
     return result;
   }, [filters]);
 
-  const getCategoryName = (cat: string) => {
-    const names: Record<string, string> = {
-      suv: 'Внедорожники',
-      premium: 'Премиум',
-      business: 'Бизнес',
-      sport: 'Спорткары',
-      comfort: 'Комфорт',
-      electric: 'Электромобили',
-      economy: 'Эконом',
-    };
-    return names[cat] || cat;
-  };
-
   return (
-    <div className="bg-white min-h-screen pt-20">
+    <div className="bg-gray-50 min-h-screen pt-24">
       <div className="container mx-auto px-6">
         {/* Header */}
-        <div className="py-8 lg:py-12 border-b border-primary-100 mb-8">
-          <h1 className="text-3xl lg:text-4xl font-medium text-primary-900 mb-2">
-            {filters.category ? getCategoryName(filters.category) : 'Автомобили'}
-          </h1>
-          <p className="text-primary-500">
-            {filteredCars.length} {filteredCars.length === 1 ? 'автомобиль' :
-              filteredCars.length < 5 ? 'автомобиля' : 'автомобилей'} в наличии
+        <div className="py-10 lg:py-14 text-center">
+          <motion.h1
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="text-4xl lg:text-5xl font-light text-gray-900 mb-3"
+          >
+            Find Your Perfect Ride
+          </motion.h1>
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.1 }}
+            className="text-gray-400 text-lg"
+          >
+            Browse our collection of premium vehicles
+          </motion.p>
+        </div>
+
+        {/* Tabs and Sort */}
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pb-8 border-b border-gray-200">
+          {/* Category Tabs */}
+          <div className="flex flex-wrap justify-center gap-2">
+            {categoryTabs.map((tab) => (
+              <button
+                key={tab.value}
+                onClick={() => handleCategoryChange(tab.value)}
+                className={cn(
+                  "px-6 py-2.5 rounded-full text-sm font-medium transition-all duration-200",
+                  filters.category === tab.value
+                    ? "bg-gray-900 text-white"
+                    : "bg-white text-gray-600 hover:bg-gray-100 border border-gray-200"
+                )}
+              >
+                {tab.label}
+              </button>
+            ))}
+          </div>
+
+          {/* Sort Dropdown */}
+          <div ref={sortRef} className="relative">
+            <button
+              onClick={() => setIsSortOpen(!isSortOpen)}
+              className="flex items-center gap-2 px-4 py-2.5 bg-white border border-gray-200 rounded-full hover:border-gray-300 transition-colors"
+            >
+              <span className="text-sm text-gray-700">
+                {sortOptions.find(o => o.value === filters.sortBy)?.label}
+              </span>
+              <ChevronDown className={cn(
+                "w-4 h-4 text-gray-400 transition-transform",
+                isSortOpen && "rotate-180"
+              )} />
+            </button>
+
+            <AnimatePresence>
+              {isSortOpen && (
+                <motion.div
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                  transition={{ duration: 0.15 }}
+                  className="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-xl overflow-hidden z-50 shadow-lg"
+                >
+                  {sortOptions.map((option) => (
+                    <button
+                      key={option.value}
+                      onClick={() => handleSortChange(option.value)}
+                      className={cn(
+                        "w-full px-4 py-3 text-left text-sm flex items-center justify-between transition-colors",
+                        filters.sortBy === option.value
+                          ? "bg-gray-50 text-gray-900"
+                          : "text-gray-600 hover:bg-gray-50"
+                      )}
+                    >
+                      {option.label}
+                      {filters.sortBy === option.value && (
+                        <Check className="w-4 h-4" />
+                      )}
+                    </button>
+                  ))}
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
+        </div>
+
+        {/* Results count */}
+        <div className="py-6">
+          <p className="text-gray-400 text-sm">
+            {filteredCars.length} {filteredCars.length === 1 ? 'vehicle' : 'vehicles'} available
           </p>
         </div>
 
-        {/* Mobile Filter Button */}
-        <div className="lg:hidden mb-6">
-          <button
-            onClick={handleMobileFilterOpen}
-            className="w-full border border-primary-200 rounded-md px-4 py-3 flex items-center justify-between text-primary-900 hover:border-primary-400 transition-colors"
-          >
-            <div className="flex items-center gap-2">
-              <SlidersHorizontal className="w-5 h-5" />
-              <span className="font-medium">Фильтры</span>
-              {[filters.category, filters.brand, filters.transmission, filters.fuel].filter(v => v && v !== '').length > 0 && (
-                <span className="bg-primary-900 text-white text-xs px-2 py-0.5 rounded-full">
-                  {[filters.category, filters.brand, filters.transmission, filters.fuel].filter(v => v && v !== '').length}
-                </span>
-              )}
-            </div>
-          </button>
-        </div>
-
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
-          {/* Desktop Filters */}
-          <div className="hidden lg:block lg:col-span-1">
-            <CarFiltersAdvanced filters={filters} setFilters={setFilters} />
-          </div>
-
-          {/* Mobile Filters Modal */}
-          <AnimatePresence>
-            {isMobileFilterOpen && (
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                className="lg:hidden fixed inset-0 z-50 bg-black/50"
-                onClick={handleMobileFilterClose}
-              >
-                <motion.div
-                  initial={{ x: '-100%' }}
-                  animate={{ x: 0 }}
-                  exit={{ x: '-100%' }}
-                  transition={{ type: 'spring', damping: 30, stiffness: 300 }}
-                  className="absolute left-0 top-0 h-full w-[85%] max-w-sm bg-white overflow-y-auto"
-                  onClick={(e) => e.stopPropagation()}
-                >
-                  <div className="sticky top-0 bg-white border-b border-primary-100 px-4 py-4 flex items-center justify-between">
-                    <span className="font-medium text-primary-900">Фильтры</span>
-                    <button onClick={handleMobileFilterClose} className="p-2 -mr-2">
-                      <X className="w-5 h-5 text-primary-500" />
-                    </button>
-                  </div>
-                  <CarFiltersAdvanced
-                    filters={filters}
-                    setFilters={setFilters}
-                    onClose={handleMobileFilterClose}
-                  />
-                </motion.div>
-              </motion.div>
-            )}
-          </AnimatePresence>
-
-          <div className="lg:col-span-3">
-            {/* Sort */}
-            <div className="mb-6 flex justify-end">
-              <div ref={sortRef} className="relative">
-                <button
-                  onClick={() => setIsSortOpen(!isSortOpen)}
-                  className="px-4 py-2.5 border border-primary-200 text-primary-900 rounded-md flex items-center gap-3 hover:border-primary-400 transition-colors"
-                >
-                  <span className="text-sm">{sortOptions.find(o => o.value === filters.sortBy)?.label}</span>
-                  <ChevronDown className={`w-4 h-4 text-primary-400 transition-transform ${isSortOpen ? 'rotate-180' : ''}`} />
-                </button>
-
-                <AnimatePresence>
-                  {isSortOpen && (
-                    <motion.div
-                      initial={{ opacity: 0, y: -10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: -10 }}
-                      transition={{ duration: 0.15 }}
-                      className="absolute right-0 mt-2 w-56 bg-white border border-primary-200 rounded-md overflow-hidden z-50 shadow-soft-lg"
-                    >
-                      {sortOptions.map((option) => (
-                        <button
-                          key={option.value}
-                          onClick={() => handleSortChange(option.value)}
-                          className={`w-full px-4 py-3 text-left text-sm flex items-center justify-between transition-colors ${
-                            filters.sortBy === option.value
-                              ? 'bg-primary-50 text-primary-900'
-                              : 'text-primary-600 hover:bg-primary-50'
-                          }`}
-                        >
-                          {option.label}
-                          {filters.sortBy === option.value && (
-                            <Check className="w-4 h-4" />
-                          )}
-                        </button>
-                      ))}
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </div>
-            </div>
-
-            <CarGrid cars={filteredCars} showRentalPrice={true} />
-          </div>
+        {/* Car Grid - Full Width */}
+        <div className="pb-16">
+          <CarGrid cars={filteredCars} showRentalPrice={false} />
         </div>
       </div>
     </div>

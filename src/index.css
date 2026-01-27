@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+/* Шрифты загружаются в index.html с оптимизированным media="print" трюком */
 
 @tailwind base;
 @tailwind components;
@@ -111,6 +111,16 @@
   .scrollbar-minimal::-webkit-scrollbar-thumb:hover {
     background-color: rgba(0, 0, 0, 0.25);
   }
+
+  /* Hidden scrollbar for carousels */
+  .scrollbar-none {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+
+  .scrollbar-none::-webkit-scrollbar {
+    display: none;
+  }
 }
 
 @layer utilities {
@@ -132,6 +142,54 @@
 
   .animation-delay-500 {
     animation-delay: 500ms;
+  }
+
+  /* GPU-ускорение для анимаций */
+  .gpu-accelerated {
+    will-change: transform, opacity;
+    transform: translateZ(0);
+    backface-visibility: hidden;
+  }
+
+  /* Оптимизированный transform для hover эффектов */
+  .hover-lift {
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    will-change: transform;
+  }
+
+  .hover-lift:hover {
+    transform: translateY(-4px);
+  }
+
+  /* Оптимизация для изображений */
+  .img-loading {
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite;
+  }
+
+  @keyframes shimmer {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+  }
+
+  /* Contain для изоляции перерисовок */
+  .contain-layout {
+    contain: layout;
+  }
+
+  .contain-paint {
+    contain: paint;
+  }
+
+  .contain-strict {
+    contain: strict;
+  }
+
+  /* Content-visibility для отложенного рендеринга */
+  .content-auto {
+    content-visibility: auto;
+    contain-intrinsic-size: 0 500px;
   }
 }
 

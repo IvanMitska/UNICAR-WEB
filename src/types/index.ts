@@ -17,6 +17,10 @@ export interface Car {
   reviews: number;
   description: string;
   discount?: boolean;
+  color?: string;
+  licensePlate?: string;
+  longTermOnly?: boolean;
+  byRequest?: boolean;
   specifications: {
     engine: string;
     power: string;

@@ -1,11 +1,9 @@
-import React, { memo, useCallback } from 'react';
+import React, { memo } from 'react';
 import { Link } from 'react-router-dom';
-import { Heart } from 'lucide-react';
+import { motion } from 'framer-motion';
+import { Check } from 'lucide-react';
 import type { Car } from '../../types/index';
-import { formatPrice, calculateDays } from '../../utils/formatters';
-import { cn } from '../../utils/cn';
-import { useFavoritesStore } from '../../store/useFavoritesStore';
-import { useBookingStore } from '../../store/useBookingStore';
+import { formatPrice } from '../../utils/formatters';
 
 interface CarCardProps {
   car: Car;
@@ -13,87 +11,120 @@ interface CarCardProps {
   showRentalPrice?: boolean;
 }
 
-const CarCardComponent: React.FC<CarCardProps> = ({ car, showRentalPrice = false }) => {
-  const { toggleFavorite, isFavorite } = useFavoritesStore();
-  const { startDate, endDate } = useBookingStore();
-  const favorite = isFavorite(car.id);
+const getVehicleType = (car: Car): string => {
+  const typeMap: Record<string, string> = {
+    suv: 'Luxury SUV',
+    premium: 'Premium Sedan',
+    sport: 'Sports Car',
+    business: 'Business Class',
+    comfort: 'Comfort Sedan',
+    economy: 'Economy',
+  };
+  return typeMap[car.category] || 'Vehicle';
+};
 
-  const rentalDays = showRentalPrice && startDate && endDate ? calculateDays(new Date(startDate), new Date(endDate)) : 0;
-  const totalPrice = rentalDays > 0 ? car.pricePerDay * rentalDays : 0;
+const getTopFeatures = (car: Car): string[] => {
+  const features: string[] = [];
 
-  const handleFavoriteClick = useCallback((e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    toggleFavorite(car.id);
-  }, [car.id, toggleFavorite]);
+  if (car.fuel === 'electric') {
+    features.push('Zero Emissions');
+  } else if (car.fuel === 'hybrid') {
+    features.push('Hybrid Engine');
+  }
+
+  if (car.transmission === 'automatic') {
+    features.push('Automatic Transmission');
+  }
+
+  if (car.seats >= 5) {
+    features.push(`${car.seats} Seats`);
+  }
+
+  // Add from car features if needed
+  if (features.length < 3 && car.features.length > 0) {
+    const additionalFeatures = car.features.slice(0, 3 - features.length);
+    features.push(...additionalFeatures);
+  }
+
+  return features.slice(0, 3);
+};
+
+const CarCardComponent: React.FC<CarCardProps> = ({ car, index = 0 }) => {
+  const vehicleType = getVehicleType(car);
+  const topFeatures = getTopFeatures(car);
 
   return (
-    <Link to={`/cars/${car.id}`} className="block group">
-      <div className="relative">
-        {/* Image Container */}
-        <div className="aspect-[4/3] relative bg-primary-100 rounded-lg overflow-hidden">
-          <img
-            src={car.image}
-            alt={`${car.brand} ${car.model}`}
-            loading="lazy"
-            decoding="async"
-            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-          />
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-50px" }}
+      transition={{ duration: 0.4, delay: Math.min(index * 0.05, 0.15) }}
+    >
+      <Link to={`/cars/${car.id}`} className="block group h-full">
+        <div className="bg-white rounded-2xl border border-gray-100 hover:border-gray-200 hover:shadow-lg transition-all duration-300 overflow-hidden h-full">
+          <div className="flex flex-col sm:flex-row h-full">
+            {/* Left Side - Info */}
+            <div className="flex-1 p-6 flex flex-col justify-between min-h-[280px]">
+              <div>
+                {/* Car Name */}
+                <h3 className="text-xl font-semibold text-gray-900 mb-1 group-hover:text-gray-600 transition-colors">
+                  {car.brand} {car.model}
+                </h3>
 
-          {/* Favorite Button */}
-          <button
-            onClick={handleFavoriteClick}
-            className={cn(
-              "absolute top-4 right-4 p-2 rounded-full bg-white/90 backdrop-blur-sm transition-all",
-              favorite
-                ? "text-red-500"
-                : "text-primary-400 hover:text-primary-600"
-            )}
-          >
-            <Heart className={cn("w-5 h-5", favorite && "fill-current")} />
-          </button>
+                {/* Type + Year */}
+                <p className="text-sm text-gray-400 mb-4">
+                  {vehicleType} • {car.year}
+                </p>
 
-          {/* Unavailable overlay */}
-          {!car.available && (
-            <div className="absolute inset-0 bg-white/80 backdrop-blur-sm flex items-center justify-center">
-              <span className="text-primary-500 font-medium">Недоступен</span>
+                {/* Price */}
+                <div className="mb-4">
+                  <span className="text-2xl font-bold text-gray-900">
+                    {formatPrice(car.pricePerDay)}
+                  </span>
+                  <span className="text-gray-400 text-sm ml-1">/day</span>
+                </div>
+
+                {/* Features */}
+                <ul className="space-y-2">
+                  {topFeatures.map((feature, idx) => (
+                    <li key={idx} className="flex items-center gap-2 text-sm text-gray-600">
+                      <Check className="w-4 h-4 text-gray-900 flex-shrink-0" />
+                      <span>{feature}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+              {/* View Details Button */}
+              <button className="w-full sm:w-auto mt-6 px-6 py-3 bg-gray-900 text-white font-medium rounded-full hover:bg-gray-800 transition-colors text-center">
+                View Details
+              </button>
             </div>
-          )}
-        </div>
 
-        {/* Info */}
-        <div className="pt-4">
-          <div className="flex items-start justify-between gap-4">
-            <div>
-              <h3 className="text-lg font-medium text-primary-900">
-                {car.brand} {car.model}
-              </h3>
-              <p className="text-sm text-primary-500 mt-1">
-                {car.year} • {car.transmission === 'automatic' ? 'Автомат' : 'Механика'}
-              </p>
-            </div>
-            <div className="text-right">
-              <p className="text-lg font-medium text-primary-900">
-                {formatPrice(car.pricePerDay)}
-              </p>
-              <p className="text-sm text-primary-400">в день</p>
+            {/* Right Side - Image */}
+            <div className="sm:w-[45%] relative bg-gray-50 order-first sm:order-last">
+              <div className="aspect-[4/3] sm:aspect-auto sm:absolute sm:inset-0 relative overflow-hidden">
+                <img
+                  src={car.image}
+                  alt={`${car.brand} ${car.model}`}
+                  loading="lazy"
+                  decoding="async"
+                  fetchPriority={index < 3 ? "auto" : "low"}
+                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                />
+
+                {/* Unavailable overlay */}
+                {!car.available && (
+                  <div className="absolute inset-0 bg-white/90 backdrop-blur-sm flex items-center justify-center">
+                    <span className="text-gray-500 font-medium text-lg">Unavailable</span>
+                  </div>
+                )}
+              </div>
             </div>
           </div>
-
-          {/* Rental total if applicable */}
-          {rentalDays > 0 && (
-            <div className="mt-3 pt-3 border-t border-primary-100 flex items-center justify-between">
-              <span className="text-sm text-primary-500">
-                {rentalDays} {rentalDays === 1 ? 'день' : rentalDays < 5 ? 'дня' : 'дней'}
-              </span>
-              <span className="font-medium text-primary-900">
-                {formatPrice(totalPrice)}
-              </span>
-            </div>
-          )}
         </div>
-      </div>
-    </Link>
+      </Link>
+    </motion.div>
   );
 };
 

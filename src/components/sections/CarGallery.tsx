@@ -113,6 +113,8 @@ export const CarGallery: React.FC<CarGalleryProps> = ({ images, has3DModel = fal
                 <img
                   src={image}
                   alt={`Thumbnail ${index + 1}`}
+                  loading="lazy"
+                  decoding="async"
                   className="w-full h-full object-cover"
                 />
               </button>

@@ -2,7 +2,6 @@ import React, { useEffect, useState, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cars } from '../data/cars';
-import { Button } from '../components/ui/Button';
 import { CustomDatePicker } from '../components/ui/CustomDatePicker';
 import { CustomLocationSelector } from '../components/ui/CustomLocationSelector';
 import {
@@ -16,7 +15,9 @@ import {
   X,
   Shield,
   Phone,
-  MessageCircle
+  MessageCircle,
+  Check,
+  ArrowRight
 } from 'lucide-react';
 import { formatPrice, calculateDays } from '../utils/formatters';
 import { useFavoritesStore } from '../store/useFavoritesStore';
@@ -49,7 +50,6 @@ export const CarDetailsPage: React.FC = () => {
   // Gallery state
   const [currentImage, setCurrentImage] = useState(0);
   const [isFullscreen, setIsFullscreen] = useState(false);
-  const [imageAspect, setImageAspect] = useState<'landscape' | 'portrait' | 'square'>('landscape');
 
   // Pricing state
   const [activeTab, setActiveTab] = useState<PricingTab>('daily');
@@ -66,24 +66,6 @@ export const CarDetailsPage: React.FC = () => {
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [id]);
-
-  // Detect image aspect ratio
-  useEffect(() => {
-    if (car && car.images[currentImage]) {
-      const img = new Image();
-      img.onload = () => {
-        const ratio = img.width / img.height;
-        if (ratio > 1.2) {
-          setImageAspect('landscape');
-        } else if (ratio < 0.8) {
-          setImageAspect('portrait');
-        } else {
-          setImageAspect('square');
-        }
-      };
-      img.src = car.images[currentImage];
-    }
-  }, [car, currentImage]);
 
   const nextImage = useCallback(() => {
     if (car) {
@@ -105,9 +87,16 @@ export const CarDetailsPage: React.FC = () => {
 
   if (!car) {
     return (
-      <div className="container mx-auto px-4 py-16 text-center">
-        <h1 className="text-2xl font-bold mb-4">Автомобиль не найден</h1>
-        <Button onClick={() => navigate('/cars')}>Вернуться к каталогу</Button>
+      <div className="min-h-screen bg-white flex items-center justify-center">
+        <div className="text-center">
+          <h1 className="text-3xl font-light text-primary-900 mb-4">Автомобиль не найден</h1>
+          <button
+            onClick={() => navigate('/cars')}
+            className="inline-flex items-center gap-2 px-8 py-4 bg-primary-900 text-white rounded-full hover:bg-primary-800 transition-colors"
+          >
+            Вернуться к каталогу
+          </button>
+        </div>
       </div>
     );
   }
@@ -159,354 +148,526 @@ export const CarDetailsPage: React.FC = () => {
     .slice(0, 3);
 
   return (
-    <div className="bg-dark-950 min-h-screen">
-      {/* Back button - mobile only */}
-      <div className="lg:hidden fixed top-20 left-4 z-30">
-        <button
-          onClick={() => navigate(-1)}
-          className="p-2 bg-black/50 backdrop-blur-sm rounded-full text-white"
-        >
-          <ArrowLeft className="w-5 h-5" />
-        </button>
-      </div>
-
-      {/* Image Gallery - Carousel with side previews */}
-      <div className={cn(
-        "relative bg-dark-950 overflow-hidden transition-all duration-300",
-        // Mobile: always 60vh with object-cover | Desktop: adaptive based on aspect
-        "h-[60vh]",
-        "lg:h-auto",
-        imageAspect === 'portrait' ? "lg:h-[85vh]" : imageAspect === 'square' ? "lg:h-[70vh]" : "lg:h-[65vh]"
-      )}>
-        {/* Side images - previous (only for landscape) */}
-        {car.images.length > 1 && imageAspect === 'landscape' && (
-          <div
-            className="hidden lg:block absolute left-0 top-0 bottom-0 w-[12%] z-10 cursor-pointer overflow-hidden"
-            onClick={prevImage}
-          >
-            <img
-              src={car.images[(currentImage - 1 + car.images.length) % car.images.length]}
-              alt="Previous"
-              className="w-full h-full object-cover object-center opacity-50 hover:opacity-70 transition-opacity scale-110"
-            />
-            <div className="absolute inset-0 bg-gradient-to-r from-black/70 to-black/30" />
-          </div>
-        )}
-
-        {/* Main image - centered */}
-        <div className={cn(
-          "absolute inset-0 flex items-center justify-center",
-          imageAspect === 'landscape' && "lg:left-[12%] lg:right-[12%]"
-        )}>
-          <motion.img
-            key={currentImage}
-            initial={{ opacity: 0, scale: 0.98 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.3 }}
-            src={car.images[currentImage]}
-            alt={`${car.brand} ${car.model}`}
-            className={cn(
-              "cursor-pointer transition-all w-full h-full",
-              // Mobile: always object-cover to fill space
-              "object-cover",
-              // Desktop: adaptive based on aspect ratio
-              imageAspect === 'portrait' ? "lg:object-contain lg:w-auto lg:h-full" :
-              imageAspect === 'square' ? "lg:object-contain lg:w-auto lg:h-full" :
-              "lg:object-cover lg:object-center"
-            )}
-            onClick={() => setIsFullscreen(true)}
-          />
-        </div>
-
-        {/* Side images - next (only for landscape) */}
-        {car.images.length > 1 && imageAspect === 'landscape' && (
-          <div
-            className="hidden lg:block absolute right-0 top-0 bottom-0 w-[12%] z-10 cursor-pointer overflow-hidden"
-            onClick={nextImage}
-          >
-            <img
-              src={car.images[(currentImage + 1) % car.images.length]}
-              alt="Next"
-              className="w-full h-full object-cover object-center opacity-50 hover:opacity-70 transition-opacity scale-110"
-            />
-            <div className="absolute inset-0 bg-gradient-to-l from-black/70 to-black/30" />
-          </div>
-        )}
-
-        {/* Navigation arrows */}
-        {car.images.length > 1 && (
-          <>
-            <button
-              onClick={prevImage}
-              className={cn(
-                "absolute top-1/2 -translate-y-1/2 p-3 bg-black/50 hover:bg-black/70 backdrop-blur-sm rounded-full transition-colors z-20",
-                imageAspect === 'landscape' ? "left-4 lg:left-[14%]" : "left-4"
-              )}
+    <div className="bg-white min-h-screen">
+      {/* Hero Gallery Section */}
+      <section className="relative bg-primary-900 overflow-hidden">
+        {/* Main Image */}
+        <div className="relative h-[50vh] lg:h-[85vh] overflow-hidden">
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={currentImage}
+              initial={{ opacity: 0, scale: 1.05 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.7 }}
+              className="absolute inset-0"
             >
-              <ChevronLeft className="w-6 h-6 text-white" />
-            </button>
-            <button
-              onClick={nextImage}
-              className={cn(
-                "absolute top-1/2 -translate-y-1/2 p-3 bg-black/50 hover:bg-black/70 backdrop-blur-sm rounded-full transition-colors z-20",
-                imageAspect === 'landscape' ? "right-4 lg:right-[14%]" : "right-4"
-              )}
-            >
-              <ChevronRight className="w-6 h-6 text-white" />
-            </button>
-          </>
-        )}
+              <img
+                src={car.images[currentImage]}
+                alt={`${car.brand} ${car.model}`}
+                className="w-full h-full object-cover cursor-pointer"
+                onClick={() => setIsFullscreen(true)}
+              />
+              {/* Gradient Overlays - lighter on mobile */}
+              <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-black/20 lg:from-black/70" />
+              <div className="hidden lg:block absolute inset-0 bg-gradient-to-r from-black/40 via-transparent to-transparent" />
+            </motion.div>
+          </AnimatePresence>
 
-        {/* Image counter */}
-        <div className={cn(
-          "absolute bottom-4 px-3 py-1.5 bg-black/60 backdrop-blur-sm rounded-full text-white text-sm z-20",
-          imageAspect === 'landscape' ? "right-4 lg:right-[14%]" : "right-4"
-        )}>
-          {currentImage + 1} / {car.images.length}
-        </div>
-
-        {/* Specs bar at bottom - like Carloson */}
-        <div className="absolute bottom-0 left-0 right-0 z-20 bg-gradient-to-t from-black/80 to-transparent pt-12 pb-4">
-          <div className="container mx-auto px-4 flex items-center justify-between">
-            {/* Left side - will be filled by content below */}
-            <div />
-            {/* Right side - specs icons */}
-            <div className="hidden md:flex items-center gap-6 text-white/80 text-sm">
-              <div className="flex items-center gap-2">
-                <Users className="w-5 h-5" />
-                <span>{car.seats}</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <Settings className="w-5 h-5" />
-                <span>{car.transmission === 'automatic' ? 'Автомат' : 'Механика'}</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <Fuel className="w-5 h-5" />
-                <span>{fuelLabels[car.fuel]}</span>
-              </div>
-              {car.specifications?.power && (
-                <div className="flex items-center gap-2">
-                  <span>{car.specifications.power}</span>
-                </div>
-              )}
+          {/* Back Button */}
+          <motion.button
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: 0.3 }}
+            onClick={() => navigate(-1)}
+            className="absolute top-24 left-6 lg:left-12 z-20 flex items-center gap-2 text-white/80 hover:text-white transition-colors group"
+          >
+            <div className="w-10 h-10 rounded-full bg-white/10 backdrop-blur-md flex items-center justify-center group-hover:bg-white/20 transition-colors">
+              <ArrowLeft className="w-5 h-5" />
             </div>
-          </div>
-        </div>
-      </div>
+            <span className="hidden lg:block text-sm">Назад</span>
+          </motion.button>
 
-      {/* Content */}
-      <div className="container mx-auto px-4 py-8 max-w-6xl">
-        {/* Back button - desktop */}
-        <button
-          onClick={() => navigate(-1)}
-          className="hidden lg:flex items-center gap-2 text-gray-400 hover:text-yellow-500 mb-6 transition-colors text-sm group"
-        >
-          <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
-          Назад к каталогу
-        </button>
+          {/* Favorite Button */}
+          <motion.button
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: 0.3 }}
+            onClick={handleFavoriteClick}
+            className="absolute top-24 right-6 lg:right-12 z-20"
+          >
+            <div className={cn(
+              "w-12 h-12 rounded-full backdrop-blur-md flex items-center justify-center transition-all",
+              favorite
+                ? "bg-red-500 text-white"
+                : "bg-white/10 text-white hover:bg-white/20"
+            )}>
+              <Heart className={cn("w-5 h-5", favorite && "fill-current")} />
+            </div>
+          </motion.button>
 
-        {/* Main Glass Card */}
-        <div className="bg-white/[0.03] backdrop-blur-xl rounded-3xl border border-white/10 overflow-hidden">
-
-          {/* Header - Compact */}
-          <div className="p-4 md:p-8 border-b border-white/5">
-            <div className="flex items-center justify-between gap-3">
-              <div className="min-w-0">
-                <h1 className="text-2xl md:text-4xl font-bold text-white truncate">
-                  {car.brand} {car.model}
-                </h1>
-                <div className="flex items-center gap-3 text-sm mt-1">
-                  <span className="text-gray-500">{car.year}</span>
-                  <span className={cn(
-                    "px-2 py-0.5 rounded text-xs",
-                    car.available ? "bg-green-500/20 text-green-400" : "bg-red-500/20 text-red-400"
-                  )}>
-                    {car.available ? 'Доступен' : 'Занят'}
-                  </span>
-                </div>
-              </div>
+          {/* Navigation Arrows */}
+          {car.images.length > 1 && (
+            <>
               <button
-                onClick={handleFavoriteClick}
-                className={cn(
-                  "p-2.5 rounded-xl border transition-all flex-shrink-0",
-                  favorite
-                    ? "bg-yellow-500/20 border-yellow-500/50 text-yellow-500"
-                    : "bg-white/5 border-white/10 text-gray-500"
-                )}
+                onClick={prevImage}
+                className="absolute left-6 lg:left-12 top-1/2 -translate-y-1/2 z-20 w-12 h-12 lg:w-14 lg:h-14 rounded-full bg-white/10 backdrop-blur-md flex items-center justify-center text-white hover:bg-white/20 transition-all"
               >
-                <Heart className={cn("w-5 h-5", favorite && "fill-current")} />
+                <ChevronLeft className="w-5 h-5 lg:w-6 lg:h-6" />
               </button>
-            </div>
-          </div>
-
-          {/* Specs - Simple line on mobile */}
-          <div className="px-4 md:px-8 py-3 border-b border-white/5 flex items-center gap-4 text-sm text-gray-400 overflow-x-auto">
-            <span className="flex items-center gap-1.5 whitespace-nowrap">
-              <Users className="w-4 h-4 text-yellow-500" />
-              {car.seats}
-            </span>
-            <span className="text-white/20">•</span>
-            <span className="whitespace-nowrap">{car.transmission === 'automatic' ? 'Автомат' : 'Механика'}</span>
-            <span className="text-white/20">•</span>
-            <span className="whitespace-nowrap">{fuelLabels[car.fuel]}</span>
-            {car.specifications?.power && (
-              <>
-                <span className="text-white/20">•</span>
-                <span className="whitespace-nowrap">{car.specifications.power}</span>
-              </>
-            )}
-          </div>
-
-          {/* Pricing Section */}
-          <div className="p-4 md:p-8 border-b border-white/5">
-            {/* Pricing tabs - horizontal scroll on mobile */}
-            <div className="flex gap-2 mb-4 overflow-x-auto pb-2 -mx-1 px-1">
-              {pricingTabs.map((tab) => (
-                <button
-                  key={tab.id}
-                  onClick={() => setActiveTab(tab.id)}
-                  className={cn(
-                    "px-4 py-2 rounded-lg font-medium transition-all text-sm whitespace-nowrap",
-                    activeTab === tab.id
-                      ? "bg-yellow-500 text-black"
-                      : "bg-white/5 text-gray-400"
-                  )}
-                >
-                  {tab.label}
-                </button>
-              ))}
-            </div>
-
-            {/* Pricing tiers - simpler on mobile */}
-            <div className="space-y-2">
-              {pricingTiers[activeTab].map((tier, index) => (
-                <div
-                  key={index}
-                  className={cn(
-                    "flex items-center justify-between p-3 rounded-xl",
-                    index === 0
-                      ? "bg-yellow-500/10 border border-yellow-500/20"
-                      : "bg-white/5"
-                  )}
-                >
-                  <span className="text-sm text-gray-400">{tier.duration}</span>
-                  <span className="text-lg font-bold text-white">
-                    {formatPrice(tier.price)}
-                    <span className="text-xs font-normal text-gray-500 ml-1">
-                      {activeTab === 'daily' ? '/сут' : activeTab === 'monthly' ? '/мес' : ''}
-                    </span>
-                  </span>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Description & Features - Compact on mobile */}
-          {(car.description || (car.features && car.features.length > 0)) && (
-            <div className="p-4 md:p-8 border-b border-white/5">
-              {car.description && (
-                <p className="text-gray-400 text-sm leading-relaxed mb-4">{car.description}</p>
-              )}
-
-              {car.features && car.features.length > 0 && (
-                <div className="flex flex-wrap gap-1.5">
-                  {car.features.map((feature, index) => (
-                    <span
-                      key={index}
-                      className="px-2.5 py-1 bg-white/5 text-gray-400 rounded-md text-xs"
-                    >
-                      {feature}
-                    </span>
-                  ))}
-                </div>
-              )}
-            </div>
+              <button
+                onClick={nextImage}
+                className="absolute right-6 lg:right-12 top-1/2 -translate-y-1/2 z-20 w-12 h-12 lg:w-14 lg:h-14 rounded-full bg-white/10 backdrop-blur-md flex items-center justify-center text-white hover:bg-white/20 transition-all"
+              >
+                <ChevronRight className="w-5 h-5 lg:w-6 lg:h-6" />
+              </button>
+            </>
           )}
 
-          {/* Insurance Badge - Compact */}
-          <div className="mx-4 md:mx-8 my-4 flex items-center gap-3 p-3 bg-green-500/5 border border-green-500/20 rounded-xl">
-            <Shield className="w-5 h-5 text-green-400 flex-shrink-0" />
-            <span className="text-sm text-gray-300">Страховка КАСКО и ОСАГО включена</span>
-          </div>
+          {/* Desktop Bottom Info Bar - hidden on mobile */}
+          <div className="hidden lg:block absolute bottom-0 left-0 right-0 z-20">
+            <div className="container mx-auto px-6 lg:px-12 pb-8">
+              <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-6">
+                {/* Car Title */}
+                <motion.div
+                  initial={{ opacity: 0, y: 30 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.4 }}
+                >
+                  <p className="text-white/60 text-sm uppercase tracking-widest mb-2">
+                    {car.year} • {car.category === 'premium' ? 'Премиум' : car.category === 'sport' ? 'Спорткар' : car.category}
+                  </p>
+                  <h1 className="text-4xl lg:text-6xl font-light text-white">
+                    {car.brand} <span className="font-medium">{car.model}</span>
+                  </h1>
+                </motion.div>
 
-          {/* Booking Section */}
-          <div className="p-4 md:p-8 bg-white/[0.02]">
-            <div className="grid grid-cols-2 gap-3 mb-4">
-              <CustomDatePicker
-                value={startDate}
-                onChange={setStartDate}
-                label="Получение"
-                minDate={new Date()}
-              />
-              <CustomDatePicker
-                value={endDate}
-                onChange={setEndDate}
-                label="Возврат"
-                minDate={new Date(startDate)}
-              />
-              <CustomLocationSelector
-                value={pickupLocation}
-                onChange={setPickupLocation}
-                label="Откуда"
-                locations={locations}
-              />
-              <CustomLocationSelector
-                value={returnLocation}
-                onChange={setReturnLocation}
-                label="Куда"
-                locations={locations}
-              />
-            </div>
-
-            {/* Price Summary - Compact */}
-            <div className="flex items-center justify-between p-4 bg-yellow-500/10 rounded-xl border border-yellow-500/20 mb-4">
-              <div>
-                <div className="text-xs text-gray-400">{days} {days === 1 ? 'день' : days < 5 ? 'дня' : 'дней'}</div>
-                <div className="text-2xl font-bold text-yellow-500">{formatPrice(totalPrice)}</div>
+                {/* Specs Pills */}
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.5 }}
+                  className="flex flex-wrap gap-3"
+                >
+                  <div className="px-4 py-2 bg-white/10 backdrop-blur-md rounded-full flex items-center gap-2 text-white">
+                    <Users className="w-4 h-4" />
+                    <span className="text-sm">{car.seats} мест</span>
+                  </div>
+                  <div className="px-4 py-2 bg-white/10 backdrop-blur-md rounded-full flex items-center gap-2 text-white">
+                    <Settings className="w-4 h-4" />
+                    <span className="text-sm">{car.transmission === 'automatic' ? 'Автомат' : 'Механика'}</span>
+                  </div>
+                  <div className="px-4 py-2 bg-white/10 backdrop-blur-md rounded-full flex items-center gap-2 text-white">
+                    <Fuel className="w-4 h-4" />
+                    <span className="text-sm">{fuelLabels[car.fuel]}</span>
+                  </div>
+                  {car.specifications?.power && (
+                    <div className="px-4 py-2 bg-white/10 backdrop-blur-md rounded-full text-white">
+                      <span className="text-sm">{car.specifications.power}</span>
+                    </div>
+                  )}
+                </motion.div>
               </div>
-              <div className="text-right">
-                <div className="text-xs text-gray-400">за день</div>
-                <div className="text-lg text-white">{formatPrice(car.pricePerDay)}</div>
-              </div>
-            </div>
 
-            {/* Action buttons - Stack on mobile */}
-            <button
-              onClick={handleBooking}
-              disabled={!car.available}
-              className="w-full py-3.5 bg-yellow-500 hover:bg-yellow-400 text-black font-bold rounded-xl transition-all disabled:opacity-50 disabled:cursor-not-allowed mb-3"
-            >
-              {car.available ? 'Забронировать' : 'Недоступен'}
-            </button>
-
-            <div className="grid grid-cols-2 gap-3">
-              <button
-                onClick={() => window.open('tel:+66959651805')}
-                className="flex items-center justify-center gap-2 py-3 bg-white/5 border border-white/10 text-gray-300 rounded-xl transition-all"
-              >
-                <Phone className="w-4 h-4" />
-                <span className="text-sm">Позвонить</span>
-              </button>
-              <button
-                onClick={() => window.open('https://wa.me/66959651805')}
-                className="flex items-center justify-center gap-2 py-3 bg-green-500/10 border border-green-500/20 text-green-400 rounded-xl transition-all"
-              >
-                <MessageCircle className="w-4 h-4" />
-                <span className="text-sm">WhatsApp</span>
-              </button>
+              {/* Thumbnail Strip */}
+              {car.images.length > 1 && (
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.6 }}
+                  className="mt-8 flex gap-2 overflow-x-auto pb-2"
+                >
+                  {car.images.map((image, index) => (
+                    <button
+                      key={index}
+                      onClick={() => setCurrentImage(index)}
+                      className={cn(
+                        "flex-shrink-0 w-20 h-14 rounded-lg overflow-hidden transition-all",
+                        index === currentImage
+                          ? "ring-2 ring-white opacity-100"
+                          : "opacity-50 hover:opacity-80"
+                      )}
+                    >
+                      <img
+                        src={image}
+                        alt={`View ${index + 1}`}
+                        loading="lazy"
+                        decoding="async"
+                        className="w-full h-full object-cover"
+                      />
+                    </button>
+                  ))}
+                </motion.div>
+              )}
             </div>
           </div>
         </div>
 
-        {/* Similar cars */}
-        {similarCars.length > 0 && (
-          <div className="mt-12">
+        {/* Mobile Info Section - below image */}
+        <div className="lg:hidden bg-white px-6 py-6">
+          {/* Car Title */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.3 }}
+          >
+            <p className="text-primary-400 text-sm uppercase tracking-widest mb-2">
+              {car.year} • {car.category === 'premium' ? 'Премиум' : car.category === 'sport' ? 'Спорткар' : car.category}
+            </p>
+            <h1 className="text-3xl font-light text-primary-900 mb-4">
+              {car.brand} <span className="font-medium">{car.model}</span>
+            </h1>
+          </motion.div>
+
+          {/* Specs Pills */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.4 }}
+            className="flex flex-wrap gap-2 mb-6"
+          >
+            <div className="px-3 py-1.5 bg-primary-100 rounded-full flex items-center gap-2 text-primary-700">
+              <Users className="w-4 h-4" />
+              <span className="text-sm">{car.seats} мест</span>
+            </div>
+            <div className="px-3 py-1.5 bg-primary-100 rounded-full flex items-center gap-2 text-primary-700">
+              <Settings className="w-4 h-4" />
+              <span className="text-sm">{car.transmission === 'automatic' ? 'Автомат' : 'Механика'}</span>
+            </div>
+            <div className="px-3 py-1.5 bg-primary-100 rounded-full flex items-center gap-2 text-primary-700">
+              <Fuel className="w-4 h-4" />
+              <span className="text-sm">{fuelLabels[car.fuel]}</span>
+            </div>
+            {car.specifications?.power && (
+              <div className="px-3 py-1.5 bg-primary-100 rounded-full text-primary-700">
+                <span className="text-sm">{car.specifications.power}</span>
+              </div>
+            )}
+          </motion.div>
+
+          {/* Thumbnail Strip */}
+          {car.images.length > 1 && (
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.5 }}
+              className="flex gap-2 overflow-x-auto pb-2"
+            >
+              {car.images.map((image, index) => (
+                <button
+                  key={index}
+                  onClick={() => setCurrentImage(index)}
+                  className={cn(
+                    "flex-shrink-0 w-16 h-12 rounded-lg overflow-hidden transition-all border-2",
+                    index === currentImage
+                      ? "border-primary-900"
+                      : "border-transparent opacity-60"
+                  )}
+                >
+                  <img
+                    src={image}
+                    alt={`View ${index + 1}`}
+                    loading="lazy"
+                    decoding="async"
+                    className="w-full h-full object-cover"
+                  />
+                </button>
+              ))}
+            </motion.div>
+          )}
+        </div>
+      </section>
+
+      {/* Content Section */}
+      <section className="py-16 lg:py-24">
+        <div className="container mx-auto px-6 lg:px-12">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-12 lg:gap-16">
+            {/* Left Column - Details */}
+            <div className="lg:col-span-2 space-y-12">
+              {/* Price Banner */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                className="flex items-center justify-between p-6 bg-primary-50 rounded-2xl"
+              >
+                <div>
+                  <p className="text-primary-400 text-sm mb-1">Стоимость аренды от</p>
+                  <p className="text-4xl font-light text-primary-900">
+                    {formatPrice(car.pricePerDay)}
+                    <span className="text-lg text-primary-400 ml-2">/день</span>
+                  </p>
+                </div>
+                <div className={cn(
+                  "px-4 py-2 rounded-full text-sm font-medium",
+                  car.available
+                    ? "bg-green-100 text-green-700"
+                    : "bg-red-100 text-red-700"
+                )}>
+                  {car.available ? 'Доступен' : 'Забронирован'}
+                </div>
+              </motion.div>
+
+              {/* Description */}
+              {car.description && (
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                >
+                  <h2 className="text-2xl font-light text-primary-900 mb-4">Об автомобиле</h2>
+                  <p className="text-primary-500 leading-relaxed">{car.description}</p>
+                </motion.div>
+              )}
+
+              {/* Features */}
+              {car.features && car.features.length > 0 && (
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                >
+                  <h2 className="text-2xl font-light text-primary-900 mb-6">Комплектация</h2>
+                  <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                    {car.features.map((feature, index) => (
+                      <div
+                        key={index}
+                        className="flex items-center gap-3 p-4 bg-primary-50 rounded-xl"
+                      >
+                        <div className="w-8 h-8 rounded-full bg-primary-900 flex items-center justify-center">
+                          <Check className="w-4 h-4 text-white" />
+                        </div>
+                        <span className="text-primary-700 text-sm">{feature}</span>
+                      </div>
+                    ))}
+                  </div>
+                </motion.div>
+              )}
+
+              {/* Specifications */}
+              {car.specifications && (
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                >
+                  <h2 className="text-2xl font-light text-primary-900 mb-6">Характеристики</h2>
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+                    {car.specifications.engine && (
+                      <div className="text-center p-6 bg-primary-50 rounded-2xl">
+                        <p className="text-3xl font-light text-primary-900 mb-2">{car.specifications.engine}</p>
+                        <p className="text-primary-400 text-sm">Двигатель</p>
+                      </div>
+                    )}
+                    {car.specifications.power && (
+                      <div className="text-center p-6 bg-primary-50 rounded-2xl">
+                        <p className="text-3xl font-light text-primary-900 mb-2">{car.specifications.power}</p>
+                        <p className="text-primary-400 text-sm">Мощность</p>
+                      </div>
+                    )}
+                    {car.specifications.acceleration && (
+                      <div className="text-center p-6 bg-primary-50 rounded-2xl">
+                        <p className="text-3xl font-light text-primary-900 mb-2">{car.specifications.acceleration}</p>
+                        <p className="text-primary-400 text-sm">0-100 км/ч</p>
+                      </div>
+                    )}
+                    {car.specifications.topSpeed && (
+                      <div className="text-center p-6 bg-primary-50 rounded-2xl">
+                        <p className="text-3xl font-light text-primary-900 mb-2">{car.specifications.topSpeed}</p>
+                        <p className="text-primary-400 text-sm">Макс. скорость</p>
+                      </div>
+                    )}
+                  </div>
+                </motion.div>
+              )}
+
+              {/* Pricing Tiers */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+              >
+                <h2 className="text-2xl font-light text-primary-900 mb-6">Тарифы</h2>
+
+                {/* Tabs */}
+                <div className="flex gap-2 mb-6">
+                  {pricingTabs.map((tab) => (
+                    <button
+                      key={tab.id}
+                      onClick={() => setActiveTab(tab.id)}
+                      className={cn(
+                        "px-6 py-3 rounded-full text-sm font-medium transition-all",
+                        activeTab === tab.id
+                          ? "bg-primary-900 text-white"
+                          : "bg-primary-100 text-primary-600 hover:bg-primary-200"
+                      )}
+                    >
+                      {tab.label}
+                    </button>
+                  ))}
+                </div>
+
+                {/* Pricing Grid */}
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                  {pricingTiers[activeTab].map((tier, index) => (
+                    <div
+                      key={index}
+                      className={cn(
+                        "p-6 rounded-2xl border-2 transition-all",
+                        index === 0
+                          ? "border-primary-900 bg-primary-900 text-white"
+                          : "border-primary-200 bg-white hover:border-primary-400"
+                      )}
+                    >
+                      <p className={cn(
+                        "text-sm mb-2",
+                        index === 0 ? "text-white/70" : "text-primary-400"
+                      )}>
+                        {tier.duration}
+                      </p>
+                      <p className={cn(
+                        "text-3xl font-light",
+                        index === 0 ? "text-white" : "text-primary-900"
+                      )}>
+                        {formatPrice(tier.price)}
+                        <span className={cn(
+                          "text-sm ml-1",
+                          index === 0 ? "text-white/60" : "text-primary-400"
+                        )}>
+                          {activeTab === 'daily' ? '/день' : activeTab === 'monthly' ? '/мес' : ''}
+                        </span>
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              </motion.div>
+
+              {/* Insurance */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                className="flex items-center gap-4 p-6 bg-green-50 rounded-2xl border border-green-200"
+              >
+                <div className="w-14 h-14 rounded-full bg-green-100 flex items-center justify-center">
+                  <Shield className="w-7 h-7 text-green-600" />
+                </div>
+                <div>
+                  <h3 className="text-lg font-medium text-primary-900 mb-1">Полная страховка включена</h3>
+                  <p className="text-primary-500 text-sm">КАСКО и ОСАГО входят в стоимость аренды</p>
+                </div>
+              </motion.div>
+            </div>
+
+            {/* Right Column - Booking Card */}
+            <div className="lg:col-span-1">
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                className="sticky top-24 bg-white rounded-3xl border border-primary-200 shadow-xl overflow-hidden"
+              >
+                {/* Card Header */}
+                <div className="p-6 bg-primary-900 text-white">
+                  <p className="text-white/70 text-sm mb-1">Быстрое бронирование</p>
+                  <p className="text-3xl font-light">
+                    {formatPrice(car.pricePerDay)}
+                    <span className="text-lg text-white/60 ml-2">/день</span>
+                  </p>
+                </div>
+
+                {/* Booking Form */}
+                <div className="p-6 space-y-4">
+                  {/* Dates */}
+                  <div className="grid grid-cols-2 gap-3">
+                    <CustomDatePicker
+                      value={startDate}
+                      onChange={setStartDate}
+                      label="Получение"
+                      minDate={new Date()}
+                    />
+                    <CustomDatePicker
+                      value={endDate}
+                      onChange={setEndDate}
+                      label="Возврат"
+                      minDate={new Date(startDate)}
+                    />
+                  </div>
+
+                  {/* Locations */}
+                  <CustomLocationSelector
+                    value={pickupLocation}
+                    onChange={setPickupLocation}
+                    label="Место получения"
+                    locations={locations}
+                  />
+                  <CustomLocationSelector
+                    value={returnLocation}
+                    onChange={setReturnLocation}
+                    label="Место возврата"
+                    locations={locations}
+                  />
+
+                  {/* Price Summary */}
+                  <div className="pt-4 border-t border-primary-100">
+                    <div className="flex justify-between mb-2">
+                      <span className="text-primary-500">{formatPrice(car.pricePerDay)} × {days} дн.</span>
+                      <span className="text-primary-900">{formatPrice(totalPrice)}</span>
+                    </div>
+                    <div className="flex justify-between text-lg font-medium">
+                      <span className="text-primary-900">Итого</span>
+                      <span className="text-primary-900">{formatPrice(totalPrice)}</span>
+                    </div>
+                  </div>
+
+                  {/* Book Button */}
+                  <button
+                    onClick={handleBooking}
+                    disabled={!car.available}
+                    className="w-full py-4 bg-primary-900 text-white rounded-full font-medium text-lg hover:bg-primary-800 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 group"
+                  >
+                    <span>{car.available ? 'Забронировать' : 'Недоступен'}</span>
+                    {car.available && (
+                      <ArrowRight className="w-5 h-5 transition-transform group-hover:translate-x-1" />
+                    )}
+                  </button>
+
+                  {/* Contact Buttons */}
+                  <div className="grid grid-cols-2 gap-3">
+                    <a
+                      href="tel:+66959657805"
+                      className="flex items-center justify-center gap-2 py-3 border border-primary-200 text-primary-700 rounded-full hover:border-primary-400 transition-colors"
+                    >
+                      <Phone className="w-4 h-4" />
+                      <span className="text-sm">Позвонить</span>
+                    </a>
+                    <a
+                      href="https://wa.me/66959657805"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center justify-center gap-2 py-3 bg-green-500 text-white rounded-full hover:bg-green-600 transition-colors"
+                    >
+                      <MessageCircle className="w-4 h-4" />
+                      <span className="text-sm">WhatsApp</span>
+                    </a>
+                  </div>
+                </div>
+              </motion.div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Similar Cars */}
+      {similarCars.length > 0 && (
+        <section className="py-16 lg:py-24 bg-primary-50">
+          <div className="container mx-auto px-6 lg:px-12">
             <SimilarCars cars={similarCars} />
           </div>
-        )}
-      </div>
+        </section>
+      )}
 
-      {/* Fullscreen gallery */}
+      {/* Fullscreen Gallery */}
       <AnimatePresence>
         {isFullscreen && (
           <motion.div
@@ -516,20 +677,26 @@ export const CarDetailsPage: React.FC = () => {
             className="fixed inset-0 z-50 bg-black flex items-center justify-center"
             onClick={() => setIsFullscreen(false)}
           >
+            {/* Close Button */}
             <button
               onClick={() => setIsFullscreen(false)}
-              className="absolute top-4 right-4 p-2 text-white hover:text-gray-300 transition-colors z-10"
+              className="absolute top-6 right-6 w-12 h-12 rounded-full bg-white/10 backdrop-blur-md flex items-center justify-center text-white hover:bg-white/20 transition-colors z-10"
             >
-              <X className="w-8 h-8" />
+              <X className="w-6 h-6" />
             </button>
 
-            <img
+            {/* Main Image */}
+            <motion.img
+              key={currentImage}
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
               src={car.images[currentImage]}
               alt={`${car.brand} ${car.model}`}
-              className="max-w-full max-h-full object-contain"
+              className="max-w-[90vw] max-h-[90vh] object-contain"
               onClick={(e) => e.stopPropagation()}
             />
 
+            {/* Navigation */}
             {car.images.length > 1 && (
               <>
                 <button
@@ -537,24 +704,24 @@ export const CarDetailsPage: React.FC = () => {
                     e.stopPropagation();
                     prevImage();
                   }}
-                  className="absolute left-4 top-1/2 -translate-y-1/2 p-3 bg-white/20 hover:bg-white/30 rounded-full transition-colors"
+                  className="absolute left-6 top-1/2 -translate-y-1/2 w-14 h-14 rounded-full bg-white/10 backdrop-blur-md flex items-center justify-center text-white hover:bg-white/20 transition-colors"
                 >
-                  <ChevronLeft className="w-8 h-8 text-white" />
+                  <ChevronLeft className="w-6 h-6" />
                 </button>
                 <button
                   onClick={(e) => {
                     e.stopPropagation();
                     nextImage();
                   }}
-                  className="absolute right-4 top-1/2 -translate-y-1/2 p-3 bg-white/20 hover:bg-white/30 rounded-full transition-colors"
+                  className="absolute right-6 top-1/2 -translate-y-1/2 w-14 h-14 rounded-full bg-white/10 backdrop-blur-md flex items-center justify-center text-white hover:bg-white/20 transition-colors"
                 >
-                  <ChevronRight className="w-8 h-8 text-white" />
+                  <ChevronRight className="w-6 h-6" />
                 </button>
               </>
             )}
 
-            {/* Thumbnail strip in fullscreen */}
-            <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2">
+            {/* Thumbnails */}
+            <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex gap-2">
               {car.images.map((image, index) => (
                 <button
                   key={index}
@@ -563,19 +730,26 @@ export const CarDetailsPage: React.FC = () => {
                     setCurrentImage(index);
                   }}
                   className={cn(
-                    "w-16 h-12 rounded-lg overflow-hidden border-2 transition-all",
+                    "w-16 h-12 rounded-lg overflow-hidden transition-all",
                     index === currentImage
-                      ? "border-yellow-400"
-                      : "border-transparent opacity-50 hover:opacity-100"
+                      ? "ring-2 ring-white opacity-100"
+                      : "opacity-50 hover:opacity-80"
                   )}
                 >
                   <img
                     src={image}
                     alt={`Thumbnail ${index + 1}`}
+                    loading="lazy"
+                    decoding="async"
                     className="w-full h-full object-cover"
                   />
                 </button>
               ))}
+            </div>
+
+            {/* Counter */}
+            <div className="absolute top-6 left-6 px-4 py-2 bg-white/10 backdrop-blur-md rounded-full text-white text-sm">
+              {currentImage + 1} / {car.images.length}
             </div>
           </motion.div>
         )}

@@ -1,48 +1,72 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Logo } from '../ui/Logo';
+import { MessageCircle, Send, MapPin, Mail, Phone } from 'lucide-react';
 
 export const Footer: React.FC = () => {
   const currentYear = new Date().getFullYear();
 
   const links = {
     vehicles: [
-      { to: '/cars', label: 'Автомобили' },
-      { to: '/motorcycles', label: 'Мотоциклы' },
-      { to: '/cars?category=premium', label: 'Премиум' },
-      { to: '/cars?category=suv', label: 'Внедорожники' },
+      { to: '/cars', label: 'All Vehicles' },
+      { to: '/cars?category=premium', label: 'Premium Cars' },
+      { to: '/cars?category=suv', label: 'Luxury SUVs' },
+      { to: '/cars?category=sport', label: 'Sports Cars' },
     ],
     company: [
-      { to: '/services', label: 'Услуги' },
-      { to: '/terms', label: 'Условия аренды' },
-      { to: '/contacts', label: 'Контакты' },
+      { to: '/about', label: 'About Us' },
+      { to: '/how-it-works', label: 'How It Works' },
+      { to: '/contacts', label: 'Contact' },
+      { to: '/terms', label: 'Terms & Conditions' },
     ],
   };
 
+  const socials = [
+    { href: 'https://wa.me/66959657805', icon: MessageCircle, label: 'WhatsApp' },
+    { href: 'https://t.me/unicar_phuket', icon: Send, label: 'Telegram' },
+  ];
+
   return (
-    <footer className="bg-primary-950 text-white">
-      <div className="container mx-auto px-6 py-16">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
-          {/* Brand */}
-          <div className="lg:col-span-1">
+    <footer className="bg-black text-white">
+      {/* Main Footer */}
+      <div className="container mx-auto px-6 py-16 lg:py-20">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8">
+          {/* Brand Column */}
+          <div className="lg:col-span-4">
             <Logo size="lg" variant="light" className="mb-6" />
-            <p className="text-primary-400 text-sm leading-relaxed">
-              Премиум аренда автомобилей и мотоциклов на Пхукете.
-              Эксклюзивность, статус, простота.
+            <p className="text-white/50 text-sm leading-relaxed mb-8 max-w-sm">
+              Premium car rental service in Phuket. Experience luxury, comfort, and freedom on the island.
             </p>
+
+            {/* Social Links */}
+            <div className="flex gap-3">
+              {socials.map((social) => {
+                const Icon = social.icon;
+                return (
+                  <a
+                    key={social.label}
+                    href={social.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-10 h-10 rounded-full border border-white/20 flex items-center justify-center hover:bg-white hover:text-black transition-all duration-300"
+                    aria-label={social.label}
+                  >
+                    <Icon className="w-5 h-5" />
+                  </a>
+                );
+              })}
+            </div>
           </div>
 
-          {/* Vehicles */}
-          <div>
-            <h4 className="text-sm font-medium text-primary-300 uppercase tracking-wider mb-6">
-              Транспорт
-            </h4>
-            <nav className="space-y-4">
+          {/* Links Columns */}
+          <div className="lg:col-span-2">
+            <h4 className="text-white font-medium mb-6">Vehicles</h4>
+            <nav className="space-y-3">
               {links.vehicles.map((link) => (
                 <Link
                   key={link.to}
                   to={link.to}
-                  className="block text-primary-400 hover:text-white transition-colors text-sm"
+                  className="block text-white/50 hover:text-white transition-colors text-sm"
                 >
                   {link.label}
                 </Link>
@@ -50,17 +74,14 @@ export const Footer: React.FC = () => {
             </nav>
           </div>
 
-          {/* Company */}
-          <div>
-            <h4 className="text-sm font-medium text-primary-300 uppercase tracking-wider mb-6">
-              Компания
-            </h4>
-            <nav className="space-y-4">
+          <div className="lg:col-span-2">
+            <h4 className="text-white font-medium mb-6">Company</h4>
+            <nav className="space-y-3">
               {links.company.map((link) => (
                 <Link
                   key={link.to}
                   to={link.to}
-                  className="block text-primary-400 hover:text-white transition-colors text-sm"
+                  className="block text-white/50 hover:text-white transition-colors text-sm"
                 >
                   {link.label}
                 </Link>
@@ -68,49 +89,58 @@ export const Footer: React.FC = () => {
             </nav>
           </div>
 
-          {/* Contact */}
-          <div>
-            <h4 className="text-sm font-medium text-primary-300 uppercase tracking-wider mb-6">
-              Связаться
-            </h4>
-            <div className="space-y-4 text-sm">
+          {/* Contact Column */}
+          <div className="lg:col-span-4">
+            <h4 className="text-white font-medium mb-6">Get In Touch</h4>
+            <div className="space-y-4">
               <a
                 href="tel:+66959657805"
-                className="block text-white hover:text-primary-300 transition-colors font-medium"
+                className="flex items-center gap-3 text-white/50 hover:text-white transition-colors group"
               >
-                +66 95-965-7805
+                <div className="w-10 h-10 rounded-full border border-white/20 group-hover:bg-white group-hover:text-black flex items-center justify-center transition-all duration-300">
+                  <Phone className="w-4 h-4" />
+                </div>
+                <span className="text-sm">+66 95-965-7805</span>
               </a>
               <a
                 href="mailto:unicar@gmail.com"
-                className="block text-primary-400 hover:text-white transition-colors"
+                className="flex items-center gap-3 text-white/50 hover:text-white transition-colors group"
               >
-                unicar@gmail.com
+                <div className="w-10 h-10 rounded-full border border-white/20 group-hover:bg-white group-hover:text-black flex items-center justify-center transition-all duration-300">
+                  <Mail className="w-4 h-4" />
+                </div>
+                <span className="text-sm">unicar@gmail.com</span>
               </a>
-              <p className="text-primary-500">
-                Пхукет, Таиланд
-              </p>
+              <div className="flex items-center gap-3 text-white/50">
+                <div className="w-10 h-10 rounded-full border border-white/20 flex items-center justify-center">
+                  <MapPin className="w-4 h-4" />
+                </div>
+                <span className="text-sm">Phuket, Thailand</span>
+              </div>
             </div>
           </div>
         </div>
+      </div>
 
-        {/* Bottom */}
-        <div className="mt-16 pt-8 border-t border-primary-800">
+      {/* Bottom Bar */}
+      <div className="border-t border-white/10">
+        <div className="container mx-auto px-6 py-6">
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">
-            <p className="text-primary-500 text-sm">
-              © {currentYear} UNICAR. Все права защищены.
+            <p className="text-white/30 text-sm">
+              © {currentYear} UNICAR. All rights reserved.
             </p>
-            <div className="flex gap-8 text-sm">
+            <div className="flex gap-6 text-sm">
               <Link
                 to="/privacy"
-                className="text-primary-500 hover:text-white transition-colors"
+                className="text-white/30 hover:text-white transition-colors"
               >
-                Конфиденциальность
+                Privacy Policy
               </Link>
               <Link
                 to="/terms"
-                className="text-primary-500 hover:text-white transition-colors"
+                className="text-white/30 hover:text-white transition-colors"
               >
-                Условия
+                Terms of Service
               </Link>
             </div>
           </div>
