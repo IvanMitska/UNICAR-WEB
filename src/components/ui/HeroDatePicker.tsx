@@ -53,9 +53,9 @@ export const HeroDatePicker: React.FC<HeroDatePickerProps> = ({
   };
 
   const isDateDisabled = (date: Date) => {
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-    return isBefore(date, today);
+    const min = new Date(minDate);
+    min.setHours(0, 0, 0, 0);
+    return isBefore(date, min);
   };
 
   return (

@@ -3,7 +3,7 @@
  * Connects to UNICAR-Table CRM backend
  */
 
-import type { Car, Booking, Customer } from '../types'
+import type { Car } from '../types'
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001'
 
@@ -58,9 +58,12 @@ interface CreateBookingData {
 }
 
 class CarsApiError extends Error {
-  constructor(message: string, public status?: number) {
+  status?: number
+
+  constructor(message: string, status?: number) {
     super(message)
     this.name = 'CarsApiError'
+    this.status = status
   }
 }
 

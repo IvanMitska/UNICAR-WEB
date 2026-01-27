@@ -30,7 +30,6 @@ export const CarsPage: React.FC = () => {
 
   const [cars, setCars] = useState<Car[]>(staticCars);
   const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
 
   const [filters, setFilters] = useState({
     category: categoryFromUrl,
@@ -42,7 +41,6 @@ export const CarsPage: React.FC = () => {
     async function fetchCars() {
       try {
         setIsLoading(true);
-        setError(null);
         const apiCars = await carsApi.getCars();
         if (apiCars.length > 0) {
           setCars(apiCars);
