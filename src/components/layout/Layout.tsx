@@ -5,12 +5,17 @@ import { Footer } from './Footer';
 
 export const Layout: React.FC = () => {
   return (
-    <div className="min-h-screen flex flex-col bg-black">
-      <Header />
-      <main className="flex-grow bg-black">
-        <Outlet />
-      </main>
-      <Footer />
-    </div>
+    <>
+      {/* Black background for bottom overscroll */}
+      <div className="fixed inset-x-0 bottom-0 h-screen bg-black -z-10" />
+
+      <div className="min-h-screen flex flex-col relative z-0">
+        <Header />
+        <main className="flex-grow bg-white">
+          <Outlet />
+        </main>
+        <Footer />
+      </div>
+    </>
   );
 };

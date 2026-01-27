@@ -2,6 +2,7 @@ import React, { useState, memo, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Search } from 'lucide-react';
+import { HeroDatePicker } from '../ui/HeroDatePicker';
 
 const HeroSectionComponent: React.FC = () => {
   const navigate = useNavigate();
@@ -113,21 +114,20 @@ const HeroSectionComponent: React.FC = () => {
 
               {/* Pick-Up Date */}
               <div className="flex-1 relative flex items-center px-4 py-3.5 md:py-4 md:border-r border-gray-200 border-t md:border-t-0">
-                <input
-                  type="date"
+                <HeroDatePicker
                   value={pickupDate}
-                  onChange={(e) => setPickupDate(e.target.value)}
-                  className="w-full text-sm text-gray-900 placeholder:text-gray-400 focus:outline-none bg-transparent"
+                  onChange={setPickupDate}
+                  placeholder="Pick-Up Date"
                 />
               </div>
 
               {/* Drop-Off Date */}
               <div className="flex-1 relative flex items-center px-4 py-3.5 md:py-4 md:border-r border-gray-200 border-t md:border-t-0">
-                <input
-                  type="date"
+                <HeroDatePicker
                   value={dropoffDate}
-                  onChange={(e) => setDropoffDate(e.target.value)}
-                  className="w-full text-sm text-gray-900 placeholder:text-gray-400 focus:outline-none bg-transparent"
+                  onChange={setDropoffDate}
+                  placeholder="Drop-Off Date"
+                  minDate={pickupDate ? new Date(pickupDate) : new Date()}
                 />
               </div>
 

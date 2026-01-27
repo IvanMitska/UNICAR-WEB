@@ -27,7 +27,7 @@ export const Footer: React.FC = () => {
   ];
 
   return (
-    <footer className="bg-black text-white">
+    <footer className="bg-black text-white relative">
       {/* Main Footer */}
       <div className="container mx-auto px-6 py-16 lg:py-20">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8">
@@ -144,6 +144,23 @@ export const Footer: React.FC = () => {
               </Link>
             </div>
           </div>
+        </div>
+      </div>
+
+      {/* Credits */}
+      <div className="border-t border-white/10">
+        <div className="container mx-auto px-6 py-5">
+          <p className="text-center text-white/40 text-sm">
+            Designed & Developed by{' '}
+            <a
+              href="https://sintara.io/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-white/60 hover:text-white transition-colors"
+            >
+              Sintara
+            </a>
+          </p>
         </div>
       </div>
     </footer>

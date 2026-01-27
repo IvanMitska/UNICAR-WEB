@@ -28,6 +28,7 @@ const ContactsPage = lazy(() => import('./pages/ContactsPage').then(m => ({ defa
 const TermsPage = lazy(() => import('./pages/TermsPage').then(m => ({ default: m.TermsPage })));
 const ProfilePage = lazy(() => import('./pages/ProfilePage').then(m => ({ default: m.ProfilePage })));
 const ServicesPage = lazy(() => import('./pages/ServicesPage').then(m => ({ default: m.ServicesPage })));
+const BookingConfirmationPage = lazy(() => import('./pages/BookingConfirmationPage').then(m => ({ default: m.BookingConfirmationPage })));
 
 // Loading fallback component
 const PageLoader = () => (
@@ -48,6 +49,7 @@ function App() {
             <Route path="cars/:id" element={<CarDetailsPage />} />
             <Route path="motorcycles" element={<MotorcyclesPage />} />
             <Route path="booking" element={<BookingPage />} />
+            <Route path="booking/confirmation" element={<BookingConfirmationPage />} />
             <Route path="contacts" element={<ContactsPage />} />
             <Route path="terms" element={<TermsPage />} />
             <Route path="services" element={<ServicesPage />} />

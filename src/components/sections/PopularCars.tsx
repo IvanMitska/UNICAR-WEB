@@ -125,6 +125,7 @@ const PopularCarsComponent: React.FC = () => {
             style={{
               scrollSnapType: 'x mandatory',
               WebkitOverflowScrolling: 'touch',
+              scrollPaddingLeft: '24px',
             }}
           >
             {popularCars.map((car, index) => (

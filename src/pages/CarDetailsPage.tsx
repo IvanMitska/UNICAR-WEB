@@ -1,7 +1,9 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { cars } from '../data/cars';
+import { cars as staticCars } from '../data/cars';
+import { carsApi } from '../api/carsApi';
+import type { Car } from '../types';
 import { CustomDatePicker } from '../components/ui/CustomDatePicker';
 import { CustomLocationSelector } from '../components/ui/CustomLocationSelector';
 import {
@@ -17,7 +19,8 @@ import {
   Phone,
   MessageCircle,
   Check,
-  ArrowRight
+  ArrowRight,
+  Loader2
 } from 'lucide-react';
 import { formatPrice, calculateDays } from '../utils/formatters';
 import { useFavoritesStore } from '../store/useFavoritesStore';
@@ -47,6 +50,10 @@ export const CarDetailsPage: React.FC = () => {
   const { toggleFavorite, isFavorite } = useFavoritesStore();
   const { setSelectedCar, setDates, setLocations } = useBookingStore();
 
+  // Car data state
+  const [car, setCar] = useState<Car | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+
   // Gallery state
   const [currentImage, setCurrentImage] = useState(0);
   const [isFullscreen, setIsFullscreen] = useState(false);
@@ -60,8 +67,28 @@ export const CarDetailsPage: React.FC = () => {
   const [pickupLocation, setPickupLocation] = useState('Аэропорт Пхукета');
   const [returnLocation, setReturnLocation] = useState('Аэропорт Пхукета');
 
-  const car = cars.find(c => c.id === id);
   const favorite = car ? isFavorite(car.id) : false;
+
+  // Fetch car from API
+  useEffect(() => {
+    async function fetchCar() {
+      if (!id) return;
+
+      setIsLoading(true);
+      try {
+        const apiCar = await carsApi.getCarById(id);
+        setCar(apiCar);
+      } catch (err) {
+        console.warn('Failed to fetch car from API, using static data:', err);
+        // Fallback to static data
+        const staticCar = staticCars.find(c => c.id === id);
+        setCar(staticCar || null);
+      } finally {
+        setIsLoading(false);
+      }
+    }
+    fetchCar();
+  }, [id]);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -84,6 +111,17 @@ export const CarDetailsPage: React.FC = () => {
       toggleFavorite(car.id);
     }
   }, [car, toggleFavorite]);
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-white flex items-center justify-center pt-24">
+        <div className="text-center">
+          <Loader2 className="w-12 h-12 animate-spin text-primary-400 mx-auto mb-4" />
+          <p className="text-primary-500">Загрузка...</p>
+        </div>
+      </div>
+    );
+  }
 
   if (!car) {
     return (
@@ -143,7 +181,7 @@ export const CarDetailsPage: React.FC = () => {
     navigate('/booking');
   };
 
-  const similarCars = cars
+  const similarCars = staticCars
     .filter(c => c.category === car.category && c.id !== car.id)
     .slice(0, 3);
 

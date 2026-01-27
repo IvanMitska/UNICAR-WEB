@@ -1,8 +1,10 @@
 import React, { useState, useMemo, useEffect, useCallback, useRef } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { CarGrid } from '../components/sections/CarGrid';
-import { cars } from '../data/cars';
-import { ChevronDown, Check } from 'lucide-react';
+import { cars as staticCars } from '../data/cars';
+import { carsApi } from '../api/carsApi';
+import type { Car } from '../types';
+import { ChevronDown, Check, Loader2 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '../utils/cn';
 
@@ -26,10 +28,34 @@ export const CarsPage: React.FC = () => {
   const [isSortOpen, setIsSortOpen] = useState(false);
   const sortRef = useRef<HTMLDivElement>(null);
 
+  const [cars, setCars] = useState<Car[]>(staticCars);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
   const [filters, setFilters] = useState({
     category: categoryFromUrl,
     sortBy: 'price-asc',
   });
+
+  // Fetch cars from API
+  useEffect(() => {
+    async function fetchCars() {
+      try {
+        setIsLoading(true);
+        setError(null);
+        const apiCars = await carsApi.getCars();
+        if (apiCars.length > 0) {
+          setCars(apiCars);
+        }
+      } catch (err) {
+        console.warn('Failed to fetch cars from API, using static data:', err);
+        // Keep static data as fallback
+      } finally {
+        setIsLoading(false);
+      }
+    }
+    fetchCars();
+  }, []);
 
   useEffect(() => {
     setFilters(prev => ({ ...prev, category: categoryFromUrl }));
@@ -173,13 +199,26 @@ export const CarsPage: React.FC = () => {
         {/* Results count */}
         <div className="py-6">
           <p className="text-gray-400 text-sm">
-            {filteredCars.length} {filteredCars.length === 1 ? 'vehicle' : 'vehicles'} available
+            {isLoading ? (
+              <span className="flex items-center gap-2">
+                <Loader2 className="w-4 h-4 animate-spin" />
+                Loading vehicles...
+              </span>
+            ) : (
+              `${filteredCars.length} ${filteredCars.length === 1 ? 'vehicle' : 'vehicles'} available`
+            )}
           </p>
         </div>
 
         {/* Car Grid - Full Width */}
         <div className="pb-16">
-          <CarGrid cars={filteredCars} showRentalPrice={false} />
+          {isLoading ? (
+            <div className="flex justify-center items-center py-20">
+              <Loader2 className="w-8 h-8 animate-spin text-gray-400" />
+            </div>
+          ) : (
+            <CarGrid cars={filteredCars} showRentalPrice={false} />
+          )}
         </div>
       </div>
     </div>

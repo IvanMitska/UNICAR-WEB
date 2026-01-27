@@ -4,12 +4,12 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { z } from 'zod';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { 
-  Calendar, 
-  MapPin, 
-  User, 
-  Phone, 
-  Mail, 
+import {
+  Calendar,
+  MapPin,
+  User,
+  Phone,
+  Mail,
   Check,
   ChevronRight,
   ChevronLeft,
@@ -18,7 +18,9 @@ import {
   Baby,
   Navigation,
   Users,
-  Car
+  Car,
+  Loader2,
+  AlertCircle
 } from 'lucide-react';
 import { Button } from '../ui/Button';
 import { useBookingStore } from '../../store/useBookingStore';
@@ -26,6 +28,7 @@ import { formatCurrency } from '../../utils/formatters';
 import { services } from '../../data/services';
 import { offices } from '../../data/offices';
 import { differenceInDays } from 'date-fns';
+import { carsApi, CarsApiError } from '../../api/carsApi';
 
 const customerSchema = z.object({
   firstName: z.string().min(2, 'Имя должно содержать минимум 2 символа'),
@@ -58,6 +61,8 @@ export const BookingForm: React.FC = () => {
   const navigate = useNavigate();
   const [currentStep, setCurrentStep] = useState(1);
   const [selectedServices, setSelectedServices] = useState<string[]>([]);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
   
   const {
     selectedCar,
@@ -134,19 +139,68 @@ export const BookingForm: React.FC = () => {
     }
   };
 
-  const onSubmit = (data: CustomerFormData) => {
-    setCustomer({
-      id: Date.now().toString(),
-      firstName: data.firstName,
-      lastName: data.lastName,
-      email: data.email,
-      phone: data.phone,
-      dateOfBirth: data.birthDate,
-      driverLicense: data.licenseNumber,
-    });
-    
-    alert('Бронирование успешно оформлено! Мы свяжемся с вами в ближайшее время.');
-    navigate('/');
+  const onSubmit = async (data: CustomerFormData) => {
+    if (!selectedCar) return;
+
+    setIsSubmitting(true);
+    setSubmitError(null);
+
+    try {
+      // Prepare additional services for API
+      const additionalServicesData = selectedServices.map(serviceId => {
+        const service = services.find(s => s.id === serviceId);
+        return {
+          id: serviceId,
+          name: service?.name || serviceId,
+          price: service?.pricePerDay || service?.price || 0,
+          perDay: !!service?.pricePerDay,
+        };
+      });
+
+      // Get vehicle ID (extract numeric ID if present, or use string ID)
+      const vehicleId = parseInt(selectedCar.id) || 0;
+
+      // Submit to API
+      const response = await carsApi.createBooking({
+        vehicleId: vehicleId,
+        customerFirstName: data.firstName,
+        customerLastName: data.lastName,
+        customerEmail: data.email,
+        customerPhone: data.phone,
+        customerBirthDate: data.birthDate,
+        customerLicenseNumber: data.licenseNumber,
+        customerLicenseIssueDate: data.licenseDate,
+        startDate: new Date(bookingDates.start).toISOString(),
+        endDate: new Date(bookingDates.end).toISOString(),
+        pickupLocation: locations.pickup,
+        returnLocation: locations.return,
+        additionalServices: additionalServicesData,
+        totalPrice: calculateTotal,
+      });
+
+      // Save customer info to store
+      setCustomer({
+        id: Date.now().toString(),
+        firstName: data.firstName,
+        lastName: data.lastName,
+        email: data.email,
+        phone: data.phone,
+        dateOfBirth: data.birthDate,
+        driverLicense: data.licenseNumber,
+      });
+
+      // Navigate to confirmation page with reference code
+      navigate(`/booking/confirmation?ref=${response.referenceCode}`);
+    } catch (error) {
+      console.error('Booking error:', error);
+      if (error instanceof CarsApiError) {
+        setSubmitError(error.message);
+      } else {
+        setSubmitError('Произошла ошибка при бронировании. Пожалуйста, попробуйте позже.');
+      }
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   if (!selectedCar) {
@@ -513,6 +567,13 @@ export const BookingForm: React.FC = () => {
                     После подтверждения бронирования наш менеджер свяжется с вами для уточнения деталей и оплаты.
                   </p>
                 </div>
+
+                {submitError && (
+                  <div className="bg-red-50 border border-red-200 rounded-lg p-4 flex items-start gap-3">
+                    <AlertCircle className="w-5 h-5 text-red-500 flex-shrink-0 mt-0.5" />
+                    <p className="text-sm text-red-800">{submitError}</p>
+                  </div>
+                )}
               </div>
             )}
           </motion.div>
@@ -544,9 +605,19 @@ export const BookingForm: React.FC = () => {
             ) : (
               <Button
                 onClick={handleSubmit(onSubmit)}
+                disabled={isSubmitting}
               >
-                <Check className="w-4 h-4 mr-2" />
-                Подтвердить бронирование
+                {isSubmitting ? (
+                  <>
+                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                    Оформление...
+                  </>
+                ) : (
+                  <>
+                    <Check className="w-4 h-4 mr-2" />
+                    Подтвердить бронирование
+                  </>
+                )}
               </Button>
             )}
           </div>
