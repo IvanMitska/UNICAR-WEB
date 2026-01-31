@@ -1,4 +1,7 @@
-export const formatPrice = (price: number): string => {
+export const formatPrice = (price: number, showOnRequest = true): string => {
+  if (price === 0 && showOnRequest) {
+    return 'По запросу';
+  }
   return new Intl.NumberFormat('th-TH', {
     style: 'currency',
     currency: 'THB',

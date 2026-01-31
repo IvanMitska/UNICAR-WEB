@@ -1,50 +1,51 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import { Link, NavLink, useLocation } from 'react-router-dom';
-import { Menu, X } from 'lucide-react';
+import { Menu, X, User } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '../../utils/cn';
+import { useAuth } from '../../contexts/AuthContext';
 
 // Pages that have a light background from the start (no dark hero)
-const lightBackgroundPages = ['/cars', '/buy', '/about', '/contacts', '/terms', '/privacy', '/sign-in', '/get-started'];
+const lightBackgroundPages = ['/cars', '/buy', '/about', '/contacts', '/terms', '/privacy', '/sign-in', '/get-started', '/profile', '/forgot-password', '/reset-password'];
 
 // Featured cars for mega menu - Row 1 (4 cars)
 const featuredCarsRow1 = [
   {
-    id: '1',
-    name: 'Mustang White',
+    id: 'mustang-white-2020',
+    name: 'Ford Mustang GT',
     image: '/cars/menu/mustang-white.png',
     category: 'sport',
     offsetY: 0,
   },
   {
-    id: '2',
-    name: 'Mustang Blue',
+    id: 'mustang-blue-2020',
+    name: 'Ford Mustang GT',
     image: '/cars/menu/mustang-blue.png',
     category: 'sport',
     offsetY: 0,
   },
   {
-    id: '3',
-    name: 'Mustang Yellow',
+    id: 'mustang-yellow-2021',
+    name: 'Ford Mustang GT',
     image: '/cars/menu/mustang-yellow.png',
     category: 'sport',
     offsetY: 20,
   },
   {
-    id: '4',
-    name: 'Mercedes',
+    id: 'mercedes-c200',
+    name: 'Mercedes-Benz S-Class',
     image: '/cars/menu/mersedes-green.png',
     category: 'premium',
     offsetY: 0,
   },
 ];
 
-// Row 2 (Inventory)
+// Row 2 (All Cars)
 const featuredCarsRow2 = [
   {
-    id: '5',
-    name: 'Inventory',
+    id: 'all-cars',
+    name: 'All Cars',
     image: '/cars/menu/mustang-white.png',
     category: 'all',
     isInventory: true,
@@ -52,13 +53,12 @@ const featuredCarsRow2 = [
 ];
 
 const quickLinks = [
-  { label: 'Current Offers', to: '/cars?offers=true' },
-  { label: 'Demo Drive', to: '/demo-drive' },
-  { label: 'Trade-in', to: '/trade-in' },
-  { label: 'Pre-Owned', to: '/cars?condition=used' },
-  { label: 'Compare', to: '/compare' },
-  { label: 'Help Me Choose', to: '/help' },
-  { label: 'Fleet', to: '/fleet' },
+  { label: 'All Cars', to: '/cars' },
+  { label: 'Luxury Cars', to: '/cars?category=premium' },
+  { label: 'Luxury SUVs', to: '/cars?category=suv' },
+  { label: 'Sports Cars', to: '/cars?category=sport' },
+  { label: 'Economy', to: '/cars?category=economy' },
+  { label: 'Contacts', to: '/contacts' },
 ];
 
 export const Header: React.FC = () => {
@@ -68,6 +68,7 @@ export const Header: React.FC = () => {
   const ticking = useRef(false);
   const dropdownTimeout = useRef<NodeJS.Timeout | null>(null);
   const location = useLocation();
+  const { user, isAuthenticated } = useAuth();
 
   // Check if current page has light background
   const isLightPage = lightBackgroundPages.some(page => location.pathname.startsWith(page));
@@ -132,7 +133,7 @@ export const Header: React.FC = () => {
     <>
       <header
         className={cn(
-          'fixed top-0 left-0 right-0 z-50 transition-all duration-300',
+          'fixed top-0 left-0 right-0 z-50 transition-all duration-300 pt-[env(safe-area-inset-top)]',
           shouldUseDarkText
             ? 'bg-white/80 backdrop-blur-md shadow-sm'
             : 'bg-transparent'
@@ -189,31 +190,56 @@ export const Header: React.FC = () => {
 
             {/* Desktop Actions - Right */}
             <div className="hidden lg:flex items-center gap-6 relative z-50">
-              <Link
-                to="/sign-in"
-                onClick={() => setActiveDropdown(null)}
-                className={cn(
-                  "text-sm font-medium transition-all duration-300 hover:opacity-70",
-                  shouldUseDarkText
-                    ? "text-gray-600 hover:text-gray-900"
-                    : "text-white/80 hover:text-white"
-                )}
-              >
-                Sign In
-              </Link>
+              {isAuthenticated ? (
+                <Link
+                  to="/profile"
+                  onClick={() => setActiveDropdown(null)}
+                  className={cn(
+                    "flex items-center gap-2 text-sm font-medium transition-all duration-300 hover:opacity-70",
+                    shouldUseDarkText
+                      ? "text-gray-900"
+                      : "text-white"
+                  )}
+                >
+                  <div className={cn(
+                    "w-8 h-8 rounded-full flex items-center justify-center text-xs font-medium",
+                    shouldUseDarkText
+                      ? "bg-gray-900 text-white"
+                      : "bg-white text-gray-900"
+                  )}>
+                    {user?.firstName?.charAt(0)}{user?.lastName?.charAt(0)}
+                  </div>
+                  <span className="hidden xl:inline">{user?.firstName}</span>
+                </Link>
+              ) : (
+                <>
+                  <Link
+                    to="/sign-in"
+                    onClick={() => setActiveDropdown(null)}
+                    className={cn(
+                      "text-sm font-medium transition-all duration-300 hover:opacity-70",
+                      shouldUseDarkText
+                        ? "text-gray-600 hover:text-gray-900"
+                        : "text-white/80 hover:text-white"
+                    )}
+                  >
+                    Sign In
+                  </Link>
 
-              <Link
-                to="/get-started"
-                onClick={() => setActiveDropdown(null)}
-                className={cn(
-                  "px-6 py-2.5 text-sm font-medium rounded-full transition-all duration-300 transform hover:scale-105",
-                  shouldUseDarkText
-                    ? "text-gray-900 border-2 border-gray-900 hover:bg-gray-900 hover:text-white"
-                    : "text-white border-2 border-white/60 hover:bg-white hover:text-gray-900"
-                )}
-              >
-                Get Started
-              </Link>
+                  <Link
+                    to="/get-started"
+                    onClick={() => setActiveDropdown(null)}
+                    className={cn(
+                      "px-6 py-2.5 text-sm font-medium rounded-full transition-all duration-300 transform hover:scale-105",
+                      shouldUseDarkText
+                        ? "text-gray-900 border-2 border-gray-900 hover:bg-gray-900 hover:text-white"
+                        : "text-white border-2 border-white/60 hover:bg-white hover:text-gray-900"
+                    )}
+                  >
+                    Get Started
+                  </Link>
+                </>
+              )}
             </div>
 
             {/* Mobile Menu Button */}
@@ -240,7 +266,7 @@ export const Header: React.FC = () => {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.2 }}
-            className="fixed inset-0 z-40 pt-[72px]"
+            className="fixed inset-0 z-40 pt-[calc(72px+env(safe-area-inset-top))]"
           >
             {/* Backdrop - closes on hover */}
             <motion.div
@@ -281,7 +307,7 @@ export const Header: React.FC = () => {
                           }}
                         >
                           <Link
-                            to={`/cars?category=${car.category}`}
+                            to={`/cars/${car.id}`}
                             onClick={() => setActiveDropdown(null)}
                             className="group text-center block"
                           >
@@ -299,7 +325,7 @@ export const Header: React.FC = () => {
                             </h3>
                             <div className="flex items-center justify-center gap-4 text-xs">
                               <span className="text-gray-500 hover:text-gray-900 underline underline-offset-2 cursor-pointer transition-colors">
-                                Learn
+                                Details
                               </span>
                               <span className="text-gray-500 hover:text-gray-900 underline underline-offset-2 cursor-pointer transition-colors">
                                 Rent
@@ -342,16 +368,16 @@ export const Header: React.FC = () => {
                               {car.isInventory ? (
                                 <>
                                   <span className="text-gray-500 hover:text-gray-900 underline underline-offset-2 cursor-pointer transition-colors">
-                                    New
+                                    View All
                                   </span>
                                   <span className="text-gray-500 hover:text-gray-900 underline underline-offset-2 cursor-pointer transition-colors">
-                                    Pre-Owned
+                                    Browse
                                   </span>
                                 </>
                               ) : (
                                 <>
                                   <span className="text-gray-500 hover:text-gray-900 underline underline-offset-2 cursor-pointer transition-colors">
-                                    Learn
+                                    Details
                                   </span>
                                   <span className="text-gray-500 hover:text-gray-900 underline underline-offset-2 cursor-pointer transition-colors">
                                     Rent
@@ -404,15 +430,9 @@ export const Header: React.FC = () => {
       {/* Mobile Menu - Full Screen Overlay */}
       {isMenuOpen &&
         createPortal(
-          <div className="lg:hidden fixed inset-0 z-[9999]">
-            {/* Backdrop */}
-            <div
-              className="absolute inset-0 bg-white"
-              onClick={() => setIsMenuOpen(false)}
-            />
-
+          <div className="lg:hidden fixed inset-0 z-[9999] bg-white animate-menu-open">
             {/* Menu Content */}
-            <div className="relative h-full flex flex-col">
+            <div className="h-full flex flex-col">
               {/* Header */}
               <div className="flex items-center justify-between h-16 px-6 border-b border-gray-100">
                 <span className="text-lg tracking-[0.25em] font-semibold text-gray-900">
@@ -420,7 +440,7 @@ export const Header: React.FC = () => {
                 </span>
                 <button
                   onClick={() => setIsMenuOpen(false)}
-                  className="p-2 -mr-2 transition-transform duration-300 hover:scale-110"
+                  className="p-2 -mr-2 transition-transform duration-200 active:scale-90"
                 >
                   <X className="w-6 h-6 text-gray-900" />
                 </button>
@@ -436,13 +456,13 @@ export const Header: React.FC = () => {
                       onClick={() => setIsMenuOpen(false)}
                       className={({ isActive }) =>
                         cn(
-                          'block py-4 text-2xl font-light border-b border-gray-100 transition-all duration-300 hover:pl-4',
+                          'block py-4 text-2xl font-light border-b border-gray-100 transition-all duration-300 hover:pl-4 opacity-0 animate-menu-item',
                           isActive
                             ? 'text-gray-900'
                             : 'text-gray-400 hover:text-gray-900'
                         )
                       }
-                      style={{ animationDelay: `${index * 100}ms` }}
+                      style={{ animationDelay: `${100 + index * 60}ms` }}
                     >
                       {link.label}
                     </NavLink>
@@ -450,21 +470,24 @@ export const Header: React.FC = () => {
                 </div>
 
                 {/* Mobile Featured Cars */}
-                <div className="mt-8 pt-6 border-t border-gray-100">
+                <div
+                  className="mt-8 pt-6 border-t border-gray-100 opacity-0 animate-menu-item"
+                  style={{ animationDelay: '350ms' }}
+                >
                   <p className="text-xs uppercase tracking-wider text-gray-400 mb-4">Featured</p>
                   <div className="grid grid-cols-2 gap-4">
                     {featuredCarsRow1.map((car) => (
                       <Link
                         key={car.id}
-                        to={`/cars?category=${car.category}`}
+                        to={`/cars/${car.id}`}
                         onClick={() => setIsMenuOpen(false)}
-                        className="group"
+                        className="group block"
                       >
                         <div className="aspect-[4/3] overflow-hidden rounded-lg bg-gray-100 mb-2">
                           <img
                             src={car.image}
                             alt={car.name}
-                            className="w-full h-full object-cover"
+                            className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
                           />
                         </div>
                         <p className="text-sm text-gray-900">{car.name}</p>
@@ -473,21 +496,39 @@ export const Header: React.FC = () => {
                   </div>
                 </div>
 
-                <div className="mt-10 pt-8 border-t border-gray-100 space-y-4">
-                  <Link
-                    to="/sign-in"
-                    onClick={() => setIsMenuOpen(false)}
-                    className="block py-3 text-lg text-gray-500 hover:text-gray-900 transition-colors"
-                  >
-                    Sign In
-                  </Link>
-                  <Link
-                    to="/get-started"
-                    onClick={() => setIsMenuOpen(false)}
-                    className="block text-center py-4 text-gray-900 text-lg font-medium border-2 border-gray-900 rounded-full hover:bg-gray-900 hover:text-white transition-all duration-300"
-                  >
-                    Get Started
-                  </Link>
+                <div
+                  className="mt-10 pt-8 border-t border-gray-100 space-y-4 opacity-0 animate-menu-item"
+                  style={{ animationDelay: '450ms' }}
+                >
+                  {isAuthenticated ? (
+                    <Link
+                      to="/profile"
+                      onClick={() => setIsMenuOpen(false)}
+                      className="flex items-center gap-3 py-3 text-lg text-gray-900 hover:text-gray-600 transition-colors"
+                    >
+                      <div className="w-10 h-10 rounded-full bg-gray-900 text-white flex items-center justify-center text-sm font-medium">
+                        {user?.firstName?.charAt(0)}{user?.lastName?.charAt(0)}
+                      </div>
+                      <span>{user?.firstName} {user?.lastName}</span>
+                    </Link>
+                  ) : (
+                    <>
+                      <Link
+                        to="/sign-in"
+                        onClick={() => setIsMenuOpen(false)}
+                        className="block py-3 text-lg text-gray-500 hover:text-gray-900 transition-colors"
+                      >
+                        Sign In
+                      </Link>
+                      <Link
+                        to="/get-started"
+                        onClick={() => setIsMenuOpen(false)}
+                        className="block text-center py-4 text-gray-900 text-lg font-medium border-2 border-gray-900 rounded-full hover:bg-gray-900 hover:text-white transition-all duration-300"
+                      >
+                        Get Started
+                      </Link>
+                    </>
+                  )}
                 </div>
               </nav>
             </div>

@@ -1,10 +1,9 @@
 import React, { useState, useMemo, useEffect, useCallback, useRef } from 'react';
+// Using static car data directly - API integration can be added later
 import { useSearchParams } from 'react-router-dom';
 import { CarGrid } from '../components/sections/CarGrid';
 import { cars as staticCars } from '../data/cars';
-import { carsApi } from '../api/carsApi';
-import type { Car } from '../types';
-import { ChevronDown, Check, Loader2 } from 'lucide-react';
+import { ChevronDown, Check } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '../utils/cn';
 
@@ -20,6 +19,7 @@ const categoryTabs = [
   { value: 'premium', label: 'Luxury Cars' },
   { value: 'suv', label: 'Luxury SUVs' },
   { value: 'sport', label: 'Sports Cars' },
+  { value: 'economy', label: 'Economy' },
 ];
 
 export const CarsPage: React.FC = () => {
@@ -28,32 +28,10 @@ export const CarsPage: React.FC = () => {
   const [isSortOpen, setIsSortOpen] = useState(false);
   const sortRef = useRef<HTMLDivElement>(null);
 
-  const [cars, setCars] = useState<Car[]>(staticCars);
-  const [isLoading, setIsLoading] = useState(true);
-
   const [filters, setFilters] = useState({
     category: categoryFromUrl,
-    sortBy: 'price-asc',
+    sortBy: 'price-desc',
   });
-
-  // Fetch cars from API
-  useEffect(() => {
-    async function fetchCars() {
-      try {
-        setIsLoading(true);
-        const apiCars = await carsApi.getCars();
-        if (apiCars.length > 0) {
-          setCars(apiCars);
-        }
-      } catch (err) {
-        console.warn('Failed to fetch cars from API, using static data:', err);
-        // Keep static data as fallback
-      } finally {
-        setIsLoading(false);
-      }
-    }
-    fetchCars();
-  }, []);
 
   useEffect(() => {
     setFilters(prev => ({ ...prev, category: categoryFromUrl }));
@@ -84,7 +62,7 @@ export const CarsPage: React.FC = () => {
   }, []);
 
   const filteredCars = useMemo(() => {
-    let result = [...cars];
+    let result = [...staticCars];
 
     // Filter by category
     if (filters.category) {
@@ -92,7 +70,7 @@ export const CarsPage: React.FC = () => {
     }
 
     // Sort
-    const sortFns: Record<string, (a: typeof cars[0], b: typeof cars[0]) => number> = {
+    const sortFns: Record<string, (a: typeof staticCars[0], b: typeof staticCars[0]) => number> = {
       'price-asc': (a, b) => a.pricePerDay - b.pricePerDay,
       'price-desc': (a, b) => b.pricePerDay - a.pricePerDay,
       'rating': (a, b) => b.rating - a.rating,
@@ -197,26 +175,13 @@ export const CarsPage: React.FC = () => {
         {/* Results count */}
         <div className="py-6">
           <p className="text-gray-400 text-sm">
-            {isLoading ? (
-              <span className="flex items-center gap-2">
-                <Loader2 className="w-4 h-4 animate-spin" />
-                Loading vehicles...
-              </span>
-            ) : (
-              `${filteredCars.length} ${filteredCars.length === 1 ? 'vehicle' : 'vehicles'} available`
-            )}
+            {filteredCars.length} {filteredCars.length === 1 ? 'vehicle' : 'vehicles'} available
           </p>
         </div>
 
         {/* Car Grid - Full Width */}
         <div className="pb-16">
-          {isLoading ? (
-            <div className="flex justify-center items-center py-20">
-              <Loader2 className="w-8 h-8 animate-spin text-gray-400" />
-            </div>
-          ) : (
-            <CarGrid cars={filteredCars} showRentalPrice={false} />
-          )}
+          <CarGrid cars={filteredCars} showRentalPrice={false} />
         </div>
       </div>
     </div>
