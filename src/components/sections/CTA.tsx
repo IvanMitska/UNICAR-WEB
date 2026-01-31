@@ -9,7 +9,7 @@ export const CTA: React.FC = () => {
       {/* Background Image */}
       <div
         className="absolute inset-0 bg-cover bg-[center_bottom] bg-no-repeat"
-        style={{ backgroundImage: 'url(/images/cta-bg.png)' }}
+        style={{ backgroundImage: 'url(/images/cta-bg.jpg)' }}
       />
 
       {/* Content */}
@@ -62,10 +62,10 @@ export const CTA: React.FC = () => {
               </Link>
 
               <a
-                href="tel:+66959657805"
+                href="tel:+66638450372"
                 className="group inline-flex items-center justify-center gap-3 px-8 py-4 text-gray-900 rounded-full font-medium border border-gray-300 hover:bg-gray-100 transition-all duration-300"
               >
-                <span>+66 95-965-7805</span>
+                <span>+66 63 845 0372</span>
               </a>
             </motion.div>
           </div>

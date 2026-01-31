@@ -25,12 +25,12 @@ const HeroSectionComponent: React.FC = () => {
       {/* Desktop Background */}
       <div
         className="absolute inset-0 hidden md:block bg-cover bg-center bg-no-repeat"
-        style={{ backgroundImage: 'url(/imager-web/hero-desctop.png)' }}
+        style={{ backgroundImage: 'url(/imager-web/hero-desctop.jpg)' }}
       />
       {/* Mobile Background */}
       <div
         className="absolute inset-0 md:hidden bg-cover bg-center bg-no-repeat"
-        style={{ backgroundImage: 'url(/imager-web/hero-mobile.png)' }}
+        style={{ backgroundImage: 'url(/imager-web/hero-mobile.jpg)' }}
       />
 
       {/* Dark overlay for better text contrast */}
