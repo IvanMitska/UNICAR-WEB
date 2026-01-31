@@ -456,7 +456,7 @@ export const Header: React.FC = () => {
                       onClick={() => setIsMenuOpen(false)}
                       className={({ isActive }) =>
                         cn(
-                          'block py-4 text-2xl font-light border-b border-gray-100 transition-all duration-300 hover:pl-4 opacity-0 animate-menu-item',
+                          'block py-4 text-2xl font-light border-b border-gray-100 transition-all duration-300 hover:pl-4 animate-menu-item',
                           isActive
                             ? 'text-gray-900'
                             : 'text-gray-400 hover:text-gray-900'
@@ -471,7 +471,7 @@ export const Header: React.FC = () => {
 
                 {/* Mobile Featured Cars */}
                 <div
-                  className="mt-8 pt-6 border-t border-gray-100 opacity-0 animate-menu-item"
+                  className="mt-8 pt-6 border-t border-gray-100 animate-menu-item"
                   style={{ animationDelay: '350ms' }}
                 >
                   <p className="text-xs uppercase tracking-wider text-gray-400 mb-4">Featured</p>
@@ -497,7 +497,7 @@ export const Header: React.FC = () => {
                 </div>
 
                 <div
-                  className="mt-10 pt-8 border-t border-gray-100 space-y-4 opacity-0 animate-menu-item"
+                  className="mt-10 pt-8 border-t border-gray-100 space-y-4 animate-menu-item"
                   style={{ animationDelay: '450ms' }}
                 >
                   {isAuthenticated ? (
