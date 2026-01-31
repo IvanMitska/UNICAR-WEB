@@ -23,6 +23,7 @@ import {
   AlertCircle,
   Check
 } from 'lucide-react';
+import type { LucideIcon } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { useFavorites } from '../contexts/FavoritesContext';
@@ -215,7 +216,7 @@ export const ProfilePage: React.FC = () => {
     );
   }
 
-  const menuItems: { icon: React.ElementType; label: string; tab: TabType; count?: number }[] = [
+  const menuItems: { icon: LucideIcon; label: string; tab: TabType; count?: number }[] = [
     { icon: Car, label: 'My Bookings', tab: 'bookings', count: 0 },
     { icon: Heart, label: 'Favorites', tab: 'favorites', count: favorites.length },
     { icon: CreditCard, label: 'Payment Methods', tab: 'payments' },
