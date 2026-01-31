@@ -1,9 +1,11 @@
 import React, { memo } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Check } from 'lucide-react';
+import { Check, Heart } from 'lucide-react';
 import type { Car } from '../../types/index';
 import { formatPrice } from '../../utils/formatters';
+import { useFavorites } from '../../contexts/FavoritesContext';
+import { useAuth } from '../../contexts/AuthContext';
 
 interface CarCardProps {
   car: Car;
@@ -52,6 +54,23 @@ const getTopFeatures = (car: Car): string[] => {
 const CarCardComponent: React.FC<CarCardProps> = ({ car, index = 0 }) => {
   const vehicleType = getVehicleType(car);
   const topFeatures = getTopFeatures(car);
+  const { isFavorite, toggleFavorite } = useFavorites();
+  const { isAuthenticated } = useAuth();
+  const navigate = useNavigate();
+
+  const handleFavoriteClick = async (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    if (!isAuthenticated) {
+      navigate('/sign-in');
+      return;
+    }
+
+    await toggleFavorite(car.id);
+  };
+
+  const isCarFavorite = isFavorite(car.id);
 
   return (
     <motion.div
@@ -112,6 +131,20 @@ const CarCardComponent: React.FC<CarCardProps> = ({ car, index = 0 }) => {
                   fetchPriority={index < 3 ? "auto" : "low"}
                   className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                 />
+
+                {/* Favorite Button */}
+                <button
+                  onClick={handleFavoriteClick}
+                  className={`absolute top-4 right-4 w-10 h-10 rounded-full flex items-center justify-center transition-all duration-200 z-10 ${
+                    isCarFavorite
+                      ? 'bg-red-500 text-white shadow-lg'
+                      : 'bg-white/90 text-gray-600 hover:bg-white hover:text-red-500 shadow-md'
+                  }`}
+                >
+                  <Heart
+                    className={`w-5 h-5 ${isCarFavorite ? 'fill-current' : ''}`}
+                  />
+                </button>
 
                 {/* Unavailable overlay */}
                 {!car.available && (

@@ -23,7 +23,8 @@ import {
   Loader2
 } from 'lucide-react';
 import { formatPrice, calculateDays } from '../utils/formatters';
-import { useFavoritesStore } from '../store/useFavoritesStore';
+import { useFavorites } from '../contexts/FavoritesContext';
+import { useAuth } from '../contexts/AuthContext';
 import { useBookingStore } from '../store/useBookingStore';
 import { format, addDays } from 'date-fns';
 import { cn } from '../utils/cn';
@@ -47,7 +48,8 @@ const pricingTabs = [
 export const CarDetailsPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const { toggleFavorite, isFavorite } = useFavoritesStore();
+  const { toggleFavorite, isFavorite } = useFavorites();
+  const { isAuthenticated } = useAuth();
   const { setSelectedCar, setDates, setLocations } = useBookingStore();
 
   // Car data state
@@ -107,10 +109,14 @@ export const CarDetailsPage: React.FC = () => {
   }, [car]);
 
   const handleFavoriteClick = useCallback(() => {
+    if (!isAuthenticated) {
+      navigate('/sign-in');
+      return;
+    }
     if (car) {
       toggleFavorite(car.id);
     }
-  }, [car, toggleFavorite]);
+  }, [car, toggleFavorite, isAuthenticated, navigate]);
 
   if (isLoading) {
     return (
@@ -673,14 +679,14 @@ export const CarDetailsPage: React.FC = () => {
                   {/* Contact Buttons */}
                   <div className="grid grid-cols-2 gap-3">
                     <a
-                      href="tel:+66959657805"
+                      href="tel:+66638450372"
                       className="flex items-center justify-center gap-2 py-3 border border-primary-200 text-primary-700 rounded-full hover:border-primary-400 transition-colors"
                     >
                       <Phone className="w-4 h-4" />
                       <span className="text-sm">Позвонить</span>
                     </a>
                     <a
-                      href="https://wa.me/66959657805"
+                      href="https://wa.me/66638450372"
                       target="_blank"
                       rel="noopener noreferrer"
                       className="flex items-center justify-center gap-2 py-3 bg-green-500 text-white rounded-full hover:bg-green-600 transition-colors"
