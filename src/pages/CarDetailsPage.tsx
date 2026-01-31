@@ -30,7 +30,7 @@ import { format, addDays } from 'date-fns';
 import { cn } from '../utils/cn';
 import { SimilarCars } from '../components/sections/SimilarCars';
 
-type PricingTab = 'daily' | 'monthly' | 'withDriver';
+type PricingTab = 'daily' | 'monthly';
 
 const fuelLabels: Record<string, string> = {
   petrol: 'Бензин',
@@ -42,7 +42,6 @@ const fuelLabels: Record<string, string> = {
 const pricingTabs = [
   { id: 'daily' as PricingTab, label: 'Посуточно' },
   { id: 'monthly' as PricingTab, label: 'Помесячно' },
-  { id: 'withDriver' as PricingTab, label: 'С водителем' },
 ];
 
 export const CarDetailsPage: React.FC = () => {
@@ -62,6 +61,7 @@ export const CarDetailsPage: React.FC = () => {
 
   // Pricing state
   const [activeTab, setActiveTab] = useState<PricingTab>('daily');
+  const [selectedTier, setSelectedTier] = useState(0);
 
   // Booking state
   const [startDate, setStartDate] = useState(format(new Date(), 'yyyy-MM-dd'));
@@ -161,11 +161,6 @@ export const CarDetailsPage: React.FC = () => {
       { duration: '1 месяц', price: Math.round(car.pricePerDay * 25) },
       { duration: '2 месяца', price: Math.round(car.pricePerDay * 23) },
       { duration: '3+ месяца', price: Math.round(car.pricePerDay * 20) },
-    ],
-    withDriver: [
-      { duration: '4 часа', price: Math.round(car.pricePerDay * 0.6) },
-      { duration: '8 часов', price: Math.round(car.pricePerDay * 1.2) },
-      { duration: 'Весь день', price: Math.round(car.pricePerDay * 1.5) },
     ],
   };
 
@@ -538,7 +533,10 @@ export const CarDetailsPage: React.FC = () => {
                   {pricingTabs.map((tab) => (
                     <button
                       key={tab.id}
-                      onClick={() => setActiveTab(tab.id)}
+                      onClick={() => {
+                        setActiveTab(tab.id);
+                        setSelectedTier(0);
+                      }}
                       className={cn(
                         "px-6 py-3 rounded-full text-sm font-medium transition-all",
                         activeTab === tab.id
@@ -554,34 +552,35 @@ export const CarDetailsPage: React.FC = () => {
                 {/* Pricing Grid */}
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                   {pricingTiers[activeTab].map((tier, index) => (
-                    <div
+                    <button
                       key={index}
+                      onClick={() => setSelectedTier(index)}
                       className={cn(
-                        "p-6 rounded-2xl border-2 transition-all",
-                        index === 0
+                        "p-6 rounded-2xl border-2 transition-all text-left cursor-pointer",
+                        selectedTier === index
                           ? "border-primary-900 bg-primary-900 text-white"
                           : "border-primary-200 bg-white hover:border-primary-400"
                       )}
                     >
                       <p className={cn(
                         "text-sm mb-2",
-                        index === 0 ? "text-white/70" : "text-primary-400"
+                        selectedTier === index ? "text-white/70" : "text-primary-400"
                       )}>
                         {tier.duration}
                       </p>
                       <p className={cn(
                         "text-3xl font-light",
-                        index === 0 ? "text-white" : "text-primary-900"
+                        selectedTier === index ? "text-white" : "text-primary-900"
                       )}>
                         {formatPrice(tier.price)}
                         <span className={cn(
                           "text-sm ml-1",
-                          index === 0 ? "text-white/60" : "text-primary-400"
+                          selectedTier === index ? "text-white/60" : "text-primary-400"
                         )}>
-                          {activeTab === 'daily' ? '/день' : activeTab === 'monthly' ? '/мес' : ''}
+                          {activeTab === 'daily' ? '/день' : '/мес'}
                         </span>
                       </p>
-                    </div>
+                    </button>
                   ))}
                 </div>
               </motion.div>
