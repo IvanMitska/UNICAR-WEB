@@ -723,6 +723,50 @@ export const cars: Car[] = [
     },
   },
 
+  // BMW X5
+  {
+    id: 'bmw-x5-2020',
+    brand: 'BMW',
+    model: 'X5 xDrive45e',
+    year: 2020,
+    category: 'suv',
+    pricePerDay: 10000,
+    image: '/images/cars/bmw-x5-2020/1.jpeg',
+    images: [
+      '/images/cars/bmw-x5-2020/1.jpeg',
+      '/images/cars/bmw-x5-2020/2.jpeg',
+      '/images/cars/bmw-x5-2020/3.jpeg',
+      '/images/cars/bmw-x5-2020/4.jpeg',
+      '/images/cars/bmw-x5-2020/5.jpeg',
+      '/images/cars/bmw-x5-2020/6.jpeg',
+      '/images/cars/bmw-x5-2020/7.jpeg',
+      '/images/cars/bmw-x5-2020/8.jpeg',
+      '/images/cars/bmw-x5-2020/9.jpeg',
+      '/images/cars/bmw-x5-2020/10.jpeg',
+      '/images/cars/bmw-x5-2020/11.jpeg',
+      '/images/cars/bmw-x5-2020/12.jpeg',
+      '/images/cars/bmw-x5-2020/13.jpeg',
+      '/images/cars/bmw-x5-2020/14.jpeg',
+      '/images/cars/bmw-x5-2020/15.jpeg',
+    ],
+    features: ['Plug-in Hybrid', 'xDrive AWD', 'Panoramic Roof', 'Harman Kardon Sound'],
+    transmission: 'automatic',
+    fuel: 'hybrid',
+    seats: 5,
+    luggage: 4,
+    available: true,
+    rating: 4.9,
+    reviews: 0,
+    description: 'Luxury plug-in hybrid SUV with powerful performance and electric driving capability.',
+    licensePlate: 'BMW X5',
+    specifications: {
+      engine: '3.0L I6 + Electric',
+      power: '394 hp',
+      acceleration: '5.6 sec',
+      topSpeed: '235 km/h',
+    },
+  },
+
   // ============================================================================
   // MERCEDES-BENZ SEDAN
   // ============================================================================

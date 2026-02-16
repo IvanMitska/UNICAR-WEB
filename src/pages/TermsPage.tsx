@@ -209,7 +209,7 @@ export const TermsPage: React.FC = () => {
         <div className="text-center mt-16">
           <p className="text-gray-400 mb-6">Остались вопросы?</p>
           <a
-            href="tel:+66959657805"
+            href="tel:+66638450372"
             className="inline-flex items-center gap-2 bg-yellow-500 hover:bg-yellow-600 text-black font-semibold px-8 py-4 rounded-xl transition-colors"
           >
             Позвонить нам

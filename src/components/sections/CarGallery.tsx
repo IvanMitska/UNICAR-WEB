@@ -3,6 +3,13 @@ import { ChevronLeft, ChevronRight, X, Camera, Box } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { CarViewer3D } from '../ui/CarViewer3D';
 
+// Helper to get WebP path from original image path
+const getWebPPath = (src: string): string => {
+  const lastDot = src.lastIndexOf('.');
+  if (lastDot === -1) return src;
+  return `${src.substring(0, lastDot)}.webp`;
+};
+
 interface CarGalleryProps {
   images: string[];
   has3DModel?: boolean;
@@ -53,12 +60,15 @@ export const CarGallery: React.FC<CarGalleryProps> = ({ images, has3DModel = fal
         <div className="relative aspect-video">
           {viewMode === 'photos' ? (
             <>
-              <img
-                src={images[currentImage]}
-                alt="Car"
-                className="w-full h-full object-cover cursor-pointer"
-                onClick={() => setIsFullscreen(true)}
-              />
+              <picture>
+                <source srcSet={getWebPPath(images[currentImage])} type="image/webp" />
+                <img
+                  src={images[currentImage]}
+                  alt="Car"
+                  className="w-full h-full object-cover cursor-pointer"
+                  onClick={() => setIsFullscreen(true)}
+                />
+              </picture>
               
               {images.length > 1 && (
                 <>
@@ -110,13 +120,16 @@ export const CarGallery: React.FC<CarGalleryProps> = ({ images, has3DModel = fal
                   index === currentImage ? 'border-yellow-400' : 'border-transparent'
                 }`}
               >
-                <img
-                  src={image}
-                  alt={`Thumbnail ${index + 1}`}
-                  loading="lazy"
-                  decoding="async"
-                  className="w-full h-full object-cover"
-                />
+                <picture>
+                  <source srcSet={getWebPPath(image)} type="image/webp" />
+                  <img
+                    src={image}
+                    alt={`Thumbnail ${index + 1}`}
+                    loading="lazy"
+                    decoding="async"
+                    className="w-full h-full object-cover"
+                  />
+                </picture>
               </button>
             ))}
           </div>
@@ -139,12 +152,14 @@ export const CarGallery: React.FC<CarGalleryProps> = ({ images, has3DModel = fal
               <X className="w-8 h-8" />
             </button>
 
-            <img
-              src={images[currentImage]}
-              alt="Car fullscreen"
-              className="max-w-full max-h-full object-contain"
-              onClick={(e) => e.stopPropagation()}
-            />
+            <picture onClick={(e) => e.stopPropagation()}>
+              <source srcSet={getWebPPath(images[currentImage])} type="image/webp" />
+              <img
+                src={images[currentImage]}
+                alt="Car fullscreen"
+                className="max-w-full max-h-full object-contain"
+              />
+            </picture>
 
             {images.length > 1 && (
               <>

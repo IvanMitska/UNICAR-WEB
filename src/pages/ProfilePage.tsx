@@ -10,12 +10,9 @@ import {
   LogOut,
   Edit2,
   ChevronRight,
-  CreditCard,
   Bell,
   Shield,
   Heart,
-  Plus,
-  Trash2,
   Eye,
   EyeOff,
   Save,
@@ -30,7 +27,7 @@ import { useFavorites } from '../contexts/FavoritesContext';
 import { api } from '../lib/api';
 import { cars as carsData } from '../data/cars';
 
-type TabType = 'bookings' | 'favorites' | 'payments' | 'notifications' | 'security' | 'settings';
+type TabType = 'bookings' | 'favorites' | 'notifications' | 'security' | 'settings';
 
 export const ProfilePage: React.FC = () => {
   const { user, logout, isAuthenticated, refreshUser } = useAuth();
@@ -219,7 +216,6 @@ export const ProfilePage: React.FC = () => {
   const menuItems: { icon: LucideIcon; label: string; tab: TabType; count?: number }[] = [
     { icon: Car, label: 'My Bookings', tab: 'bookings', count: 0 },
     { icon: Heart, label: 'Favorites', tab: 'favorites', count: favorites.length },
-    { icon: CreditCard, label: 'Payment Methods', tab: 'payments' },
     { icon: Bell, label: 'Notifications', tab: 'notifications' },
     { icon: Shield, label: 'Security', tab: 'security' },
     { icon: Settings, label: 'Settings', tab: 'settings' },
@@ -309,45 +305,6 @@ export const ProfilePage: React.FC = () => {
                 ))}
               </div>
             )}
-          </div>
-        );
-
-      case 'payments':
-        return (
-          <div className="bg-gray-50 rounded-2xl p-6">
-            <div className="flex items-center justify-between mb-6">
-              <h3 className="text-xl font-light text-gray-900">Payment Methods</h3>
-              <button className="flex items-center gap-2 text-gray-900 hover:text-gray-600 transition-colors text-sm font-medium">
-                <Plus className="w-4 h-4" />
-                Add New
-              </button>
-            </div>
-            <div className="space-y-4">
-              {/* Example saved card */}
-              <div className="bg-white rounded-xl p-4 border border-gray-100 flex items-center justify-between">
-                <div className="flex items-center gap-4">
-                  <div className="w-12 h-8 bg-gradient-to-r from-blue-600 to-blue-800 rounded flex items-center justify-center">
-                    <span className="text-white text-xs font-bold">VISA</span>
-                  </div>
-                  <div>
-                    <p className="text-gray-900 font-medium">•••• •••• •••• 4242</p>
-                    <p className="text-sm text-gray-500">Expires 12/25</p>
-                  </div>
-                </div>
-                <div className="flex items-center gap-2">
-                  <span className="px-2 py-1 bg-green-100 text-green-700 rounded-full text-xs font-medium">Default</span>
-                  <button className="p-2 text-gray-400 hover:text-red-500 transition-colors">
-                    <Trash2 className="w-4 h-4" />
-                  </button>
-                </div>
-              </div>
-
-              {/* Add new card button */}
-              <button className="w-full bg-white rounded-xl p-4 border-2 border-dashed border-gray-200 hover:border-gray-300 transition-colors flex items-center justify-center gap-2 text-gray-500 hover:text-gray-700">
-                <Plus className="w-5 h-5" />
-                <span>Add New Card</span>
-              </button>
-            </div>
           </div>
         );
 
@@ -662,7 +619,7 @@ export const ProfilePage: React.FC = () => {
   return (
     <div className="bg-white min-h-screen">
       {/* Hero Section */}
-      <div className="relative pt-8 pb-16 lg:pt-12 lg:pb-24 bg-gray-50">
+      <div className="relative pt-24 pb-16 lg:pt-32 lg:pb-24 bg-gray-50">
         <div className="container mx-auto px-4 relative">
           <motion.div
             initial={{ opacity: 0, y: 20 }}

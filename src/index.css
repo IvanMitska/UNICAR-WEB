@@ -4,6 +4,12 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Mark CSS as loaded to prevent FOUC */
+html {
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
 @layer base {
   html {
     scroll-behavior: smooth;

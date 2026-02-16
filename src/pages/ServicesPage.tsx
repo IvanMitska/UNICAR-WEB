@@ -281,7 +281,7 @@ export const ServicesPage: React.FC = () => {
 
                   {/* CTA */}
                   <button
-                    onClick={() => window.open('https://wa.me/66959651805')}
+                    onClick={() => window.open('https://wa.me/66638450372')}
                     className={cn(
                       "w-full py-3 rounded-xl font-medium transition-all text-sm mt-5",
                       pkg.popular
@@ -460,14 +460,14 @@ export const ServicesPage: React.FC = () => {
 
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <button
-                  onClick={() => window.open('tel:+66959651805')}
+                  onClick={() => window.open('tel:+66638450372')}
                   className="flex items-center justify-center gap-2 px-8 py-4 bg-white/5 border border-white/10 rounded-xl text-white font-medium hover:bg-white/10 transition-all"
                 >
                   <Phone className="w-5 h-5" />
                   +66 95-965-1805
                 </button>
                 <button
-                  onClick={() => window.open('https://wa.me/66959651805')}
+                  onClick={() => window.open('https://wa.me/66638450372')}
                   className="flex items-center justify-center gap-2 px-8 py-4 bg-green-500 hover:bg-green-400 rounded-xl text-white font-medium transition-all"
                 >
                   <MessageCircle className="w-5 h-5" />

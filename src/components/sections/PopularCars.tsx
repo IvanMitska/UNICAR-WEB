@@ -5,13 +5,31 @@ import { cars } from '../../data/cars';
 import { formatPrice } from '../../utils/formatters';
 import { ChevronLeft, ChevronRight, ArrowRight } from 'lucide-react';
 
+// Helper to get WebP path from original image path
+const getWebPPath = (src: string): string => {
+  const lastDot = src.lastIndexOf('.');
+  if (lastDot === -1) return src;
+  return `${src.substring(0, lastDot)}.webp`;
+};
+
+// Explicitly define which cars to show in Popular Models
+const POPULAR_CAR_IDS = [
+  'mustang-yellow-2021',
+  'mustang-yellow-2016',
+  'mustang-blue-2020',
+  'mustang-white-2020',
+  'bmw-x5-2020',
+];
+
 const PopularCarsComponent: React.FC = () => {
   const scrollRef = useRef<HTMLDivElement>(null);
   const [activeIndex, setActiveIndex] = useState(0);
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(true);
 
-  const popularCars = useMemo(() => cars.slice(0, 5), []);
+  const popularCars = useMemo(() =>
+    POPULAR_CAR_IDS.map(id => cars.find(car => car.id === id)).filter(Boolean) as typeof cars,
+  []);
   const totalSlides = popularCars.length;
 
   const updateScrollState = useCallback(() => {
@@ -144,12 +162,15 @@ const PopularCarsComponent: React.FC = () => {
                 <Link to={`/cars/${car.id}`} className="group block">
                   {/* Image Container */}
                   <div className="relative aspect-[4/3] rounded-2xl overflow-hidden mb-5 bg-gray-100">
-                    <img
-                      src={car.image}
-                      alt={`${car.brand} ${car.model}`}
-                      loading={index < 2 ? "eager" : "lazy"}
-                      className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                    />
+                    <picture>
+                      <source srcSet={getWebPPath(car.image)} type="image/webp" />
+                      <img
+                        src={car.image}
+                        alt={`${car.brand} ${car.model}`}
+                        loading={index < 2 ? "eager" : "lazy"}
+                        className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                      />
+                    </picture>
                   </div>
 
                   {/* Info */}

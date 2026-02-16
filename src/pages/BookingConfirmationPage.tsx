@@ -248,14 +248,14 @@ export const BookingConfirmationPage: React.FC = () => {
             <h3 className="text-lg font-medium text-primary-900 mb-4">Связаться с нами</h3>
             <div className="grid grid-cols-2 gap-4">
               <a
-                href="tel:+66959657805"
+                href="tel:+66638450372"
                 className="flex items-center justify-center gap-2 py-4 border border-primary-200 text-primary-700 rounded-xl hover:border-primary-400 transition-colors"
               >
                 <Phone className="w-5 h-5" />
                 <span>Позвонить</span>
               </a>
               <a
-                href="https://wa.me/66959657805"
+                href="https://wa.me/66638450372"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center justify-center gap-2 py-4 bg-green-500 text-white rounded-xl hover:bg-green-600 transition-colors"

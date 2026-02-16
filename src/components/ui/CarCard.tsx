@@ -7,6 +7,13 @@ import { formatPrice } from '../../utils/formatters';
 import { useFavorites } from '../../contexts/FavoritesContext';
 import { useAuth } from '../../contexts/AuthContext';
 
+// Helper to get WebP path from original image path
+const getWebPPath = (src: string): string => {
+  const lastDot = src.lastIndexOf('.');
+  if (lastDot === -1) return src;
+  return `${src.substring(0, lastDot)}.webp`;
+};
+
 interface CarCardProps {
   car: Car;
   index?: number;
@@ -123,14 +130,17 @@ const CarCardComponent: React.FC<CarCardProps> = ({ car, index = 0 }) => {
             {/* Right Side - Image */}
             <div className="sm:w-[45%] relative bg-gray-50 order-first sm:order-last">
               <div className="aspect-[4/3] sm:aspect-auto sm:absolute sm:inset-0 relative overflow-hidden">
-                <img
-                  src={car.image}
-                  alt={`${car.brand} ${car.model}`}
-                  loading="lazy"
-                  decoding="async"
-                  fetchPriority={index < 3 ? "auto" : "low"}
-                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                />
+                <picture>
+                  <source srcSet={getWebPPath(car.image)} type="image/webp" />
+                  <img
+                    src={car.image}
+                    alt={`${car.brand} ${car.model}`}
+                    loading="lazy"
+                    decoding="async"
+                    fetchPriority={index < 3 ? "auto" : "low"}
+                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                  />
+                </picture>
 
                 {/* Favorite Button */}
                 <button

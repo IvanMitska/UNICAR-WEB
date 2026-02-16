@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Logo } from '../ui/Logo';
-import { MessageCircle, Send, MapPin, Mail, Phone } from 'lucide-react';
+import { MessageCircle, Send, MapPin, Mail, Phone, Instagram } from 'lucide-react';
 
 export const Footer: React.FC = () => {
   const currentYear = new Date().getFullYear();
@@ -22,7 +22,8 @@ export const Footer: React.FC = () => {
   };
 
   const socials = [
-    { href: 'https://wa.me/66959657805', icon: MessageCircle, label: 'WhatsApp' },
+    { href: 'https://wa.me/66638450372', icon: MessageCircle, label: 'WhatsApp' },
+    { href: 'https://www.instagram.com/unicar_rent_phuket/', icon: Instagram, label: 'Instagram' },
     { href: 'https://t.me/unicar_phuket', icon: Send, label: 'Telegram' },
   ];
 
@@ -94,13 +95,13 @@ export const Footer: React.FC = () => {
             <h4 className="text-white font-medium mb-6">Get In Touch</h4>
             <div className="space-y-4">
               <a
-                href="tel:+66959657805"
+                href="tel:+66638450372"
                 className="flex items-center gap-3 text-white/50 hover:text-white transition-colors group"
               >
                 <div className="w-10 h-10 rounded-full border border-white/20 group-hover:bg-white group-hover:text-black flex items-center justify-center transition-all duration-300">
                   <Phone className="w-4 h-4" />
                 </div>
-                <span className="text-sm">+66 95-965-7805</span>
+                <span className="text-sm">+66 63 845 0372</span>
               </a>
               <a
                 href="mailto:unicar@gmail.com"
