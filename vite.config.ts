@@ -18,7 +18,6 @@ export default defineConfig({
         manualChunks: {
           // Split vendor chunks for better caching
           'vendor-react': ['react', 'react-dom', 'react-router-dom'],
-          'vendor-three': ['three', '@react-three/fiber', '@react-three/drei'],
           'vendor-motion': ['framer-motion'],
           'vendor-form': ['react-hook-form', 'zod'],
           'vendor-utils': ['date-fns', 'clsx', 'tailwind-merge'],
@@ -30,8 +29,7 @@ export default defineConfig({
         assetFileNames: 'assets/[ext]/[name]-[hash].[ext]',
       },
     },
-    // Increase the warning limit since Three.js is inherently large
-    chunkSizeWarningLimit: 600,
+    chunkSizeWarningLimit: 500,
     // Не генерировать sourcemap в продакшене для меньшего размера
     sourcemap: false,
   },
