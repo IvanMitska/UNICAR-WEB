@@ -41,8 +41,22 @@ const featuredCarsRow1 = [
   },
 ];
 
-// Row 2 (All Cars)
+// Row 2 (BMWs + All Cars)
 const featuredCarsRow2 = [
+  {
+    id: 'bmw-x5-2020',
+    name: 'BMW X5',
+    image: '/cars/menu/bmw.png',
+    category: 'suv',
+    offsetY: 0,
+  },
+  {
+    id: 'bmw-420i-blue',
+    name: 'BMW 420i',
+    image: '/cars/menu/bmw420i.png',
+    category: 'premium',
+    offsetY: 0,
+  },
   {
     id: 'all-cars',
     name: 'All Cars',
@@ -350,7 +364,7 @@ export const Header: React.FC = () => {
                           }}
                         >
                           <Link
-                            to={car.isInventory ? '/cars' : `/cars?category=${car.category}`}
+                            to={car.isInventory ? '/cars' : `/cars/${car.id}`}
                             onClick={() => setActiveDropdown(null)}
                             className="group text-center block"
                           >

@@ -2,6 +2,7 @@ import React from 'react';
 import { HeroSection } from '../components/sections/HeroSection';
 import { PopularCars } from '../components/sections/PopularCars';
 import { Features } from '../components/sections/Features';
+import { ParallaxSection } from '../components/sections/ParallaxSection';
 import { CTA } from '../components/sections/CTA';
 
 export const HomePage: React.FC = () => {
@@ -10,6 +11,7 @@ export const HomePage: React.FC = () => {
       <HeroSection />
       <PopularCars />
       <Features />
+      <ParallaxSection />
       <CTA />
     </div>
   );

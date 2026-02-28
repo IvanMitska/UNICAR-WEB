@@ -42,31 +42,11 @@ export const ContactsPage: React.FC = () => {
         <div
           className="absolute inset-0 bg-cover bg-center"
           style={{
-            backgroundImage: 'url(/imager-web/hero-desctop.png)',
-            filter: 'brightness(0.7)',
+            backgroundImage: 'url(/imager-web/parallax-road.png)',
+            filter: 'brightness(0.8)',
           }}
         />
 
-        {/* Content */}
-        <div className="relative z-10 text-center px-6">
-          <motion.h1
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            className="text-5xl md:text-6xl lg:text-7xl text-white mb-4"
-            style={{ fontWeight: 200 }}
-          >
-            Get in Touch
-          </motion.h1>
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.1 }}
-            className="text-lg md:text-xl text-white/70 max-w-md mx-auto font-light"
-          >
-            We're here to help with your premium car rental needs
-          </motion.p>
-        </div>
       </section>
 
       {/* Contact Methods */}

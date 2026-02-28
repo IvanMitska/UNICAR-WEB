@@ -158,9 +158,9 @@ export const CarDetailsPage: React.FC = () => {
       { duration: '30+ дней', price: Math.round(car.pricePerDay * 0.7) },
     ],
     monthly: [
-      { duration: '1 месяц', price: Math.round(car.pricePerDay * 25) },
-      { duration: '2 месяца', price: Math.round(car.pricePerDay * 23) },
-      { duration: '3+ месяца', price: Math.round(car.pricePerDay * 20) },
+      { duration: '1 месяц', price: Math.round(car.pricePerDay * 8.75) },
+      { duration: '2 месяца', price: Math.round(car.pricePerDay * 7.5) },
+      { duration: '3+ месяца', price: Math.round(car.pricePerDay * 6.5) },
     ],
   };
 

@@ -1,6 +1,6 @@
-import React, { useState, memo, useCallback, useRef } from 'react';
+import React, { useState, memo, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { motion, useScroll, useTransform } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { Search } from 'lucide-react';
 import { HeroDatePicker } from '../ui/HeroDatePicker';
 
@@ -9,19 +9,6 @@ const HeroSectionComponent: React.FC = () => {
   const [pickupLocation, setPickupLocation] = useState('');
   const [pickupDate, setPickupDate] = useState('');
   const [dropoffDate, setDropoffDate] = useState('');
-
-  // Parallax effect
-  const sectionRef = useRef<HTMLElement>(null);
-  const { scrollYProgress } = useScroll({
-    target: sectionRef,
-    offset: ["start start", "end start"]
-  });
-
-  // Background moves slower than scroll (parallax)
-  const backgroundY = useTransform(scrollYProgress, [0, 1], ["0%", "30%"]);
-  // Text fades out and moves up faster
-  const textY = useTransform(scrollYProgress, [0, 1], ["0%", "50%"]);
-  const textOpacity = useTransform(scrollYProgress, [0, 0.5], [1, 0]);
 
   const handleSearch = useCallback((e: React.FormEvent) => {
     e.preventDefault();
@@ -33,35 +20,26 @@ const HeroSectionComponent: React.FC = () => {
   }, [navigate]);
 
   return (
-    <section ref={sectionRef} className="h-screen relative overflow-hidden">
-      {/* Background Images with Parallax */}
-      {/* Desktop Background */}
-      <motion.div
-        className="absolute inset-0 hidden md:block bg-cover bg-center bg-no-repeat scale-110"
-        style={{
-          backgroundImage: 'url(/imager-web/hero-desctop.jpg)',
-          y: backgroundY
-        }}
+    <section className="h-screen relative overflow-hidden">
+      {/* Background Image - Static */}
+      {/* Desktop */}
+      <div
+        className="absolute inset-0 hidden md:block bg-cover bg-center bg-no-repeat"
+        style={{ backgroundImage: 'url(/imager-web/hero-desctop.jpg)' }}
       />
-      {/* Mobile Background */}
-      <motion.div
-        className="absolute inset-0 md:hidden bg-cover bg-center bg-no-repeat scale-110"
-        style={{
-          backgroundImage: 'url(/imager-web/hero-mobile.jpg)',
-          y: backgroundY
-        }}
+      {/* Mobile */}
+      <div
+        className="absolute inset-0 md:hidden bg-cover bg-center bg-no-repeat"
+        style={{ backgroundImage: 'url(/imager-web/hero-mobile.jpg)' }}
       />
 
-      {/* Dark overlay for better text contrast */}
+      {/* Dark overlay */}
       <div className="absolute inset-0 bg-black/10" />
 
-      {/* Content Container - flex column to push elements */}
+      {/* Content */}
       <div className="relative z-10 h-full flex flex-col">
-        {/* Top Section - Title with Parallax */}
-        <motion.div
-          className="pt-24 md:pt-28 lg:pt-32"
-          style={{ y: textY, opacity: textOpacity }}
-        >
+        {/* Title */}
+        <div className="pt-24 md:pt-28 lg:pt-32">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -78,12 +56,12 @@ const HeroSectionComponent: React.FC = () => {
               Premium Car & Electric Vehicle Rentals
             </p>
           </motion.div>
-        </motion.div>
+        </div>
 
-        {/* Spacer - pushes bottom content down */}
+        {/* Spacer */}
         <div className="flex-1" />
 
-        {/* Bottom Section - Buttons and Search */}
+        {/* Bottom Section */}
         <div className="pb-8 md:pb-12 lg:pb-16 px-4 md:px-6">
           {/* Category Buttons */}
           <motion.div

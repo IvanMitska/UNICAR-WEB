@@ -169,6 +169,7 @@ const PopularCarsComponent: React.FC = () => {
                         alt={`${car.brand} ${car.model}`}
                         loading={index < 2 ? "eager" : "lazy"}
                         className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                        style={car.imagePosition ? { objectPosition: car.imagePosition } : undefined}
                       />
                     </picture>
                   </div>

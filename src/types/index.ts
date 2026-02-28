@@ -6,6 +6,7 @@ export interface Car {
   category: 'economy' | 'comfort' | 'business' | 'premium' | 'suv' | 'sport' | 'electric';
   pricePerDay: number;
   image: string;
+  imagePosition?: string;
   images: string[];
   features: string[];
   transmission: 'manual' | 'automatic';

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Eye, EyeOff, ArrowRight } from 'lucide-react';
+import { Eye, EyeOff, ArrowRight, ArrowLeft } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 
 export const SignInPage: React.FC = () => {
@@ -39,6 +39,14 @@ export const SignInPage: React.FC = () => {
           transition={{ duration: 0.5 }}
           className="w-full max-w-md"
         >
+          {/* Back button */}
+          <button
+            onClick={() => navigate(-1)}
+            className="mb-8 w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center hover:bg-gray-200 transition-colors"
+          >
+            <ArrowLeft className="w-5 h-5 text-gray-600" />
+          </button>
+
           {/* Logo */}
           <Link to="/" className="block mb-12">
             <span className="text-xl tracking-[0.3em] font-semibold text-gray-900">

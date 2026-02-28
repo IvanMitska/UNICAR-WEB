@@ -16,24 +16,10 @@ export const services: AdditionalService[] = [
     pricePerDay: 500,
   },
   {
-    id: 'gps',
-    name: 'GPS-навигатор',
-    description: 'Современный навигатор с актуальными картами России',
-    price: 300,
-    pricePerDay: 300,
-  },
-  {
     id: 'additional-driver',
     name: 'Дополнительный водитель',
     description: 'Возможность управления автомобилем вторым водителем',
     price: 1000,
-  },
-  {
-    id: 'full-insurance',
-    name: 'Полная страховка',
-    description: 'Полное страховое покрытие без франшизы',
-    price: 800,
-    pricePerDay: 800,
   },
   {
     id: 'delivery',
