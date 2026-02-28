@@ -2,7 +2,6 @@ import React, { useEffect, useState, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cars as staticCars } from '../data/cars';
-import { carsApi } from '../api/carsApi';
 import type { Car } from '../types';
 import { CustomDatePicker } from '../components/ui/CustomDatePicker';
 import { CustomLocationSelector } from '../components/ui/CustomLocationSelector';
@@ -71,25 +70,15 @@ export const CarDetailsPage: React.FC = () => {
 
   const favorite = car ? isFavorite(car.id) : false;
 
-  // Fetch car from API
+  // Use local car data (prices, photos, categories)
+  // API is only used for bookings
   useEffect(() => {
-    async function fetchCar() {
-      if (!id) return;
+    if (!id) return;
 
-      setIsLoading(true);
-      try {
-        const apiCar = await carsApi.getCarById(id);
-        setCar(apiCar);
-      } catch (err) {
-        console.warn('Failed to fetch car from API, using static data:', err);
-        // Fallback to static data
-        const staticCar = staticCars.find(c => c.id === id);
-        setCar(staticCar || null);
-      } finally {
-        setIsLoading(false);
-      }
-    }
-    fetchCar();
+    setIsLoading(true);
+    const staticCar = staticCars.find(c => c.id === id);
+    setCar(staticCar || null);
+    setIsLoading(false);
   }, [id]);
 
   useEffect(() => {
