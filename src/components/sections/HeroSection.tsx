@@ -34,16 +34,10 @@ const HeroSectionComponent: React.FC = () => {
 
   return (
     <section className="h-screen relative overflow-hidden">
-      {/* Background Image - Static */}
-      {/* Desktop */}
+      {/* Background Image - use high-res desktop image for all devices */}
       <div
-        className="absolute inset-0 hidden md:block bg-cover bg-center bg-no-repeat"
+        className="absolute inset-0 bg-cover bg-center bg-no-repeat"
         style={{ backgroundImage: 'url(/imager-web/hero-desctop.jpg)' }}
-      />
-      {/* Mobile */}
-      <div
-        className="absolute inset-0 md:hidden bg-cover bg-center bg-no-repeat"
-        style={{ backgroundImage: 'url(/imager-web/hero-mobile.jpg)' }}
       />
 
       {/* Dark overlay */}
