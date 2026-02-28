@@ -158,12 +158,11 @@ export const BookingForm: React.FC = () => {
         };
       });
 
-      // Get vehicle ID - try to parse as number, fallback to string-based ID
-      const vehicleId = parseInt(selectedCar.id) || selectedCar.id;
-      console.log('BookingForm: vehicleId =', vehicleId, 'from selectedCar.id =', selectedCar.id);
+      // Send car ID as string (matches websiteId in CRM)
+      console.log('BookingForm: vehicleId =', selectedCar.id);
 
       const bookingData = {
-        vehicleId: typeof vehicleId === 'number' ? vehicleId : parseInt(vehicleId) || 1,
+        vehicleId: selectedCar.id,
         customerFirstName: data.firstName,
         customerLastName: data.lastName,
         customerEmail: data.email,

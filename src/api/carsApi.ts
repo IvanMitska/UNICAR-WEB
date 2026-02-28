@@ -41,7 +41,7 @@ interface AdditionalService {
 }
 
 interface CreateBookingData {
-  vehicleId: number
+  vehicleId: string
   customerFirstName: string
   customerLastName: string
   customerEmail: string
