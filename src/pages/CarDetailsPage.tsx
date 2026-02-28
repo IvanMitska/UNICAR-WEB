@@ -48,7 +48,15 @@ export const CarDetailsPage: React.FC = () => {
   const navigate = useNavigate();
   const { toggleFavorite, isFavorite } = useFavorites();
   const { isAuthenticated } = useAuth();
-  const { setSelectedCar, setDates, setLocations } = useBookingStore();
+  const {
+    setSelectedCar,
+    setDates,
+    setLocations,
+    startDate: storedStartDate,
+    endDate: storedEndDate,
+    pickupLocation: storedPickupLocation,
+    returnLocation: storedReturnLocation
+  } = useBookingStore();
 
   // Car data state
   const [car, setCar] = useState<Car | null>(null);
@@ -62,11 +70,15 @@ export const CarDetailsPage: React.FC = () => {
   const [activeTab, setActiveTab] = useState<PricingTab>('daily');
   const [selectedTier, setSelectedTier] = useState(0);
 
-  // Booking state
-  const [startDate, setStartDate] = useState(format(new Date(), 'yyyy-MM-dd'));
-  const [endDate, setEndDate] = useState(format(addDays(new Date(), 3), 'yyyy-MM-dd'));
-  const [pickupLocation, setPickupLocation] = useState('Аэропорт Пхукета');
-  const [returnLocation, setReturnLocation] = useState('Аэропорт Пхукета');
+  // Booking state - use stored dates if available
+  const [startDate, setStartDate] = useState(() =>
+    storedStartDate ? format(new Date(storedStartDate), 'yyyy-MM-dd') : format(new Date(), 'yyyy-MM-dd')
+  );
+  const [endDate, setEndDate] = useState(() =>
+    storedEndDate ? format(new Date(storedEndDate), 'yyyy-MM-dd') : format(addDays(new Date(), 3), 'yyyy-MM-dd')
+  );
+  const [pickupLocation, setPickupLocation] = useState(storedPickupLocation || 'Аэропорт Пхукета');
+  const [returnLocation, setReturnLocation] = useState(storedReturnLocation || 'Аэропорт Пхукета');
 
   // Auto-adjust end date when start date changes
   const handleStartDateChange = (newStartDate: string) => {

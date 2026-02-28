@@ -3,17 +3,30 @@ import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Search } from 'lucide-react';
 import { HeroDatePicker } from '../ui/HeroDatePicker';
+import { useBookingStore } from '../../store/useBookingStore';
 
 const HeroSectionComponent: React.FC = () => {
   const navigate = useNavigate();
+  const { setDates, setLocations } = useBookingStore();
   const [pickupLocation, setPickupLocation] = useState('');
   const [pickupDate, setPickupDate] = useState('');
   const [dropoffDate, setDropoffDate] = useState('');
 
   const handleSearch = useCallback((e: React.FormEvent) => {
     e.preventDefault();
+    // Save dates to store
+    if (pickupDate || dropoffDate) {
+      setDates(
+        pickupDate ? new Date(pickupDate) : null,
+        dropoffDate ? new Date(dropoffDate) : null
+      );
+    }
+    // Save location to store
+    if (pickupLocation) {
+      setLocations(pickupLocation, pickupLocation);
+    }
     navigate('/cars');
-  }, [navigate]);
+  }, [navigate, pickupDate, dropoffDate, pickupLocation, setDates, setLocations]);
 
   const handleCategoryClick = useCallback((category: string) => {
     navigate(`/cars?category=${category}`);
