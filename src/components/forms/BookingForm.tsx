@@ -224,27 +224,27 @@ export const BookingForm: React.FC = () => {
 
   return (
     <div className="max-w-4xl mx-auto">
-      <div className="mb-8">
+      <div className="mb-8 overflow-hidden">
         <div className="flex items-center justify-between">
           {STEPS.map((step, index) => (
             <React.Fragment key={step.id}>
-              <div className="flex flex-col items-center">
+              <div className="flex flex-col items-center flex-shrink-0">
                 <div
-                  className={`w-12 h-12 rounded-full flex items-center justify-center transition-colors ${
+                  className={`w-10 h-10 md:w-12 md:h-12 rounded-full flex items-center justify-center transition-colors ${
                     currentStep >= step.id
                       ? 'bg-primary-500 text-white'
                       : 'bg-gray-200 text-gray-500'
                   }`}
                 >
-                  <step.icon className="w-6 h-6" />
+                  <step.icon className="w-5 h-5 md:w-6 md:h-6" />
                 </div>
-                <span className="mt-2 text-sm font-medium text-gray-700">
+                <span className="mt-2 text-xs md:text-sm font-medium text-gray-700 text-center hidden sm:block max-w-[80px] md:max-w-none">
                   {step.title}
                 </span>
               </div>
               {index < STEPS.length - 1 && (
                 <div
-                  className={`flex-1 h-1 mx-4 transition-colors ${
+                  className={`flex-1 h-1 mx-1 sm:mx-2 md:mx-4 transition-colors ${
                     currentStep > step.id ? 'bg-primary-500' : 'bg-gray-200'
                   }`}
                 />
@@ -254,7 +254,7 @@ export const BookingForm: React.FC = () => {
         </div>
       </div>
 
-      <div className="bg-white rounded-lg shadow-lg p-8">
+      <div className="bg-white rounded-lg shadow-lg p-4 sm:p-6 md:p-8">
         <div className="mb-6">
           <h2 className="text-2xl font-bold text-gray-900">
             {selectedCar.brand} {selectedCar.model}
