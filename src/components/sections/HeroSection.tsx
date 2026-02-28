@@ -37,7 +37,7 @@ const HeroSectionComponent: React.FC = () => {
       {/* Background Image - use high-res desktop image for all devices */}
       <div
         className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-        style={{ backgroundImage: 'url(/imager-web/hero-desctop.jpg)' }}
+        style={{ backgroundImage: 'url(/imager-web/hero-desctop.jpg?v=2)' }}
       />
 
       {/* Dark overlay */}
