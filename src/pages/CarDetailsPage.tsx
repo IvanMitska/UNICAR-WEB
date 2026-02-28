@@ -68,6 +68,15 @@ export const CarDetailsPage: React.FC = () => {
   const [pickupLocation, setPickupLocation] = useState('Аэропорт Пхукета');
   const [returnLocation, setReturnLocation] = useState('Аэропорт Пхукета');
 
+  // Auto-adjust end date when start date changes
+  const handleStartDateChange = (newStartDate: string) => {
+    setStartDate(newStartDate);
+    // If end date is before or equal to new start date, set it to start + 1 day
+    if (new Date(endDate) <= new Date(newStartDate)) {
+      setEndDate(format(addDays(new Date(newStartDate), 1), 'yyyy-MM-dd'));
+    }
+  };
+
   const favorite = car ? isFavorite(car.id) : false;
 
   // Use local car data (prices, photos, categories)
@@ -597,10 +606,10 @@ export const CarDetailsPage: React.FC = () => {
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                className="sticky top-24 bg-white rounded-3xl border border-primary-200 shadow-xl overflow-hidden"
+                className="sticky top-24 bg-white rounded-3xl border border-primary-200 shadow-xl"
               >
                 {/* Card Header */}
-                <div className="p-6 bg-primary-900 text-white">
+                <div className="p-6 bg-primary-900 text-white rounded-t-3xl">
                   <p className="text-white/70 text-sm mb-1">Быстрое бронирование</p>
                   <p className="text-3xl font-light">
                     {formatPrice(car.pricePerDay)}
@@ -614,7 +623,7 @@ export const CarDetailsPage: React.FC = () => {
                   <div className="grid grid-cols-2 gap-3">
                     <CustomDatePicker
                       value={startDate}
-                      onChange={setStartDate}
+                      onChange={handleStartDateChange}
                       label="Получение"
                       minDate={new Date()}
                     />
@@ -622,7 +631,7 @@ export const CarDetailsPage: React.FC = () => {
                       value={endDate}
                       onChange={setEndDate}
                       label="Возврат"
-                      minDate={new Date(startDate)}
+                      minDate={addDays(new Date(startDate), 1)}
                     />
                   </div>
 
