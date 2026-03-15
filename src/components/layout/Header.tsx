@@ -6,6 +6,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '../../utils/cn';
 import { useAuth } from '../../contexts/AuthContext';
 import { useBookingStore } from '../../store/useBookingStore';
+import { LanguageSwitcher } from '../ui/LanguageSwitcher';
 
 // Pages that have a light background from the start (no dark hero)
 const lightBackgroundPages = ['/cars', '/buy', '/about', '/contacts', '/terms', '/privacy', '/sign-in', '/get-started', '/profile', '/forgot-password', '/reset-password'];
@@ -212,6 +213,7 @@ export const Header: React.FC = () => {
 
             {/* Desktop Actions - Right */}
             <div className="hidden lg:flex items-center gap-6 relative z-50">
+              <LanguageSwitcher className={shouldUseDarkText ? '' : 'text-white [&>span]:text-white/60 [&>span]:hover:text-white'} />
               {isAuthenticated ? (
                 <Link
                   to="/profile"
@@ -466,12 +468,15 @@ export const Header: React.FC = () => {
                 <span className="text-lg tracking-[0.25em] font-semibold text-gray-900">
                   UNICAR
                 </span>
-                <button
-                  onClick={() => setIsMenuOpen(false)}
-                  className="p-2 -mr-2 transition-transform duration-200 active:scale-90"
-                >
-                  <X className="w-6 h-6 text-gray-900" />
-                </button>
+                <div className="flex items-center gap-4">
+                  <LanguageSwitcher />
+                  <button
+                    onClick={() => setIsMenuOpen(false)}
+                    className="p-2 -mr-2 transition-transform duration-200 active:scale-90"
+                  >
+                    <X className="w-6 h-6 text-gray-900" />
+                  </button>
+                </div>
               </div>
 
               {/* Navigation */}

@@ -2,10 +2,12 @@ import React, { useState, memo, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Search } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { HeroDatePicker } from '../ui/HeroDatePicker';
 import { useBookingStore } from '../../store/useBookingStore';
 
 const HeroSectionComponent: React.FC = () => {
+  const { t } = useTranslation(['pages', 'common']);
   const navigate = useNavigate();
   const { setDatesFromSearch, setLocations, clearSearch } = useBookingStore();
   const [pickupLocation, setPickupLocation] = useState('');
@@ -66,10 +68,10 @@ const HeroSectionComponent: React.FC = () => {
               className="text-[48px] sm:text-[64px] md:text-[80px] lg:text-[100px] xl:text-[120px] text-white mb-2 md:mb-4 tracking-[-0.02em] leading-[1]"
               style={{ fontWeight: 200 }}
             >
-              Drive the Future
+              {t('pages:hero.title')}
             </h1>
             <p className="text-sm md:text-base lg:text-lg text-white/70 max-w-md mx-auto font-light tracking-wide">
-              Premium Car & Electric Vehicle Rentals
+              {t('pages:hero.subtitle')}
             </p>
           </motion.div>
         </div>
@@ -90,19 +92,19 @@ const HeroSectionComponent: React.FC = () => {
               onClick={() => handleCategoryClick('')}
               className="px-6 md:px-8 py-2.5 md:py-3 bg-white text-gray-900 text-xs md:text-sm font-medium rounded-full hover:bg-gray-100 transition-colors"
             >
-              Explore Cars
+              {t('common:buttons.exploreCars')}
             </button>
             <button
               onClick={() => handleCategoryClick('suv')}
               className="px-6 md:px-8 py-2.5 md:py-3 bg-white/20 backdrop-blur-md text-white text-xs md:text-sm font-medium rounded-full border border-white/30 hover:bg-white/30 transition-colors"
             >
-              Luxury SUVs
+              {t('common:buttons.luxurySuvs')}
             </button>
             <button
               onClick={() => handleCategoryClick('sport')}
               className="px-6 md:px-8 py-2.5 md:py-3 bg-white/20 backdrop-blur-md text-white text-xs md:text-sm font-medium rounded-full border border-white/30 hover:bg-white/30 transition-colors"
             >
-              Sports Cars
+              {t('common:buttons.sportsCars')}
             </button>
           </motion.div>
 
@@ -121,7 +123,7 @@ const HeroSectionComponent: React.FC = () => {
               <div className="flex-1 relative flex items-center px-4 py-3.5 md:py-4 md:border-r border-gray-200">
                 <input
                   type="text"
-                  placeholder="Pick-Up Location"
+                  placeholder={t('common:form.pickupLocation')}
                   value={pickupLocation}
                   onChange={(e) => setPickupLocation(e.target.value)}
                   className="w-full text-sm text-gray-900 placeholder:text-gray-400 focus:outline-none bg-transparent"
@@ -133,7 +135,7 @@ const HeroSectionComponent: React.FC = () => {
                 <HeroDatePicker
                   value={pickupDate}
                   onChange={setPickupDate}
-                  placeholder="Pick-Up Date"
+                  placeholder={t('common:form.pickupDate')}
                 />
               </div>
 
@@ -142,7 +144,7 @@ const HeroSectionComponent: React.FC = () => {
                 <HeroDatePicker
                   value={dropoffDate}
                   onChange={setDropoffDate}
-                  placeholder="Drop-Off Date"
+                  placeholder={t('common:form.dropoffDate')}
                   minDate={pickupDate ? new Date(pickupDate) : new Date()}
                 />
               </div>
@@ -154,7 +156,7 @@ const HeroSectionComponent: React.FC = () => {
                   className="w-full md:w-auto flex items-center justify-center gap-2 px-6 md:px-8 py-3 bg-gray-900 text-white text-sm font-medium rounded-xl hover:bg-gray-800 transition-colors"
                 >
                   <Search className="w-4 h-4" />
-                  <span>Search</span>
+                  <span>{t('common:buttons.search')}</span>
                 </button>
               </div>
             </form>

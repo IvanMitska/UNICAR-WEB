@@ -1,0 +1,60 @@
+{
+  "nav": {
+    "home": "Home",
+    "cars": "Cars",
+    "about": "About",
+    "contact": "Contact",
+    "favorites": "Favorites",
+    "signIn": "Sign In",
+    "signOut": "Sign Out"
+  },
+  "buttons": {
+    "search": "Search",
+    "viewDetails": "View Details",
+    "bookNow": "Book Now",
+    "exploreCars": "Explore Cars",
+    "luxurySuvs": "Luxury SUVs",
+    "sportsCars": "Sports Cars",
+    "sendMessage": "Send Message",
+    "back": "Back",
+    "confirm": "Confirm",
+    "cancel": "Cancel"
+  },
+  "form": {
+    "pickupLocation": "Pick-Up Location",
+    "pickupDate": "Pick-Up Date",
+    "dropoffDate": "Drop-Off Date",
+    "name": "Name",
+    "email": "Email",
+    "phone": "Phone",
+    "message": "Message"
+  },
+  "price": {
+    "perDay": "/day",
+    "forDays": "for {{days}} days",
+    "total": "Total",
+    "discount": "-{{percent}}%",
+    "onRequest": "On Request"
+  },
+  "car": {
+    "available": "Available",
+    "unavailable": "Unavailable",
+    "seats": "{{count}} Seats",
+    "automatic": "Automatic Transmission",
+    "zeroEmissions": "Zero Emissions",
+    "hybrid": "Hybrid Engine"
+  },
+  "categories": {
+    "suv": "Luxury SUV",
+    "premium": "Premium Sedan",
+    "sport": "Sports Car",
+    "business": "Business Class",
+    "comfort": "Comfort Sedan",
+    "economy": "Economy"
+  },
+  "footer": {
+    "rights": "All rights reserved",
+    "privacy": "Privacy Policy",
+    "terms": "Terms of Service"
+  }
+}

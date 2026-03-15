@@ -2,6 +2,7 @@ import React, { memo } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Check, Heart } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import type { Car } from '../../types/index';
 import { formatPrice, calculateDays, getDailyRateForDuration, calculateRentalTotal } from '../../utils/formatters';
 import { useFavorites } from '../../contexts/FavoritesContext';
@@ -20,18 +21,6 @@ interface CarCardProps {
   index?: number;
   showRentalPrice?: boolean;
 }
-
-const getVehicleType = (car: Car): string => {
-  const typeMap: Record<string, string> = {
-    suv: 'Luxury SUV',
-    premium: 'Premium Sedan',
-    sport: 'Sports Car',
-    business: 'Business Class',
-    comfort: 'Comfort Sedan',
-    economy: 'Economy',
-  };
-  return typeMap[car.category] || 'Vehicle';
-};
 
 const getTopFeatures = (car: Car): string[] => {
   const features: string[] = [];
@@ -60,12 +49,15 @@ const getTopFeatures = (car: Car): string[] => {
 };
 
 const CarCardComponent: React.FC<CarCardProps> = ({ car, index = 0 }) => {
-  const vehicleType = getVehicleType(car);
+  const { t } = useTranslation('common');
   const topFeatures = getTopFeatures(car);
   const { isFavorite, toggleFavorite } = useFavorites();
   const { isAuthenticated } = useAuth();
   const navigate = useNavigate();
   const { startDate, endDate, searchPerformed } = useBookingStore();
+
+  // Get translated vehicle type
+  const vehicleType = t(`categories.${car.category}`, { defaultValue: 'Vehicle' });
 
   // Расчёт цены за период только если пользователь явно выбрал даты через поиск
   const hasDates = searchPerformed && startDate && endDate;
@@ -117,9 +109,9 @@ const CarCardComponent: React.FC<CarCardProps> = ({ car, index = 0 }) => {
                       <span className="text-2xl font-bold text-gray-900">
                         {formatPrice(totalPrice)}
                       </span>
-                      <span className="text-gray-400 text-sm ml-1">за {days} дн.</span>
+                      <span className="text-gray-400 text-sm ml-1">{t('price.forDays', { days })}</span>
                       <div className="text-sm text-gray-500 mt-0.5">
-                        {formatPrice(dailyRate)}/день
+                        {formatPrice(dailyRate)}{t('price.perDay')}
                         {dailyRate < car.pricePerDay && (
                           <span className="ml-2 text-green-600 font-medium">
                             -{Math.round((1 - dailyRate / car.pricePerDay) * 100)}%
@@ -132,7 +124,7 @@ const CarCardComponent: React.FC<CarCardProps> = ({ car, index = 0 }) => {
                       <span className="text-2xl font-bold text-gray-900">
                         {formatPrice(car.pricePerDay)}
                       </span>
-                      <span className="text-gray-400 text-sm ml-1">/day</span>
+                      <span className="text-gray-400 text-sm ml-1">{t('price.perDay')}</span>
                     </>
                   )}
                 </div>
@@ -150,7 +142,7 @@ const CarCardComponent: React.FC<CarCardProps> = ({ car, index = 0 }) => {
 
               {/* View Details Button */}
               <button className="w-full sm:w-auto mt-6 px-6 py-3 bg-gray-900 text-white font-medium rounded-full hover:bg-gray-800 transition-colors text-center">
-                View Details
+                {t('buttons.viewDetails')}
               </button>
             </div>
 
@@ -186,7 +178,7 @@ const CarCardComponent: React.FC<CarCardProps> = ({ car, index = 0 }) => {
                 {/* Unavailable overlay */}
                 {!car.available && (
                   <div className="absolute inset-0 bg-white/90 backdrop-blur-sm flex items-center justify-center">
-                    <span className="text-gray-500 font-medium text-lg">Unavailable</span>
+                    <span className="text-gray-500 font-medium text-lg">{t('car.unavailable')}</span>
                   </div>
                 )}
               </div>

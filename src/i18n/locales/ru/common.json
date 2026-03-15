@@ -1,0 +1,60 @@
+{
+  "nav": {
+    "home": "Главная",
+    "cars": "Автомобили",
+    "about": "О нас",
+    "contact": "Контакты",
+    "favorites": "Избранное",
+    "signIn": "Войти",
+    "signOut": "Выйти"
+  },
+  "buttons": {
+    "search": "Поиск",
+    "viewDetails": "Подробнее",
+    "bookNow": "Забронировать",
+    "exploreCars": "Смотреть авто",
+    "luxurySuvs": "Премиум SUV",
+    "sportsCars": "Спорткары",
+    "sendMessage": "Отправить",
+    "back": "Назад",
+    "confirm": "Подтвердить",
+    "cancel": "Отмена"
+  },
+  "form": {
+    "pickupLocation": "Место получения",
+    "pickupDate": "Дата получения",
+    "dropoffDate": "Дата возврата",
+    "name": "Имя",
+    "email": "Email",
+    "phone": "Телефон",
+    "message": "Сообщение"
+  },
+  "price": {
+    "perDay": "/день",
+    "forDays": "за {{days}} дн.",
+    "total": "Итого",
+    "discount": "-{{percent}}%",
+    "onRequest": "По запросу"
+  },
+  "car": {
+    "available": "Доступен",
+    "unavailable": "Недоступен",
+    "seats": "{{count}} мест",
+    "automatic": "Автомат",
+    "zeroEmissions": "Электро",
+    "hybrid": "Гибрид"
+  },
+  "categories": {
+    "suv": "Премиум SUV",
+    "premium": "Премиум седан",
+    "sport": "Спорткар",
+    "business": "Бизнес-класс",
+    "comfort": "Комфорт",
+    "economy": "Эконом"
+  },
+  "footer": {
+    "rights": "Все права защищены",
+    "privacy": "Политика конфиденциальности",
+    "terms": "Условия использования"
+  }
+}

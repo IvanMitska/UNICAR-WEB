@@ -1,0 +1,88 @@
+{
+  "hero": {
+    "title": "Drive the Future",
+    "subtitle": "Премиум аренда авто и электромобилей"
+  },
+  "carDetails": {
+    "specifications": "Характеристики",
+    "features": "Особенности",
+    "year": "Год",
+    "transmission": "Коробка передач",
+    "fuel": "Тип топлива",
+    "seats": "Мест",
+    "engine": "Двигатель",
+    "priceCalculator": "Калькулятор стоимости",
+    "selectDays": "Выберите срок аренды",
+    "dailyRate": "Цена за день",
+    "totalPrice": "Общая стоимость",
+    "youSave": "Вы экономите",
+    "bookingDates": "Даты бронирования",
+    "startDate": "Дата начала",
+    "endDate": "Дата окончания",
+    "location": "Локация",
+    "additionalServices": "Дополнительные услуги",
+    "childSeat": "Детское кресло",
+    "insurance": "Полная страховка",
+    "delivery": "Доставка",
+    "perDayService": "/день",
+    "oneTimeService": "разово"
+  },
+  "cars": {
+    "title": "Наш автопарк",
+    "subtitle": "Выберите премиум автомобиль",
+    "filters": "Фильтры",
+    "allCategories": "Все категории",
+    "sortBy": "Сортировка",
+    "priceAsc": "Сначала дешевле",
+    "priceDesc": "Сначала дороже",
+    "newest": "Сначала новые",
+    "noResults": "Автомобили не найдены",
+    "tryOther": "Попробуйте изменить фильтры"
+  },
+  "about": {
+    "title": "О нас",
+    "subtitle": "Премиум аренда автомобилей в Таиланде",
+    "mission": "Наша миссия",
+    "missionText": "Мы предоставляем исключительный сервис аренды авто с фокусом на удовлетворенность клиентов и качество автомобилей.",
+    "whyUs": "Почему выбирают нас",
+    "experience": "Опыт работы",
+    "experienceText": "Нам доверяют тысячи клиентов",
+    "fleet": "Премиум автопарк",
+    "fleetText": "Широкий выбор люксовых и электрических авто",
+    "service": "Поддержка 24/7",
+    "serviceText": "Всегда готовы помочь",
+    "prices": "Лучшие цены",
+    "pricesText": "Конкурентные цены без скрытых платежей"
+  },
+  "contact": {
+    "title": "Контакты",
+    "subtitle": "Свяжитесь с нами",
+    "address": "Адрес",
+    "phone": "Телефон",
+    "email": "Email",
+    "workingHours": "Часы работы",
+    "formTitle": "Напишите нам",
+    "formSuccess": "Сообщение отправлено!",
+    "formError": "Ошибка отправки"
+  },
+  "favorites": {
+    "title": "Избранное",
+    "empty": "Пока пусто",
+    "emptyText": "Добавьте автомобили в избранное"
+  },
+  "auth": {
+    "signIn": "Вход",
+    "signUp": "Регистрация",
+    "email": "Email",
+    "password": "Пароль",
+    "confirmPassword": "Подтвердите пароль",
+    "forgotPassword": "Забыли пароль?",
+    "noAccount": "Нет аккаунта?",
+    "hasAccount": "Уже есть аккаунт?",
+    "orContinueWith": "Или войти через"
+  },
+  "popularCars": {
+    "title": "Популярные модели",
+    "subtitle": "Чаще всего арендуют"
+  }
+}

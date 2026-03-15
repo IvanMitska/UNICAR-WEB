@@ -1,0 +1,88 @@
+{
+  "hero": {
+    "title": "Drive the Future",
+    "subtitle": "Premium Car & Electric Vehicle Rentals"
+  },
+  "carDetails": {
+    "specifications": "Specifications",
+    "features": "Features",
+    "year": "Year",
+    "transmission": "Transmission",
+    "fuel": "Fuel Type",
+    "seats": "Seats",
+    "engine": "Engine",
+    "priceCalculator": "Price Calculator",
+    "selectDays": "Select rental days",
+    "dailyRate": "Daily rate",
+    "totalPrice": "Total price",
+    "youSave": "You save",
+    "bookingDates": "Booking Dates",
+    "startDate": "Start Date",
+    "endDate": "End Date",
+    "location": "Location",
+    "additionalServices": "Additional Services",
+    "childSeat": "Child Seat",
+    "insurance": "Full Insurance",
+    "delivery": "Delivery",
+    "perDayService": "/day",
+    "oneTimeService": "one-time"
+  },
+  "cars": {
+    "title": "Our Fleet",
+    "subtitle": "Explore our collection of premium vehicles",
+    "filters": "Filters",
+    "allCategories": "All Categories",
+    "sortBy": "Sort by",
+    "priceAsc": "Price: Low to High",
+    "priceDesc": "Price: High to Low",
+    "newest": "Newest",
+    "noResults": "No cars found",
+    "tryOther": "Try changing filters"
+  },
+  "about": {
+    "title": "About Us",
+    "subtitle": "Premium car rental service in Thailand",
+    "mission": "Our Mission",
+    "missionText": "We provide exceptional car rental services with a focus on customer satisfaction and premium vehicle quality.",
+    "whyUs": "Why Choose Us",
+    "experience": "Years of Experience",
+    "experienceText": "Trusted by thousands of customers",
+    "fleet": "Premium Fleet",
+    "fleetText": "Wide selection of luxury and electric vehicles",
+    "service": "24/7 Support",
+    "serviceText": "Always here to help you",
+    "prices": "Best Prices",
+    "pricesText": "Competitive rates with no hidden fees"
+  },
+  "contact": {
+    "title": "Contact Us",
+    "subtitle": "Get in touch with our team",
+    "address": "Address",
+    "phone": "Phone",
+    "email": "Email",
+    "workingHours": "Working Hours",
+    "formTitle": "Send us a message",
+    "formSuccess": "Message sent successfully!",
+    "formError": "Error sending message"
+  },
+  "favorites": {
+    "title": "Favorites",
+    "empty": "No favorites yet",
+    "emptyText": "Add cars to favorites to see them here"
+  },
+  "auth": {
+    "signIn": "Sign In",
+    "signUp": "Sign Up",
+    "email": "Email",
+    "password": "Password",
+    "confirmPassword": "Confirm Password",
+    "forgotPassword": "Forgot Password?",
+    "noAccount": "Don't have an account?",
+    "hasAccount": "Already have an account?",
+    "orContinueWith": "Or continue with"
+  },
+  "popularCars": {
+    "title": "Popular Models",
+    "subtitle": "Most rented vehicles"
+  }
+}
