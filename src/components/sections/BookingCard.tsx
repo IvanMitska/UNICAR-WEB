@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Calendar, MapPin, Info } from 'lucide-react';
 import { Button } from '../ui/Button';
 import type { Car } from '../../types/index';
-import { formatPrice, calculateDays } from '../../utils/formatters';
+import { formatPrice, calculateDays, getDailyRateForDuration, calculateRentalTotal } from '../../utils/formatters';
 import { format, addDays } from 'date-fns';
 import { useBookingStore } from '../../store/useBookingStore';
 
@@ -21,7 +21,8 @@ export const BookingCard: React.FC<BookingCardProps> = ({ car }) => {
   const [returnLocation, setReturnLocation] = useState('Шереметьево');
 
   const days = calculateDays(new Date(startDate), new Date(endDate));
-  const totalPrice = car.pricePerDay * days;
+  const dailyRate = getDailyRateForDuration(car.pricePerDay, days);
+  const totalPrice = calculateRentalTotal(car.pricePerDay, days);
 
   const handleBooking = () => {
     setSelectedCar(car);
@@ -34,9 +35,14 @@ export const BookingCard: React.FC<BookingCardProps> = ({ car }) => {
     <div className="glass-effect rounded-xl shadow-xl border border-dark-800/50 hover:border-yellow-500/30 p-6 transition-all duration-300">
       <div className="mb-6">
         <div className="text-3xl font-bold gradient-text">
-          {formatPrice(car.pricePerDay)}
+          {formatPrice(dailyRate)}
           <span className="text-base font-normal text-gray-400 ml-1">/день</span>
         </div>
+        {dailyRate < car.pricePerDay && (
+          <div className="text-sm text-gray-500 line-through mt-1">
+            {formatPrice(car.pricePerDay)}/день
+          </div>
+        )}
       </div>
 
       <div className="space-y-4 mb-6">
@@ -107,8 +113,8 @@ export const BookingCard: React.FC<BookingCardProps> = ({ car }) => {
 
       <div className="border-t border-dark-700 pt-4 mb-6">
         <div className="flex justify-between text-sm text-gray-300 mb-2">
-          <span>Стоимость за {days} дней</span>
-          <span>{formatPrice(car.pricePerDay * days)}</span>
+          <span>{formatPrice(dailyRate)} × {days} дн.</span>
+          <span>{formatPrice(totalPrice)}</span>
         </div>
         <div className="flex justify-between font-semibold text-lg">
           <span className="text-white">Итого</span>

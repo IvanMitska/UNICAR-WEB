@@ -7,16 +7,16 @@ import { useBookingStore } from '../../store/useBookingStore';
 
 const HeroSectionComponent: React.FC = () => {
   const navigate = useNavigate();
-  const { setDates, setLocations } = useBookingStore();
+  const { setDatesFromSearch, setLocations, clearSearch } = useBookingStore();
   const [pickupLocation, setPickupLocation] = useState('');
   const [pickupDate, setPickupDate] = useState('');
   const [dropoffDate, setDropoffDate] = useState('');
 
   const handleSearch = useCallback((e: React.FormEvent) => {
     e.preventDefault();
-    // Save dates to store
+    // Save dates to store (with searchPerformed flag)
     if (pickupDate || dropoffDate) {
-      setDates(
+      setDatesFromSearch(
         pickupDate ? new Date(pickupDate) : null,
         dropoffDate ? new Date(dropoffDate) : null
       );
@@ -26,19 +26,27 @@ const HeroSectionComponent: React.FC = () => {
       setLocations(pickupLocation, pickupLocation);
     }
     navigate('/cars');
-  }, [navigate, pickupDate, dropoffDate, pickupLocation, setDates, setLocations]);
+  }, [navigate, pickupDate, dropoffDate, pickupLocation, setDatesFromSearch, setLocations]);
 
   const handleCategoryClick = useCallback((category: string) => {
+    clearSearch(); // Сброс флага поиска при переходе по категории
     navigate(`/cars?category=${category}`);
-  }, [navigate]);
+  }, [navigate, clearSearch]);
 
   return (
     <section className="h-screen relative overflow-hidden">
       {/* Background Image - using img tag for better iOS Safari support */}
+      {/* Desktop version */}
       <img
         src="/imager-web/hero-desctop.jpg"
         alt=""
-        className="absolute inset-0 w-full h-full object-cover"
+        className="absolute inset-0 w-full h-full object-cover hidden md:block"
+      />
+      {/* Mobile version */}
+      <img
+        src="/imager-web/hero-mobile-new.png"
+        alt=""
+        className="absolute inset-0 w-full h-full object-cover md:hidden"
       />
 
       {/* Dark overlay */}

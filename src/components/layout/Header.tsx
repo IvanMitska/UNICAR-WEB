@@ -5,6 +5,7 @@ import { Menu, X } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '../../utils/cn';
 import { useAuth } from '../../contexts/AuthContext';
+import { useBookingStore } from '../../store/useBookingStore';
 
 // Pages that have a light background from the start (no dark hero)
 const lightBackgroundPages = ['/cars', '/buy', '/about', '/contacts', '/terms', '/privacy', '/sign-in', '/get-started', '/profile', '/forgot-password', '/reset-password'];
@@ -83,6 +84,7 @@ export const Header: React.FC = () => {
   const dropdownTimeout = useRef<NodeJS.Timeout | null>(null);
   const location = useLocation();
   const { user, isAuthenticated } = useAuth();
+  const { clearSearch } = useBookingStore();
 
   // Check if current page has light background
   const isLightPage = lightBackgroundPages.some(page => location.pathname.startsWith(page));
@@ -180,7 +182,13 @@ export const Header: React.FC = () => {
                 >
                   <NavLink
                     to={link.to}
-                    onClick={() => setActiveDropdown(null)}
+                    onClick={() => {
+                      setActiveDropdown(null);
+                      // Сброс флага поиска при переходе через меню
+                      if (link.to.startsWith('/cars')) {
+                        clearSearch();
+                      }
+                    }}
                     className={({ isActive }) =>
                       cn(
                         'relative text-sm font-medium transition-all duration-300 py-2 px-3 rounded-md',
@@ -365,7 +373,10 @@ export const Header: React.FC = () => {
                         >
                           <Link
                             to={car.isInventory ? '/cars' : `/cars/${car.id}`}
-                            onClick={() => setActiveDropdown(null)}
+                            onClick={() => {
+                              setActiveDropdown(null);
+                              if (car.isInventory) clearSearch();
+                            }}
                             className="group text-center block"
                           >
                             <div className="relative mb-4 h-40 flex items-end justify-center">
@@ -425,7 +436,10 @@ export const Header: React.FC = () => {
                         >
                           <Link
                             to={link.to}
-                            onClick={() => setActiveDropdown(null)}
+                            onClick={() => {
+                              setActiveDropdown(null);
+                              if (link.to.startsWith('/cars')) clearSearch();
+                            }}
                             className="block py-1.5 text-sm text-gray-700 hover:text-gray-900 transition-colors"
                           >
                             {link.label}
@@ -467,7 +481,10 @@ export const Header: React.FC = () => {
                     <NavLink
                       key={link.to}
                       to={link.to}
-                      onClick={() => setIsMenuOpen(false)}
+                      onClick={() => {
+                        setIsMenuOpen(false);
+                        if (link.to.startsWith('/cars')) clearSearch();
+                      }}
                       className={({ isActive }) =>
                         cn(
                           'block py-4 text-2xl font-light border-b border-gray-100 transition-all duration-300 hover:pl-4 animate-menu-item',

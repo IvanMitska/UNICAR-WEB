@@ -24,7 +24,7 @@ export const services: AdditionalService[] = [
   {
     id: 'delivery',
     name: 'Доставка автомобиля',
-    description: 'Доставка автомобиля по указанному адресу в пределах МКАД',
+    description: 'Доставка автомобиля по указанному адресу в Пхукете',
     price: 1500,
   },
 ];

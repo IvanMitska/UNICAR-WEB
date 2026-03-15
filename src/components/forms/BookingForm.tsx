@@ -24,7 +24,7 @@ import {
 } from 'lucide-react';
 import { Button } from '../ui/Button';
 import { useBookingStore } from '../../store/useBookingStore';
-import { formatCurrency } from '../../utils/formatters';
+import { formatCurrency, getDailyRateForDuration, calculateRentalTotal } from '../../utils/formatters';
 import { services } from '../../data/services';
 import { offices } from '../../data/offices';
 import { differenceInDays } from 'date-fns';
@@ -99,10 +99,15 @@ export const BookingForm: React.FC = () => {
     return Math.max(1, days);
   }, [bookingDates]);
 
+  const dailyRate = useMemo(() => {
+    if (!selectedCar || rentalDays === 0) return selectedCar?.pricePerDay || 0;
+    return getDailyRateForDuration(selectedCar.pricePerDay, rentalDays);
+  }, [selectedCar, rentalDays]);
+
   const calculateTotal = useMemo(() => {
     if (!selectedCar) return 0;
-    
-    const carPrice = selectedCar.pricePerDay * rentalDays;
+
+    const carPrice = calculateRentalTotal(selectedCar.pricePerDay, rentalDays);
     const servicesPrice = selectedServices.reduce((total, serviceId) => {
       const service = services.find(s => s.id === serviceId);
       if (service) {
@@ -260,7 +265,12 @@ export const BookingForm: React.FC = () => {
             {selectedCar.brand} {selectedCar.model}
           </h2>
           <p className="text-gray-600">
-            {formatCurrency(selectedCar.pricePerDay)}/день
+            {formatCurrency(dailyRate)}/день
+            {dailyRate < selectedCar.pricePerDay && (
+              <span className="ml-2 text-gray-400 line-through text-sm">
+                {formatCurrency(selectedCar.pricePerDay)}
+              </span>
+            )}
           </p>
         </div>
 
@@ -529,8 +539,17 @@ export const BookingForm: React.FC = () => {
                   <div className="flex justify-between">
                     <span className="text-gray-600">Стоимость аренды:</span>
                     <span className="font-semibold">
-                      {formatCurrency(selectedCar.pricePerDay * rentalDays)}
+                      {formatCurrency(calculateRentalTotal(selectedCar.pricePerDay, rentalDays))}
                     </span>
+                  </div>
+
+                  <div className="flex justify-between text-sm">
+                    <span className="text-gray-500">{formatCurrency(dailyRate)} × {rentalDays} дн.</span>
+                    {dailyRate < selectedCar.pricePerDay && (
+                      <span className="text-green-600 font-medium">
+                        Скидка {Math.round((1 - dailyRate / selectedCar.pricePerDay) * 100)}%
+                      </span>
+                    )}
                   </div>
                   
                   {selectedServices.length > 0 && (

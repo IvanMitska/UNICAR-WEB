@@ -3,9 +3,10 @@ import { Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Check, Heart } from 'lucide-react';
 import type { Car } from '../../types/index';
-import { formatPrice } from '../../utils/formatters';
+import { formatPrice, calculateDays, getDailyRateForDuration, calculateRentalTotal } from '../../utils/formatters';
 import { useFavorites } from '../../contexts/FavoritesContext';
 import { useAuth } from '../../contexts/AuthContext';
+import { useBookingStore } from '../../store/useBookingStore';
 
 // Helper to get WebP path from original image path
 const getWebPPath = (src: string): string => {
@@ -64,6 +65,13 @@ const CarCardComponent: React.FC<CarCardProps> = ({ car, index = 0 }) => {
   const { isFavorite, toggleFavorite } = useFavorites();
   const { isAuthenticated } = useAuth();
   const navigate = useNavigate();
+  const { startDate, endDate, searchPerformed } = useBookingStore();
+
+  // Расчёт цены за период только если пользователь явно выбрал даты через поиск
+  const hasDates = searchPerformed && startDate && endDate;
+  const days = hasDates ? calculateDays(new Date(startDate), new Date(endDate)) : 0;
+  const dailyRate = hasDates ? getDailyRateForDuration(car.pricePerDay, days) : car.pricePerDay;
+  const totalPrice = hasDates ? calculateRentalTotal(car.pricePerDay, days) : 0;
 
   const handleFavoriteClick = async (e: React.MouseEvent) => {
     e.preventDefault();
@@ -104,10 +112,29 @@ const CarCardComponent: React.FC<CarCardProps> = ({ car, index = 0 }) => {
 
                 {/* Price */}
                 <div className="mb-4">
-                  <span className="text-2xl font-bold text-gray-900">
-                    {formatPrice(car.pricePerDay)}
-                  </span>
-                  <span className="text-gray-400 text-sm ml-1">/day</span>
+                  {hasDates ? (
+                    <>
+                      <span className="text-2xl font-bold text-gray-900">
+                        {formatPrice(totalPrice)}
+                      </span>
+                      <span className="text-gray-400 text-sm ml-1">за {days} дн.</span>
+                      <div className="text-sm text-gray-500 mt-0.5">
+                        {formatPrice(dailyRate)}/день
+                        {dailyRate < car.pricePerDay && (
+                          <span className="ml-2 text-green-600 font-medium">
+                            -{Math.round((1 - dailyRate / car.pricePerDay) * 100)}%
+                          </span>
+                        )}
+                      </div>
+                    </>
+                  ) : (
+                    <>
+                      <span className="text-2xl font-bold text-gray-900">
+                        {formatPrice(car.pricePerDay)}
+                      </span>
+                      <span className="text-gray-400 text-sm ml-1">/day</span>
+                    </>
+                  )}
                 </div>
 
                 {/* Features */}

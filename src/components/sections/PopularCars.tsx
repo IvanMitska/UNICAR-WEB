@@ -16,8 +16,8 @@ const getWebPPath = (src: string): string => {
 const POPULAR_CAR_IDS = [
   'mustang-yellow-2021',
   'mustang-yellow-2016',
-  'mustang-blue-2020',
-  'mustang-white-2020',
+  'mustang-blue-2018',
+  'mustang-white-2017',
   'bmw-x5-2020',
 ];
 

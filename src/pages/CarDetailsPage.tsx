@@ -21,7 +21,7 @@ import {
   ArrowRight,
   Loader2
 } from 'lucide-react';
-import { formatPrice, calculateDays } from '../utils/formatters';
+import { formatPrice, calculateDays, getDailyRateForDuration, calculateRentalTotal } from '../utils/formatters';
 import { useFavorites } from '../contexts/FavoritesContext';
 import { useAuth } from '../contexts/AuthContext';
 import { useBookingStore } from '../store/useBookingStore';
@@ -29,19 +29,12 @@ import { format, addDays } from 'date-fns';
 import { cn } from '../utils/cn';
 import { SimilarCars } from '../components/sections/SimilarCars';
 
-type PricingTab = 'daily' | 'monthly';
-
 const fuelLabels: Record<string, string> = {
   petrol: 'Бензин',
   diesel: 'Дизель',
   hybrid: 'Гибрид',
   electric: 'Электро',
 };
-
-const pricingTabs = [
-  { id: 'daily' as PricingTab, label: 'Посуточно' },
-  { id: 'monthly' as PricingTab, label: 'Помесячно' },
-];
 
 export const CarDetailsPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -66,10 +59,6 @@ export const CarDetailsPage: React.FC = () => {
   const [currentImage, setCurrentImage] = useState(0);
   const [isFullscreen, setIsFullscreen] = useState(false);
 
-  // Pricing state
-  const [activeTab, setActiveTab] = useState<PricingTab>('daily');
-  const [selectedTier, setSelectedTier] = useState(0);
-
   // Booking state - use stored dates if available
   const [startDate, setStartDate] = useState(() =>
     storedStartDate ? format(new Date(storedStartDate), 'yyyy-MM-dd') : format(new Date(), 'yyyy-MM-dd')
@@ -80,12 +69,39 @@ export const CarDetailsPage: React.FC = () => {
   const [pickupLocation, setPickupLocation] = useState(storedPickupLocation || 'Аэропорт Пхукета');
   const [returnLocation, setReturnLocation] = useState(storedReturnLocation || 'Аэропорт Пхукета');
 
+  // Pricing state - sync with booking dates
+  const currentDays = calculateDays(new Date(startDate), new Date(endDate));
+  const [sliderDays, setSliderDays] = useState(currentDays || 3);
+
+  // Sync slider with dates when dates change
+  useEffect(() => {
+    const days = calculateDays(new Date(startDate), new Date(endDate));
+    if (days > 0 && days <= 30 && days !== sliderDays) {
+      setSliderDays(days);
+    }
+  }, [startDate, endDate]);
+
+  // Update end date when slider changes
+  const handleSliderChange = (newDays: number) => {
+    setSliderDays(newDays);
+    const newEndDate = addDays(new Date(startDate), newDays);
+    setEndDate(format(newEndDate, 'yyyy-MM-dd'));
+  };
+
   // Auto-adjust end date when start date changes
   const handleStartDateChange = (newStartDate: string) => {
     setStartDate(newStartDate);
-    // If end date is before or equal to new start date, set it to start + 1 day
-    if (new Date(endDate) <= new Date(newStartDate)) {
-      setEndDate(format(addDays(new Date(newStartDate), 1), 'yyyy-MM-dd'));
+    // Keep the same number of days
+    const newEndDate = addDays(new Date(newStartDate), sliderDays);
+    setEndDate(format(newEndDate, 'yyyy-MM-dd'));
+  };
+
+  // Update slider when end date changes manually
+  const handleEndDateChange = (newEndDate: string) => {
+    setEndDate(newEndDate);
+    const days = calculateDays(new Date(startDate), new Date(newEndDate));
+    if (days > 0 && days <= 30) {
+      setSliderDays(days);
     }
   };
 
@@ -156,23 +172,8 @@ export const CarDetailsPage: React.FC = () => {
   }
 
   const days = calculateDays(new Date(startDate), new Date(endDate));
-  const totalPrice = car.pricePerDay * days;
-
-  // Pricing tiers based on duration
-  const pricingTiers = {
-    daily: [
-      { duration: '1-2 дня', price: car.pricePerDay },
-      { duration: '3-6 дней', price: Math.round(car.pricePerDay * 0.9) },
-      { duration: '7-13 дней', price: Math.round(car.pricePerDay * 0.85) },
-      { duration: '14-29 дней', price: Math.round(car.pricePerDay * 0.8) },
-      { duration: '30+ дней', price: Math.round(car.pricePerDay * 0.7) },
-    ],
-    monthly: [
-      { duration: '1 месяц', price: Math.round(car.pricePerDay * 8.75) },
-      { duration: '2 месяца', price: Math.round(car.pricePerDay * 7.5) },
-      { duration: '3+ месяца', price: Math.round(car.pricePerDay * 6.5) },
-    ],
-  };
+  const dailyRate = getDailyRateForDuration(car.pricePerDay, days);
+  const totalPrice = calculateRentalTotal(car.pricePerDay, days);
 
   const locations = [
     { id: 'phuket-airport', name: 'Аэропорт Пхукета', description: 'Международный аэропорт', popular: true },
@@ -530,68 +531,102 @@ export const CarDetailsPage: React.FC = () => {
                 </motion.div>
               )}
 
-              {/* Pricing Tiers */}
+              {/* Pricing Calculator */}
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
               >
-                <h2 className="text-2xl font-light text-primary-900 mb-6">Тарифы</h2>
+                <h2 className="text-2xl font-light text-primary-900 mb-6">Калькулятор стоимости</h2>
 
-                {/* Tabs */}
-                <div className="flex gap-2 mb-6">
-                  {pricingTabs.map((tab) => (
-                    <button
-                      key={tab.id}
-                      onClick={() => {
-                        setActiveTab(tab.id);
-                        setSelectedTier(0);
+                {/* Interactive Slider */}
+                <div className="bg-primary-50 rounded-3xl p-6 md:p-8">
+                  {/* Days Display */}
+                  <div className="text-center mb-6">
+                    <span className="text-6xl md:text-7xl font-light text-primary-900">{sliderDays}</span>
+                    <span className="text-2xl text-primary-400 ml-2">
+                      {sliderDays === 1 ? 'день' : sliderDays < 5 ? 'дня' : 'дней'}
+                    </span>
+                  </div>
+
+                  {/* Slider */}
+                  <div className="relative mb-8">
+                    <input
+                      type="range"
+                      min="1"
+                      max="30"
+                      value={sliderDays}
+                      onChange={(e) => handleSliderChange(Number(e.target.value))}
+                      className="w-full h-2 bg-primary-200 rounded-full appearance-none cursor-pointer
+                        [&::-webkit-slider-thumb]:appearance-none
+                        [&::-webkit-slider-thumb]:w-6
+                        [&::-webkit-slider-thumb]:h-6
+                        [&::-webkit-slider-thumb]:bg-primary-900
+                        [&::-webkit-slider-thumb]:rounded-full
+                        [&::-webkit-slider-thumb]:cursor-pointer
+                        [&::-webkit-slider-thumb]:transition-transform
+                        [&::-webkit-slider-thumb]:hover:scale-110
+                        [&::-moz-range-thumb]:w-6
+                        [&::-moz-range-thumb]:h-6
+                        [&::-moz-range-thumb]:bg-primary-900
+                        [&::-moz-range-thumb]:rounded-full
+                        [&::-moz-range-thumb]:border-0
+                        [&::-moz-range-thumb]:cursor-pointer"
+                      style={{
+                        background: `linear-gradient(to right, #111827 0%, #111827 ${((sliderDays - 1) / 29) * 100}%, #e5e7eb ${((sliderDays - 1) / 29) * 100}%, #e5e7eb 100%)`
                       }}
-                      className={cn(
-                        "px-6 py-3 rounded-full text-sm font-medium transition-all",
-                        activeTab === tab.id
-                          ? "bg-primary-900 text-white"
-                          : "bg-primary-100 text-primary-600 hover:bg-primary-200"
-                      )}
-                    >
-                      {tab.label}
-                    </button>
-                  ))}
-                </div>
+                    />
+                    {/* Scale markers */}
+                    <div className="flex justify-between mt-2 text-xs text-primary-400">
+                      <span>1</span>
+                      <span>7</span>
+                      <span>14</span>
+                      <span>21</span>
+                      <span>30</span>
+                    </div>
+                  </div>
 
-                {/* Pricing Grid */}
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                  {pricingTiers[activeTab].map((tier, index) => (
-                    <button
-                      key={index}
-                      onClick={() => setSelectedTier(index)}
-                      className={cn(
-                        "p-6 rounded-2xl border-2 transition-all text-left cursor-pointer",
-                        selectedTier === index
-                          ? "border-primary-900 bg-primary-900 text-white"
-                          : "border-primary-200 bg-white hover:border-primary-400"
+                  {/* Price Display */}
+                  <div className="grid grid-cols-2 gap-4 md:gap-6">
+                    <div className="bg-white rounded-2xl p-5 text-center">
+                      <p className="text-primary-400 text-sm mb-1">Цена за день</p>
+                      <p className="text-2xl md:text-3xl font-light text-primary-900">
+                        {formatPrice(getDailyRateForDuration(car.pricePerDay, sliderDays))}
+                      </p>
+                      {sliderDays > 1 && (
+                        <p className="text-green-600 text-sm mt-1 font-medium">
+                          -{Math.round((1 - getDailyRateForDuration(car.pricePerDay, sliderDays) / car.pricePerDay) * 100)}%
+                        </p>
                       )}
-                    >
-                      <p className={cn(
-                        "text-sm mb-2",
-                        selectedTier === index ? "text-white/70" : "text-primary-400"
-                      )}>
-                        {tier.duration}
+                    </div>
+                    <div className="bg-primary-900 rounded-2xl p-5 text-center">
+                      <p className="text-white/60 text-sm mb-1">Итого</p>
+                      <p className="text-2xl md:text-3xl font-light text-white">
+                        {formatPrice(calculateRentalTotal(car.pricePerDay, sliderDays))}
                       </p>
-                      <p className={cn(
-                        "text-3xl font-light",
-                        selectedTier === index ? "text-white" : "text-primary-900"
-                      )}>
-                        {formatPrice(tier.price)}
-                        <span className={cn(
-                          "text-sm ml-1",
-                          selectedTier === index ? "text-white/60" : "text-primary-400"
-                        )}>
-                          {activeTab === 'daily' ? '/день' : '/мес'}
-                        </span>
+                      <p className="text-white/50 text-sm mt-1">
+                        за {sliderDays} {sliderDays === 1 ? 'день' : sliderDays < 5 ? 'дня' : 'дней'}
                       </p>
-                    </button>
-                  ))}
+                    </div>
+                  </div>
+
+                  {/* Quick Select Buttons */}
+                  <div className="flex flex-wrap justify-center gap-2 mt-6">
+                    {[1, 3, 7, 14, 30].map((d) => (
+                      <button
+                        key={d}
+                        onClick={() => handleSliderChange(d)}
+                        className={cn(
+                          "px-4 py-2 rounded-full text-sm font-medium transition-all",
+                          sliderDays === d
+                            ? "bg-primary-900 text-white"
+                            : "bg-white text-primary-600 hover:bg-primary-100"
+                        )}
+                      >
+                        {d} {d === 1 ? 'день' : d < 5 ? 'дня' : 'дней'}
+                      </button>
+                    ))}
+                  </div>
                 </div>
               </motion.div>
 
@@ -624,9 +659,14 @@ export const CarDetailsPage: React.FC = () => {
                 <div className="p-6 bg-primary-900 text-white rounded-t-3xl">
                   <p className="text-white/70 text-sm mb-1">Быстрое бронирование</p>
                   <p className="text-3xl font-light">
-                    {formatPrice(car.pricePerDay)}
+                    {formatPrice(dailyRate)}
                     <span className="text-lg text-white/60 ml-2">/день</span>
                   </p>
+                  {dailyRate < car.pricePerDay && (
+                    <p className="text-white/50 text-sm mt-1 line-through">
+                      {formatPrice(car.pricePerDay)}/день
+                    </p>
+                  )}
                 </div>
 
                 {/* Booking Form */}
@@ -641,7 +681,7 @@ export const CarDetailsPage: React.FC = () => {
                     />
                     <CustomDatePicker
                       value={endDate}
-                      onChange={setEndDate}
+                      onChange={handleEndDateChange}
                       label="Возврат"
                       minDate={addDays(new Date(startDate), 1)}
                     />
@@ -664,7 +704,7 @@ export const CarDetailsPage: React.FC = () => {
                   {/* Price Summary */}
                   <div className="pt-4 border-t border-primary-100">
                     <div className="flex justify-between mb-2">
-                      <span className="text-primary-500">{formatPrice(car.pricePerDay)} × {days} дн.</span>
+                      <span className="text-primary-500">{formatPrice(dailyRate)} × {days} дн.</span>
                       <span className="text-primary-900">{formatPrice(totalPrice)}</span>
                     </div>
                     <div className="flex justify-between text-lg font-medium">
