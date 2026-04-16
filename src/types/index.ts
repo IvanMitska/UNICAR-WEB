@@ -1,3 +1,8 @@
+export interface LocalizedText {
+  ru: string;
+  en: string;
+}
+
 export interface Car {
   id: string;
   brand: string;
@@ -16,7 +21,7 @@ export interface Car {
   available: boolean;
   rating: number;
   reviews: number;
-  description: string;
+  description: LocalizedText;
   discount?: boolean;
   color?: string;
   licensePlate?: string;
@@ -98,7 +103,7 @@ export interface Motorcycle {
   available: boolean;
   rating: number;
   reviews: number;
-  description: string;
+  description: LocalizedText;
   specifications: {
     engine: string;
     power: string;

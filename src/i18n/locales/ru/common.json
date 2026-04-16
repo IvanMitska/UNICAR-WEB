@@ -2,11 +2,20 @@
   "nav": {
     "home": "Главная",
     "cars": "Автомобили",
+    "motorcycles": "Мотоциклы",
     "about": "О нас",
     "contact": "Контакты",
     "favorites": "Избранное",
     "signIn": "Войти",
-    "signOut": "Выйти"
+    "signOut": "Выйти",
+    "rentCar": "Аренда авто",
+    "buyCar": "Купить авто",
+    "aboutUs": "О нас",
+    "contacts": "Контакты",
+    "allCars": "Все авто",
+    "luxuryCars": "Премиум авто",
+    "economy": "Эконом",
+    "getStarted": "Начать"
   },
   "buttons": {
     "search": "Поиск",
@@ -17,44 +26,190 @@
     "sportsCars": "Спорткары",
     "sendMessage": "Отправить",
     "back": "Назад",
+    "next": "Далее",
     "confirm": "Подтвердить",
-    "cancel": "Отмена"
+    "cancel": "Отмена",
+    "call": "Позвонить",
+    "whatsapp": "WhatsApp",
+    "resetFilters": "Сбросить фильтры",
+    "showResults": "Показать результаты",
+    "backToCatalog": "Вернуться к каталогу",
+    "viewAll": "Смотреть все",
+    "details": "Подробнее",
+    "rent": "Арендовать",
+    "browse": "Перейти"
   },
   "form": {
     "pickupLocation": "Место получения",
     "pickupDate": "Дата получения",
     "dropoffDate": "Дата возврата",
+    "returnLocation": "Место возврата",
     "name": "Имя",
     "email": "Email",
     "phone": "Телефон",
-    "message": "Сообщение"
+    "message": "Сообщение",
+    "searchByBrand": "Поиск по марке...",
+    "from": "От",
+    "to": "До",
+    "selectLocation": "Выберите место",
+    "popularLocations": "Популярные места"
   },
   "price": {
     "perDay": "/день",
     "forDays": "за {{days}} дн.",
     "total": "Итого",
     "discount": "-{{percent}}%",
-    "onRequest": "По запросу"
+    "onRequest": "По запросу",
+    "priceFrom": "Стоимость аренды от",
+    "pricePerDay": "Цена за день",
+    "days": "дн."
   },
   "car": {
     "available": "Доступен",
     "unavailable": "Недоступен",
-    "seats": "{{count}} мест",
+    "booked": "Забронирован",
+    "seats": "мест",
+    "seatsCount": "{{count}} мест",
     "automatic": "Автомат",
+    "manual": "Механика",
     "zeroEmissions": "Электро",
-    "hybrid": "Гибрид"
+    "hybrid": "Гибрид",
+    "loading": "Загрузка...",
+    "notFound": "Автомобиль не найден",
+    "similarCars": "Похожие автомобили"
+  },
+  "fuel": {
+    "petrol": "Бензин",
+    "diesel": "Дизель",
+    "hybrid": "Гибрид",
+    "electric": "Электро",
+    "any": "Любое"
+  },
+  "transmission": {
+    "any": "Любая",
+    "automatic": "Автомат",
+    "manual": "Механика"
   },
   "categories": {
-    "suv": "Премиум SUV",
-    "premium": "Премиум седан",
+    "all": "Все",
+    "suv": "Внедорожники",
+    "premium": "Премиум",
     "sport": "Спорткар",
-    "business": "Бизнес-класс",
+    "business": "Бизнес",
     "comfort": "Комфорт",
-    "economy": "Эконом"
+    "economy": "Эконом",
+    "electric": "Электро"
+  },
+  "filters": {
+    "category": "Категория",
+    "pricePerDay": "Цена за день",
+    "transmission": "Коробка передач",
+    "fuel": "Топливо",
+    "filters": "Фильтры"
+  },
+  "locations": {
+    "phuketAirport": "Аэропорт Пхукета",
+    "patong": "Патонг",
+    "kata": "Ката",
+    "karon": "Карон",
+    "phuketTown": "Пхукет Таун",
+    "rawai": "Рауай",
+    "kamala": "Камала",
+    "surin": "Сурин",
+    "internationalAirport": "Международный аэропорт",
+    "centralBeach": "Центральный пляж",
+    "kataBeach": "Пляж Ката",
+    "karonBeach": "Пляж Карон",
+    "oldTown": "Старый город",
+    "southBeach": "Южный пляж",
+    "kamalaBeach": "Пляж Камала",
+    "surinBeach": "Пляж Сурин"
+  },
+  "booking": {
+    "quickBooking": "Быстрое бронирование",
+    "pickup": "Получение",
+    "return": "Возврат",
+    "freeCancellation": "Бесплатная отмена",
+    "freeCancellationDesc": "Отмена бронирования бесплатно за 24 часа до начала аренды",
+    "insuranceIncluded": "Полная страховка включена",
+    "insuranceDesc": "КАСКО и ОСАГО входят в стоимость аренды"
+  },
+  "specs": {
+    "engine": "Двигатель",
+    "power": "Мощность",
+    "acceleration": "0-100 км/ч",
+    "topSpeed": "Макс. скорость",
+    "year": "Год"
   },
   "footer": {
     "rights": "Все права защищены",
     "privacy": "Политика конфиденциальности",
-    "terms": "Условия использования"
+    "terms": "Условия использования",
+    "vehicles": "Автомобили",
+    "company": "Компания",
+    "getInTouch": "Связаться с нами",
+    "brandDescription": "Премиальный сервис аренды автомобилей на Пхукете. Люкс, комфорт и свобода на острове.",
+    "allVehicles": "Все автомобили",
+    "premiumCars": "Премиум авто",
+    "luxurySuvs": "Премиум внедорожники",
+    "sportsCars": "Спорткары",
+    "aboutUs": "О нас",
+    "howItWorks": "Как это работает",
+    "contact": "Контакты",
+    "termsConditions": "Условия и правила",
+    "copyright": "© {{year}} UNICAR. Все права защищены.",
+    "designedBy": "Дизайн и разработка"
+  },
+  "datePicker": {
+    "today": "Сегодня",
+    "tomorrow": "Завтра",
+    "selectDate": "Выберите дату",
+    "weekDays": ["Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Вс"]
+  },
+  "locationSelector": {
+    "selectLocation": "Выберите место",
+    "searchLocation": "Поиск локации...",
+    "popularLocations": "Популярные места",
+    "otherLocations": "Другие места",
+    "notFound": "Локация не найдена"
+  },
+  "motorcycles": {
+    "title": "Мотоциклы",
+    "count_one": "мотоцикл",
+    "count_few": "мотоцикла",
+    "count_many": "мотоциклов",
+    "inStock": "в наличии",
+    "noResults": "По вашему запросу мотоциклов не найдено",
+    "tryAdjusting": "Попробуйте изменить параметры поиска"
+  },
+  "motorcycleCategories": {
+    "scooter": "Скутер",
+    "sport": "Спорт",
+    "touring": "Туринг",
+    "cruiser": "Круизер",
+    "adventure": "Адвенчер",
+    "scooters": "Скутеры",
+    "sportbikes": "Спортбайки",
+    "tourings": "Туринги",
+    "cruisers": "Круизеры",
+    "adventures": "Адвенчер",
+    "scooterDesc": "Для городских поездок",
+    "sportDesc": "Для любителей скорости",
+    "adventureDesc": "Для дальних поездок",
+    "cruiserDesc": "Комфорт и стиль",
+    "categoriesTitle": "Категории мотоциклов",
+    "categoriesSubtitle": "Выберите идеальный мотоцикл для ваших поездок по Пхукету",
+    "allMotorcycles": "Все мотоциклы"
+  },
+  "sort": {
+    "priceAsc": "Сначала дешевле",
+    "priceDesc": "Сначала дороже",
+    "byRating": "По рейтингу",
+    "byPopularity": "По популярности"
+  },
+  "time": {
+    "day": "день",
+    "days_few": "дня",
+    "days_many": "дней"
   }
 }

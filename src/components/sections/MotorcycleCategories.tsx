@@ -1,37 +1,38 @@
 import React from 'react';
 import { motion } from 'framer-motion';
+import { useTranslation } from 'react-i18next';
 import { Bike, Zap, Car, Truck } from 'lucide-react';
 
-const categories = [
+const CATEGORY_META = [
   {
     id: 'scooter',
-    name: 'Скутеры',
+    nameKey: 'scooters',
+    descKey: 'scooterDesc',
     icon: Bike,
-    description: 'Для городских поездок',
     gradient: 'from-blue-500 to-cyan-500',
   },
   {
     id: 'sport',
-    name: 'Спортбайки',
+    nameKey: 'sportbikes',
+    descKey: 'sportDesc',
     icon: Zap,
-    description: 'Для любителей скорости',
     gradient: 'from-red-500 to-yellow-500',
   },
   {
     id: 'adventure',
-    name: 'Адвенчер',
+    nameKey: 'adventures',
+    descKey: 'adventureDesc',
     icon: Truck,
-    description: 'Для дальних поездок',
     gradient: 'from-green-500 to-emerald-500',
   },
   {
     id: 'cruiser',
-    name: 'Круизеры',
+    nameKey: 'cruisers',
+    descKey: 'cruiserDesc',
     icon: Car,
-    description: 'Комфорт и стиль',
     gradient: 'from-purple-500 to-pink-500',
   },
-];
+] as const;
 
 interface MotorcycleCategoriesProps {
   selectedCategory: string | null;
@@ -44,6 +45,8 @@ export const MotorcycleCategories: React.FC<MotorcycleCategoriesProps> = ({
   onCategoryClick,
   showTitle = true,
 }) => {
+  const { t } = useTranslation('common');
+
   return (
     <section className="bg-black py-12 lg:py-16">
       <div className="container mx-auto px-4">
@@ -56,10 +59,10 @@ export const MotorcycleCategories: React.FC<MotorcycleCategoriesProps> = ({
             className="text-center mb-12"
           >
             <h2 className="text-3xl lg:text-4xl font-bold text-white mb-4">
-              Категории мотоциклов
+              {t('motorcycleCategories.categoriesTitle')}
             </h2>
             <p className="text-xl text-gray-300 max-w-2xl mx-auto">
-              Выберите идеальный мотоцикл для ваших поездок по Пхукету
+              {t('motorcycleCategories.categoriesSubtitle')}
             </p>
           </motion.div>
         )}
@@ -75,12 +78,12 @@ export const MotorcycleCategories: React.FC<MotorcycleCategoriesProps> = ({
                 : 'bg-dark-800/50 text-gray-300 hover:bg-dark-700/50 border border-dark-700'
             }`}
           >
-            Все мотоциклы
+            {t('motorcycleCategories.allMotorcycles')}
           </motion.button>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {categories.map((category, index) => (
+          {CATEGORY_META.map((category, index) => (
             <motion.div
               key={category.id}
               initial={{ opacity: 0, y: 50 }}
@@ -97,21 +100,21 @@ export const MotorcycleCategories: React.FC<MotorcycleCategoriesProps> = ({
             >
               <div className="absolute inset-0 bg-gradient-to-br from-dark-800/80 to-dark-900/80 backdrop-blur-sm"></div>
               <div className={`absolute inset-0 bg-gradient-to-br ${category.gradient} opacity-10 group-hover:opacity-20 transition-opacity`}></div>
-              
+
               <div className="relative z-10">
                 <div className={`inline-flex p-3 rounded-xl bg-gradient-to-r ${category.gradient} mb-4`}>
                   <category.icon className="w-8 h-8 text-white" />
                 </div>
-                
+
                 <h3 className="text-xl font-bold text-white mb-2 group-hover:text-yellow-400 transition-all">
-                  {category.name}
+                  {t(`motorcycleCategories.${category.nameKey}`)}
                 </h3>
-                
+
                 <p className="text-gray-300 text-sm group-hover:text-gray-200 transition-colors">
-                  {category.description}
+                  {t(`motorcycleCategories.${category.descKey}`)}
                 </p>
               </div>
-              
+
               <div className="absolute -bottom-4 -right-4 w-24 h-24 bg-gradient-to-r from-yellow-500/20 to-yellow-600/20 rounded-full blur-xl group-hover:scale-150 transition-transform"></div>
             </motion.div>
           ))}

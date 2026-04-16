@@ -1,8 +1,10 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useTranslation } from 'react-i18next';
 import { cars as staticCars } from '../data/cars';
 import type { Car } from '../types';
+import { pickLocalized } from '../utils/localized';
 import { CustomDatePicker } from '../components/ui/CustomDatePicker';
 import { CustomLocationSelector } from '../components/ui/CustomLocationSelector';
 import {
@@ -29,14 +31,8 @@ import { format, addDays } from 'date-fns';
 import { cn } from '../utils/cn';
 import { SimilarCars } from '../components/sections/SimilarCars';
 
-const fuelLabels: Record<string, string> = {
-  petrol: 'Бензин',
-  diesel: 'Дизель',
-  hybrid: 'Гибрид',
-  electric: 'Электро',
-};
-
 export const CarDetailsPage: React.FC = () => {
+  const { t, i18n } = useTranslation();
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const { toggleFavorite, isFavorite } = useFavorites();
@@ -66,8 +62,8 @@ export const CarDetailsPage: React.FC = () => {
   const [endDate, setEndDate] = useState(() =>
     storedEndDate ? format(new Date(storedEndDate), 'yyyy-MM-dd') : format(addDays(new Date(), 3), 'yyyy-MM-dd')
   );
-  const [pickupLocation, setPickupLocation] = useState(storedPickupLocation || 'Аэропорт Пхукета');
-  const [returnLocation, setReturnLocation] = useState(storedReturnLocation || 'Аэропорт Пхукета');
+  const [pickupLocation, setPickupLocation] = useState(storedPickupLocation || t('locations.phuketAirport'));
+  const [returnLocation, setReturnLocation] = useState(storedReturnLocation || t('locations.phuketAirport'));
 
   // Pricing state - sync with booking dates
   const currentDays = calculateDays(new Date(startDate), new Date(endDate));
@@ -149,7 +145,7 @@ export const CarDetailsPage: React.FC = () => {
       <div className="min-h-screen bg-white flex items-center justify-center pt-24">
         <div className="text-center">
           <Loader2 className="w-12 h-12 animate-spin text-primary-400 mx-auto mb-4" />
-          <p className="text-primary-500">Загрузка...</p>
+          <p className="text-primary-500">{t('car.loading')}</p>
         </div>
       </div>
     );
@@ -159,12 +155,12 @@ export const CarDetailsPage: React.FC = () => {
     return (
       <div className="min-h-screen bg-white flex items-center justify-center">
         <div className="text-center">
-          <h1 className="text-3xl font-light text-primary-900 mb-4">Автомобиль не найден</h1>
+          <h1 className="text-3xl font-light text-primary-900 mb-4">{t('car.notFound')}</h1>
           <button
             onClick={() => navigate('/cars')}
             className="inline-flex items-center gap-2 px-8 py-4 bg-primary-900 text-white rounded-full hover:bg-primary-800 transition-colors"
           >
-            Вернуться к каталогу
+            {t('buttons.backToCatalog')}
           </button>
         </div>
       </div>
@@ -176,14 +172,14 @@ export const CarDetailsPage: React.FC = () => {
   const totalPrice = calculateRentalTotal(car.pricePerDay, days);
 
   const locations = [
-    { id: 'phuket-airport', name: 'Аэропорт Пхукета', description: 'Международный аэропорт', popular: true },
-    { id: 'patong', name: 'Патонг', description: 'Центральный пляж', popular: true },
-    { id: 'kata', name: 'Ката', description: 'Пляж Ката' },
-    { id: 'karon', name: 'Карон', description: 'Пляж Карон' },
-    { id: 'phuket-town', name: 'Пхукет Таун', description: 'Старый город', popular: true },
-    { id: 'rawai', name: 'Рауай', description: 'Южный пляж' },
-    { id: 'kamala', name: 'Камала', description: 'Пляж Камала' },
-    { id: 'surin', name: 'Сурин', description: 'Пляж Сурин' },
+    { id: 'phuket-airport', name: t('locations.phuketAirport'), description: t('locations.internationalAirport'), popular: true },
+    { id: 'patong', name: t('locations.patong'), description: t('locations.centralBeach'), popular: true },
+    { id: 'kata', name: t('locations.kata'), description: t('locations.kataBeach') },
+    { id: 'karon', name: t('locations.karon'), description: t('locations.karonBeach') },
+    { id: 'phuket-town', name: t('locations.phuketTown'), description: t('locations.oldTown'), popular: true },
+    { id: 'rawai', name: t('locations.rawai'), description: t('locations.southBeach') },
+    { id: 'kamala', name: t('locations.kamala'), description: t('locations.kamalaBeach') },
+    { id: 'surin', name: t('locations.surin'), description: t('locations.surinBeach') },
   ];
 
   const handleBooking = () => {
@@ -235,7 +231,7 @@ export const CarDetailsPage: React.FC = () => {
             <div className="w-10 h-10 rounded-full bg-white/10 backdrop-blur-md flex items-center justify-center group-hover:bg-white/20 transition-colors">
               <ArrowLeft className="w-5 h-5" />
             </div>
-            <span className="hidden lg:block text-sm">Назад</span>
+            <span className="hidden lg:block text-sm">{t('buttons.back')}</span>
           </motion.button>
 
           {/* Favorite Button */}
@@ -285,7 +281,7 @@ export const CarDetailsPage: React.FC = () => {
                   transition={{ delay: 0.4 }}
                 >
                   <p className="text-white/60 text-sm uppercase tracking-widest mb-2">
-                    {car.year} • {car.category === 'premium' ? 'Премиум' : car.category === 'sport' ? 'Спорткар' : car.category}
+                    {car.year} • {t(`categories.${car.category}`)}
                   </p>
                   <h1 className="text-4xl lg:text-6xl font-light text-white">
                     {car.brand} <span className="font-medium">{car.model}</span>
@@ -301,15 +297,15 @@ export const CarDetailsPage: React.FC = () => {
                 >
                   <div className="px-4 py-2 bg-white/10 backdrop-blur-md rounded-full flex items-center gap-2 text-white">
                     <Users className="w-4 h-4" />
-                    <span className="text-sm">{car.seats} мест</span>
+                    <span className="text-sm">{car.seats} {t('car.seats')}</span>
                   </div>
                   <div className="px-4 py-2 bg-white/10 backdrop-blur-md rounded-full flex items-center gap-2 text-white">
                     <Settings className="w-4 h-4" />
-                    <span className="text-sm">{car.transmission === 'automatic' ? 'Автомат' : 'Механика'}</span>
+                    <span className="text-sm">{car.transmission === 'automatic' ? t('car.automatic') : t('car.manual')}</span>
                   </div>
                   <div className="px-4 py-2 bg-white/10 backdrop-blur-md rounded-full flex items-center gap-2 text-white">
                     <Fuel className="w-4 h-4" />
-                    <span className="text-sm">{fuelLabels[car.fuel]}</span>
+                    <span className="text-sm">{t(`fuel.${car.fuel}`)}</span>
                   </div>
                   {car.specifications?.power && (
                     <div className="px-4 py-2 bg-white/10 backdrop-blur-md rounded-full text-white">
@@ -362,7 +358,7 @@ export const CarDetailsPage: React.FC = () => {
             transition={{ delay: 0.3 }}
           >
             <p className="text-primary-400 text-sm uppercase tracking-widest mb-2">
-              {car.year} • {car.category === 'premium' ? 'Премиум' : car.category === 'sport' ? 'Спорткар' : car.category}
+              {car.year} • {t(`categories.${car.category}`)}
             </p>
             <h1 className="text-3xl font-light text-primary-900 mb-4">
               {car.brand} <span className="font-medium">{car.model}</span>
@@ -378,15 +374,15 @@ export const CarDetailsPage: React.FC = () => {
           >
             <div className="px-3 py-1.5 bg-primary-100 rounded-full flex items-center gap-2 text-primary-700">
               <Users className="w-4 h-4" />
-              <span className="text-sm">{car.seats} мест</span>
+              <span className="text-sm">{car.seats} {t('car.seats')}</span>
             </div>
             <div className="px-3 py-1.5 bg-primary-100 rounded-full flex items-center gap-2 text-primary-700">
               <Settings className="w-4 h-4" />
-              <span className="text-sm">{car.transmission === 'automatic' ? 'Автомат' : 'Механика'}</span>
+              <span className="text-sm">{car.transmission === 'automatic' ? t('car.automatic') : t('car.manual')}</span>
             </div>
             <div className="px-3 py-1.5 bg-primary-100 rounded-full flex items-center gap-2 text-primary-700">
               <Fuel className="w-4 h-4" />
-              <span className="text-sm">{fuelLabels[car.fuel]}</span>
+              <span className="text-sm">{t(`fuel.${car.fuel}`)}</span>
             </div>
             {car.specifications?.power && (
               <div className="px-3 py-1.5 bg-primary-100 rounded-full text-primary-700">
@@ -442,10 +438,10 @@ export const CarDetailsPage: React.FC = () => {
                 className="flex items-center justify-between p-6 bg-primary-50 rounded-2xl"
               >
                 <div>
-                  <p className="text-primary-400 text-sm mb-1">Стоимость аренды от</p>
+                  <p className="text-primary-400 text-sm mb-1">{t('price.priceFrom')}</p>
                   <p className="text-4xl font-light text-primary-900">
                     {formatPrice(car.pricePerDay)}
-                    <span className="text-lg text-primary-400 ml-2">/день</span>
+                    <span className="text-lg text-primary-400 ml-2">{t('price.perDay')}</span>
                   </p>
                 </div>
                 <div className={cn(
@@ -454,7 +450,7 @@ export const CarDetailsPage: React.FC = () => {
                     ? "bg-green-100 text-green-700"
                     : "bg-red-100 text-red-700"
                 )}>
-                  {car.available ? 'Доступен' : 'Забронирован'}
+                  {car.available ? t('car.available') : t('car.booked')}
                 </div>
               </motion.div>
 
@@ -465,8 +461,8 @@ export const CarDetailsPage: React.FC = () => {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                 >
-                  <h2 className="text-2xl font-light text-primary-900 mb-4">Об автомобиле</h2>
-                  <p className="text-primary-500 leading-relaxed">{car.description}</p>
+                  <h2 className="text-2xl font-light text-primary-900 mb-4">{t('carDetails.aboutCar', { ns: 'pages' })}</h2>
+                  <p className="text-primary-500 leading-relaxed">{pickLocalized(car.description, i18n.language)}</p>
                 </motion.div>
               )}
 
@@ -477,7 +473,7 @@ export const CarDetailsPage: React.FC = () => {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                 >
-                  <h2 className="text-2xl font-light text-primary-900 mb-6">Комплектация</h2>
+                  <h2 className="text-2xl font-light text-primary-900 mb-6">{t('carDetails.equipment', { ns: 'pages' })}</h2>
                   <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
                     {car.features.map((feature, index) => (
                       <div
@@ -501,30 +497,30 @@ export const CarDetailsPage: React.FC = () => {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                 >
-                  <h2 className="text-2xl font-light text-primary-900 mb-6">Характеристики</h2>
+                  <h2 className="text-2xl font-light text-primary-900 mb-6">{t('carDetails.specifications', { ns: 'pages' })}</h2>
                   <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
                     {car.specifications.engine && (
                       <div className="text-center p-6 bg-primary-50 rounded-2xl">
                         <p className="text-3xl font-light text-primary-900 mb-2">{car.specifications.engine}</p>
-                        <p className="text-primary-400 text-sm">Двигатель</p>
+                        <p className="text-primary-400 text-sm">{t('specs.engine')}</p>
                       </div>
                     )}
                     {car.specifications.power && (
                       <div className="text-center p-6 bg-primary-50 rounded-2xl">
                         <p className="text-3xl font-light text-primary-900 mb-2">{car.specifications.power}</p>
-                        <p className="text-primary-400 text-sm">Мощность</p>
+                        <p className="text-primary-400 text-sm">{t('specs.power')}</p>
                       </div>
                     )}
                     {car.specifications.acceleration && (
                       <div className="text-center p-6 bg-primary-50 rounded-2xl">
                         <p className="text-3xl font-light text-primary-900 mb-2">{car.specifications.acceleration}</p>
-                        <p className="text-primary-400 text-sm">0-100 км/ч</p>
+                        <p className="text-primary-400 text-sm">{t('specs.acceleration')}</p>
                       </div>
                     )}
                     {car.specifications.topSpeed && (
                       <div className="text-center p-6 bg-primary-50 rounded-2xl">
                         <p className="text-3xl font-light text-primary-900 mb-2">{car.specifications.topSpeed}</p>
-                        <p className="text-primary-400 text-sm">Макс. скорость</p>
+                        <p className="text-primary-400 text-sm">{t('specs.topSpeed')}</p>
                       </div>
                     )}
                   </div>
@@ -537,7 +533,7 @@ export const CarDetailsPage: React.FC = () => {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
               >
-                <h2 className="text-2xl font-light text-primary-900 mb-6">Калькулятор стоимости</h2>
+                <h2 className="text-2xl font-light text-primary-900 mb-6">{t('carDetails.priceCalculator', { ns: 'pages' })}</h2>
 
                 {/* Interactive Slider */}
                 <div className="bg-primary-50 rounded-3xl p-6 md:p-8">
@@ -545,7 +541,7 @@ export const CarDetailsPage: React.FC = () => {
                   <div className="text-center mb-6">
                     <span className="text-6xl md:text-7xl font-light text-primary-900">{sliderDays}</span>
                     <span className="text-2xl text-primary-400 ml-2">
-                      {sliderDays === 1 ? 'день' : sliderDays < 5 ? 'дня' : 'дней'}
+                      {sliderDays === 1 ? t('time.day') : sliderDays < 5 ? t('time.days_few') : t('time.days_many')}
                     </span>
                   </div>
 
@@ -589,7 +585,7 @@ export const CarDetailsPage: React.FC = () => {
                   {/* Price Display */}
                   <div className="grid grid-cols-2 gap-4 md:gap-6">
                     <div className="bg-white rounded-2xl p-5 text-center">
-                      <p className="text-primary-400 text-sm mb-1">Цена за день</p>
+                      <p className="text-primary-400 text-sm mb-1">{t('price.pricePerDay')}</p>
                       <p className="text-2xl md:text-3xl font-light text-primary-900">
                         {formatPrice(getDailyRateForDuration(car.pricePerDay, sliderDays))}
                       </p>
@@ -600,12 +596,12 @@ export const CarDetailsPage: React.FC = () => {
                       )}
                     </div>
                     <div className="bg-primary-900 rounded-2xl p-5 text-center">
-                      <p className="text-white/60 text-sm mb-1">Итого</p>
+                      <p className="text-white/60 text-sm mb-1">{t('price.total')}</p>
                       <p className="text-2xl md:text-3xl font-light text-white">
                         {formatPrice(calculateRentalTotal(car.pricePerDay, sliderDays))}
                       </p>
                       <p className="text-white/50 text-sm mt-1">
-                        за {sliderDays} {sliderDays === 1 ? 'день' : sliderDays < 5 ? 'дня' : 'дней'}
+                        {t('price.forDays', { days: sliderDays })}
                       </p>
                     </div>
                   </div>
@@ -623,7 +619,7 @@ export const CarDetailsPage: React.FC = () => {
                             : "bg-white text-primary-600 hover:bg-primary-100"
                         )}
                       >
-                        {d} {d === 1 ? 'день' : d < 5 ? 'дня' : 'дней'}
+                        {d} {d === 1 ? t('time.day') : d < 5 ? t('time.days_few') : t('time.days_many')}
                       </button>
                     ))}
                   </div>
@@ -641,8 +637,8 @@ export const CarDetailsPage: React.FC = () => {
                   <Shield className="w-7 h-7 text-green-600" />
                 </div>
                 <div>
-                  <h3 className="text-lg font-medium text-primary-900 mb-1">Полная страховка включена</h3>
-                  <p className="text-primary-500 text-sm">КАСКО и ОСАГО входят в стоимость аренды</p>
+                  <h3 className="text-lg font-medium text-primary-900 mb-1">{t('booking.insuranceIncluded')}</h3>
+                  <p className="text-primary-500 text-sm">{t('booking.insuranceDesc')}</p>
                 </div>
               </motion.div>
             </div>
@@ -657,14 +653,14 @@ export const CarDetailsPage: React.FC = () => {
               >
                 {/* Card Header */}
                 <div className="p-6 bg-primary-900 text-white rounded-t-3xl">
-                  <p className="text-white/70 text-sm mb-1">Быстрое бронирование</p>
+                  <p className="text-white/70 text-sm mb-1">{t('booking.quickBooking')}</p>
                   <p className="text-3xl font-light">
                     {formatPrice(dailyRate)}
-                    <span className="text-lg text-white/60 ml-2">/день</span>
+                    <span className="text-lg text-white/60 ml-2">{t('price.perDay')}</span>
                   </p>
                   {dailyRate < car.pricePerDay && (
                     <p className="text-white/50 text-sm mt-1 line-through">
-                      {formatPrice(car.pricePerDay)}/день
+                      {formatPrice(car.pricePerDay)}{t('price.perDay')}
                     </p>
                   )}
                 </div>
@@ -676,13 +672,13 @@ export const CarDetailsPage: React.FC = () => {
                     <CustomDatePicker
                       value={startDate}
                       onChange={handleStartDateChange}
-                      label="Получение"
+                      label={t('booking.pickup')}
                       minDate={new Date()}
                     />
                     <CustomDatePicker
                       value={endDate}
                       onChange={handleEndDateChange}
-                      label="Возврат"
+                      label={t('booking.return')}
                       minDate={addDays(new Date(startDate), 1)}
                     />
                   </div>
@@ -691,24 +687,24 @@ export const CarDetailsPage: React.FC = () => {
                   <CustomLocationSelector
                     value={pickupLocation}
                     onChange={setPickupLocation}
-                    label="Место получения"
+                    label={t('form.pickupLocation')}
                     locations={locations}
                   />
                   <CustomLocationSelector
                     value={returnLocation}
                     onChange={setReturnLocation}
-                    label="Место возврата"
+                    label={t('form.returnLocation')}
                     locations={locations}
                   />
 
                   {/* Price Summary */}
                   <div className="pt-4 border-t border-primary-100">
                     <div className="flex justify-between mb-2">
-                      <span className="text-primary-500">{formatPrice(dailyRate)} × {days} дн.</span>
+                      <span className="text-primary-500">{formatPrice(dailyRate)} × {days} {t('price.days')}</span>
                       <span className="text-primary-900">{formatPrice(totalPrice)}</span>
                     </div>
                     <div className="flex justify-between text-lg font-medium">
-                      <span className="text-primary-900">Итого</span>
+                      <span className="text-primary-900">{t('price.total')}</span>
                       <span className="text-primary-900">{formatPrice(totalPrice)}</span>
                     </div>
                   </div>
@@ -719,7 +715,7 @@ export const CarDetailsPage: React.FC = () => {
                     disabled={!car.available}
                     className="w-full py-4 bg-primary-900 text-white rounded-full font-medium text-lg hover:bg-primary-800 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 group"
                   >
-                    <span>{car.available ? 'Забронировать' : 'Недоступен'}</span>
+                    <span>{car.available ? t('buttons.bookNow') : t('car.unavailable')}</span>
                     {car.available && (
                       <ArrowRight className="w-5 h-5 transition-transform group-hover:translate-x-1" />
                     )}
@@ -732,7 +728,7 @@ export const CarDetailsPage: React.FC = () => {
                       className="flex items-center justify-center gap-2 py-3 border border-primary-200 text-primary-700 rounded-full hover:border-primary-400 transition-colors"
                     >
                       <Phone className="w-4 h-4" />
-                      <span className="text-sm">Позвонить</span>
+                      <span className="text-sm">{t('buttons.call')}</span>
                     </a>
                     <a
                       href="https://wa.me/66638450372"
@@ -741,7 +737,7 @@ export const CarDetailsPage: React.FC = () => {
                       className="flex items-center justify-center gap-2 py-3 bg-green-500 text-white rounded-full hover:bg-green-600 transition-colors"
                     >
                       <MessageCircle className="w-4 h-4" />
-                      <span className="text-sm">WhatsApp</span>
+                      <span className="text-sm">{t('buttons.whatsapp')}</span>
                     </a>
                   </div>
                 </div>

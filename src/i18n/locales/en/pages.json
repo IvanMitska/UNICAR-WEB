@@ -6,11 +6,15 @@
   "carDetails": {
     "specifications": "Specifications",
     "features": "Features",
+    "equipment": "Equipment",
     "year": "Year",
     "transmission": "Transmission",
     "fuel": "Fuel Type",
     "seats": "Seats",
     "engine": "Engine",
+    "power": "Power",
+    "acceleration": "0-100 km/h",
+    "topSpeed": "Top Speed",
     "priceCalculator": "Price Calculator",
     "selectDays": "Select rental days",
     "dailyRate": "Daily rate",
@@ -25,7 +29,10 @@
     "insurance": "Full Insurance",
     "delivery": "Delivery",
     "perDayService": "/day",
-    "oneTimeService": "one-time"
+    "oneTimeService": "one-time",
+    "aboutCar": "About the Car",
+    "description": "Description",
+    "reviews": "reviews"
   },
   "cars": {
     "title": "Our Fleet",
@@ -36,8 +43,8 @@
     "priceAsc": "Price: Low to High",
     "priceDesc": "Price: High to Low",
     "newest": "Newest",
-    "noResults": "No cars found",
-    "tryOther": "Try changing filters"
+    "noResults": "No vehicles found matching your criteria",
+    "tryOther": "Try adjusting your search filters"
   },
   "about": {
     "title": "About Us",
@@ -83,6 +90,396 @@
   },
   "popularCars": {
     "title": "Popular Models",
-    "subtitle": "Most rented vehicles"
+    "subtitle": "Most rented vehicles",
+    "featuredVehicles": "Featured Vehicles"
+  },
+  "features": {
+    "eyebrow": "Why UNICAR",
+    "title1": "We create experiences,",
+    "title2": "not just rent cars",
+    "subtitle": "Premium service with attention to every detail. Your comfort is our priority.",
+    "learnMore": "Learn more about us",
+    "happyCustomers": "500+ happy customers",
+    "joinThem": "Join them today",
+    "items": {
+      "delivery": {
+        "title": "2-Hour Delivery",
+        "description": "We deliver your car anywhere on the island within 2 hours. Airport, hotel, or villa."
+      },
+      "insurance": {
+        "title": "Full Insurance",
+        "description": "All vehicles are fully insured. First-class protection for your peace of mind."
+      },
+      "concierge": {
+        "title": "Concierge Service",
+        "description": "Personal manager available 24/7. We solve any question."
+      },
+      "guide": {
+        "title": "Island Guide",
+        "description": "Exclusive guide with the best locations as a gift with every rental."
+      }
+    },
+    "stats": {
+      "vehicles": "Vehicles",
+      "yearsExperience": "Years Experience",
+      "happyClients": "Happy Clients",
+      "support": "Support"
+    }
+  },
+  "cta": {
+    "eyebrow": "Start Your Journey",
+    "title": "Your adventure awaits",
+    "subtitle": "Premium vehicles delivered to your location. Explore Phuket your way.",
+    "browseVehicles": "Browse Vehicles"
+  },
+  "statistics": {
+    "title": "in numbers",
+    "subtitle": "Facts and figures about our company",
+    "carsInFleet": "Cars in fleet",
+    "happyClients": "Happy clients",
+    "yearsOnMarket": "Years on the market",
+    "clientsRecommend": "Clients recommend us"
+  },
+  "carCategories": {
+    "title": "Collection",
+    "subtitle": "Exclusive vehicles for unforgettable experiences",
+    "viewAll": "View all vehicles",
+    "carsCountLabel": "cars",
+    "items": {
+      "premium": {
+        "name": "Premium",
+        "description": "Mercedes, BMW, Audi"
+      },
+      "sport": {
+        "name": "Sports Cars",
+        "description": "Porsche, Mustang"
+      },
+      "suv": {
+        "name": "SUVs",
+        "description": "Range Rover, X5"
+      },
+      "cabrio": {
+        "name": "Convertibles",
+        "description": "Open roof"
+      }
+    }
+  },
+  "reviews": {
+    "titlePart1": "Customer",
+    "titlePart2": "reviews",
+    "subtitle": "What our clients say about us",
+    "items": {
+      "r1": {
+        "name": "Alexander M.",
+        "date": "2 weeks ago",
+        "comment": "Great service! Rented a BMW 3 Series for the weekend. The car was in perfect condition, paperwork was fast, staff friendly. Highly recommend!"
+      },
+      "r2": {
+        "name": "Elena K.",
+        "date": "1 month ago",
+        "comment": "Rented a Hyundai Solaris for a week. Very satisfied! Fair price, clean and well-maintained car. 24/7 support was especially helpful."
+      },
+      "r3": {
+        "name": "Mikhail P.",
+        "date": "1 month ago",
+        "comment": "I rent cars here regularly for business trips. Everything is always top-notch. Wide selection, transparent conditions, no hidden fees."
+      }
+    }
+  },
+  "terms": {
+    "hero": {
+      "titleLine1": "Car rental",
+      "titleLine2": "terms & conditions",
+      "subtitle": "Transparent rules and favorable conditions for a comfortable rental. No hidden fees or unpleasant surprises",
+      "fairPrices": "Fair prices",
+      "fullInsurance": "Full insurance",
+      "support247": "24/7 support"
+    },
+    "requirements": {
+      "title": "Age, experience and documents",
+      "subtitle": "Simple requirements for a safe and comfortable car rental",
+      "warningTitle": "Important notice",
+      "warningText": "If you don't have an IDP or driver's license accepted in Thailand, the insurance may refuse to pay out and you will take on the repair risks yourself. Be sure to have all the necessary documents before your trip.",
+      "items": {
+        "age": {
+          "title": "Age",
+          "description": "At least 22 years old",
+          "details": "Minimum age to rent a car"
+        },
+        "experience": {
+          "title": "Driving experience",
+          "description": "At least 2 years",
+          "details": "Driving experience must be at least 24 months"
+        },
+        "passport": {
+          "title": "Passport",
+          "description": "Valid document",
+          "details": "Required to verify your identity"
+        },
+        "license": {
+          "title": "International driver's license",
+          "description": "IDP required",
+          "details": "International driving permit is required for driving in Thailand"
+        }
+      }
+    },
+    "insurance": {
+      "title": "Insurance & security deposit",
+      "subtitle": "Reliable protection for your peace of mind during the trip",
+      "items": {
+        "fullInsurance": {
+          "title": "Full insurance",
+          "description": "All vehicles are insured at first-class or business-class level"
+        },
+        "deposit": {
+          "title": "Security deposit",
+          "description": "From $200 to $800 depending on the selected vehicle"
+        },
+        "franchise": {
+          "title": "Deductible",
+          "description": "From 3,000 to 7,000 baht according to the insurance terms"
+        }
+      },
+      "depositCard": {
+        "title": "Security deposit",
+        "text": "The deposit amount is set by the lessor and listed on each vehicle's card. The deposit is held on your card at the moment you pick up the car.",
+        "range": "Average amount: from $200 to $800",
+        "rangeNote": "Depending on the car class"
+      },
+      "franchiseCard": {
+        "title": "Deductible",
+        "text": "A deductible is the amount you pay on top in the event of an insurance claim. The size depends on the type of insurance.",
+        "range": "Amount: from 3,000 to 7,000 ฿",
+        "rangeNote": "Approx. $85–$200"
+      }
+    },
+    "delivery": {
+      "title": "Delivery & mileage",
+      "subtitle": "Convenient delivery and fair mileage terms",
+      "items": {
+        "anyLocation": {
+          "title": "Delivery anywhere",
+          "description": "We deliver the car or bike to a location convenient for you"
+        },
+        "fullTank": {
+          "title": "Full tank",
+          "description": "The vehicle is always delivered clean and with a full tank"
+        },
+        "mileage": {
+          "title": "Limit 150 km/day",
+          "description": "Additional kilometer — 2 THB"
+        }
+      },
+      "deliveryCard": {
+        "title": "Delivery",
+        "islandLabel": "Around the island (paid)",
+        "islandValue": "Depends on the area",
+        "conditionLabel": "Vehicle condition",
+        "conditionValue": "Clean + full tank",
+        "convenienceTitle": "Convenient service",
+        "convenienceText": "If you don't have time to refuel and wash the car on return — we'll do it for you (we'll provide receipts)"
+      },
+      "mileageCard": {
+        "title": "Mileage",
+        "includedValue": "150 km",
+        "includedLabel": "included per day",
+        "extraLabel": "Additional km",
+        "extraValue": "2 THB",
+        "fairTitle": "Fair",
+        "fairText": "150 km per day is enough for comfortable travel around the island. Excess is charged at fair rates."
+      }
+    },
+    "booking": {
+      "title": "Booking",
+      "subtitle": "Simple car or bike booking process in just 3 steps",
+      "items": {
+        "passportPhoto": {
+          "title": "Passport photo",
+          "description": "A clear photo of all pages of the document"
+        },
+        "licensePhoto": {
+          "title": "Driver's license photo",
+          "description": "Both sides of the IDP or national license"
+        },
+        "prepayment": {
+          "title": "2-day rental prepayment",
+          "description": "Prepayment to confirm the booking"
+        }
+      },
+      "confirmTitle": "Fast confirmation",
+      "confirmText": "After receiving all documents and prepayment, we confirm your booking within 2 hours. You'll get detailed information about the pickup location and time, as well as contact details."
+    },
+    "service": {
+      "title": "Customer service",
+      "subtitle": "Full comfort and professional service at every stage",
+      "rentalFromDay": {
+        "title": "Rental from 1 day",
+        "description": "Minimum term — 24 hours"
+      },
+      "contract": {
+        "title": "Official contract",
+        "description": "From our company"
+      },
+      "support": {
+        "title": "24/7 Support",
+        "description": "In English and Russian"
+      },
+      "payment": {
+        "title": "Convenient payment",
+        "description": "Cards and cash"
+      },
+      "paymentMethodsTitle": "Payment methods",
+      "paymentOptions": {
+        "thb": "Thai baht",
+        "rub": "Russian rubles",
+        "usd": "US dollars",
+        "usdt": "USDT cryptocurrency"
+      },
+      "carFeaturesTitle": "Our cars include",
+      "carFeatures": {
+        "dashcam": { "title": "Dashcam", "description": "For your safety" },
+        "navigation": { "title": "Navigation", "description": "GPS system" },
+        "chargers": { "title": "Charging cables", "description": "iPhone and Android" },
+        "carplay": { "title": "CarPlay", "description": "Smartphone connection" },
+        "umbrella": { "title": "Umbrella", "description": "In case of rain" },
+        "waterTissues": { "title": "Water & tissues", "description": "For your comfort" },
+        "babySeat": { "title": "Baby seats", "description": "Free on request" }
+      },
+      "giftTitle": "A gift for every client",
+      "giftText": "A Phuket guide with top spots and Instagrammable locations",
+      "giftBadge": "Exclusive spots for photos"
+    }
+  },
+  "bookingForm": {
+    "steps": {
+      "dates": "Dates & location",
+      "services": "Additional services",
+      "customer": "Customer details",
+      "confirmation": "Confirmation"
+    },
+    "validation": {
+      "firstName": "First name must be at least 2 characters",
+      "lastName": "Last name must be at least 2 characters",
+      "email": "Enter a valid email",
+      "phone": "Format: +7XXXXXXXXXX",
+      "birthDate": "Please enter date of birth",
+      "licenseNumber": "Enter your driver's license number",
+      "licenseDate": "Please enter license issue date"
+    },
+    "fields": {
+      "firstName": "First name",
+      "lastName": "Last name",
+      "email": "Email",
+      "phone": "Phone",
+      "birthDate": "Date of birth",
+      "licenseNumber": "Driver's license number",
+      "licenseDate": "License issue date",
+      "startDate": "Rental start date",
+      "endDate": "Return date",
+      "pickupLocation": "Pick-up location",
+      "returnLocation": "Return location"
+    },
+    "noCarSelected": "No car selected",
+    "noCarSelectedHint": "Choose a car to book",
+    "goToCatalog": "Go to catalog",
+    "selectServices": "Choose additional services",
+    "perDay": "/day",
+    "perDaySuffix": "day",
+    "confirmTitle": "Order confirmation",
+    "carLabel": "Car:",
+    "periodLabel": "Rental period:",
+    "rentalCostLabel": "Rental cost:",
+    "discountLabel": "Discount {{percent}}%",
+    "extraServicesLabel": "Additional services:",
+    "totalLabel": "Total:",
+    "managerNotice": "After confirmation, our manager will contact you to clarify details and arrange payment.",
+    "fillStep3": "Please complete all fields in step 3:",
+    "genericError": "An error occurred during booking. Please try again later.",
+    "rentalPeriod": "Rental period",
+    "dayOne": "day",
+    "dayFew": "days",
+    "dayMany": "days",
+    "back": "Back",
+    "next": "Next",
+    "submitting": "Processing...",
+    "submit": "Confirm booking",
+    "previewTotal": "Estimated total:",
+    "currentDailyRate": "{{price}} × {{days}} d."
+  },
+  "carsMenu": {
+    "featured": "Featured"
+  },
+  "bookingPage": {
+    "title": "Booking checkout"
+  },
+  "bookingConfirmation": {
+    "thankYou": "Thank you for your booking!",
+    "subtitle": "Your request has been sent. Our manager will contact you shortly to confirm.",
+    "referenceLabel": "Reference code",
+    "copied": "Copied",
+    "copy": "Copy",
+    "whatNextTitle": "What's next?",
+    "step1": "Manager will contact you to clarify details",
+    "step2": "Confirm the booking and payment method",
+    "step3": "Pick up the car at your chosen location",
+    "questionsTitle": "Questions? Contact us",
+    "callBtn": "Call",
+    "homeBtn": "Home",
+    "otherCarsBtn": "Browse other cars"
+  },
+  "termsPage": {
+    "titlePart1": "Terms",
+    "titlePart2": "& conditions",
+    "subtitle": "Transparent rules and favorable conditions. No hidden fees",
+    "stats": {
+      "minAgeValue": "22+",
+      "minAgeLabel": "Minimum age",
+      "experienceValue": "2 years",
+      "experienceLabel": "Driving experience",
+      "mileageValue": "150 km",
+      "mileageLabel": "Daily limit",
+      "supportValue": "24/7",
+      "supportLabel": "Support"
+    },
+    "driverReqs": "Driver requirements",
+    "age": "Age",
+    "ageDetails": "At least 22 years old",
+    "experience": "Experience",
+    "experienceDetails": "At least 2 years",
+    "passport": "Passport",
+    "passportDetails": "Valid document",
+    "license": "International license",
+    "licenseDetails": "IDP is required",
+    "warning": "Without an IDP the insurer may refuse to pay. You take on repair risk yourself.",
+    "bookingTitle": "Booking",
+    "passportPhoto": "Passport photo",
+    "passportPhotoDetails": "A clear photo of all pages",
+    "licensePhoto": "Driver's license photo",
+    "licensePhotoDetails": "Both sides of the IDP",
+    "prepayment": "2-day prepayment",
+    "prepaymentDetails": "Prepayment to confirm",
+    "confirmNote": "After receiving the documents we confirm the booking within 2 hours.",
+    "insuranceTitle": "Insurance & deposit",
+    "insurance": "Insurance",
+    "insuranceText": "All cars are insured at first-class level",
+    "deposit": "Deposit",
+    "depositText": "$200 — $800 depending on the car",
+    "franchiseTitle": "Deductible",
+    "franchiseText": "From 3,000 to 7,000 ฿ (~$85–200) in case of an insurance event",
+    "deliveryMileage": "Delivery & mileage",
+    "delivery": "Delivery",
+    "deliveryByIsland": "Around the island",
+    "paid": "Paid",
+    "condition": "Condition",
+    "conditionValue": "Clean + full tank",
+    "mileage": "Mileage",
+    "dailyLimit": "Daily limit",
+    "mileageValue": "150 km",
+    "overLimit": "Over limit",
+    "overLimitValue": "2 ฿/km",
+    "returnTitle": "Return",
+    "returnText": "No time to refuel and wash? We'll do it for you (receipts provided)",
+    "questions": "Any questions left?",
+    "callUs": "Call us"
   }
 }

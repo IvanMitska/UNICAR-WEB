@@ -1,23 +1,25 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { Logo } from '../ui/Logo';
 import { MessageCircle, Send, MapPin, Mail, Phone, Instagram } from 'lucide-react';
 
 export const Footer: React.FC = () => {
+  const { t } = useTranslation('common');
   const currentYear = new Date().getFullYear();
 
   const links = {
     vehicles: [
-      { to: '/cars', label: 'All Vehicles' },
-      { to: '/cars?category=premium', label: 'Premium Cars' },
-      { to: '/cars?category=suv', label: 'Luxury SUVs' },
-      { to: '/cars?category=sport', label: 'Sports Cars' },
+      { to: '/cars', labelKey: 'footer.allVehicles' },
+      { to: '/cars?category=premium', labelKey: 'footer.premiumCars' },
+      { to: '/cars?category=suv', labelKey: 'footer.luxurySuvs' },
+      { to: '/cars?category=sport', labelKey: 'footer.sportsCars' },
     ],
     company: [
-      { to: '/about', label: 'About Us' },
-      { to: '/how-it-works', label: 'How It Works' },
-      { to: '/contacts', label: 'Contact' },
-      { to: '/terms', label: 'Terms & Conditions' },
+      { to: '/about', labelKey: 'footer.aboutUs' },
+      { to: '/how-it-works', labelKey: 'footer.howItWorks' },
+      { to: '/contacts', labelKey: 'footer.contact' },
+      { to: '/terms', labelKey: 'footer.termsConditions' },
     ],
   };
 
@@ -36,7 +38,7 @@ export const Footer: React.FC = () => {
           <div className="lg:col-span-4">
             <Logo size="lg" variant="light" className="mb-6" />
             <p className="text-white/50 text-sm leading-relaxed mb-8 max-w-sm">
-              Premium car rental service in Phuket. Experience luxury, comfort, and freedom on the island.
+              {t('footer.brandDescription')}
             </p>
 
             {/* Social Links */}
@@ -61,7 +63,7 @@ export const Footer: React.FC = () => {
 
           {/* Links Columns */}
           <div className="lg:col-span-2">
-            <h4 className="text-white font-medium mb-6">Vehicles</h4>
+            <h4 className="text-white font-medium mb-6">{t('footer.vehicles')}</h4>
             <nav className="space-y-3">
               {links.vehicles.map((link) => (
                 <Link
@@ -69,14 +71,14 @@ export const Footer: React.FC = () => {
                   to={link.to}
                   className="block text-white/50 hover:text-white transition-colors text-sm"
                 >
-                  {link.label}
+                  {t(link.labelKey)}
                 </Link>
               ))}
             </nav>
           </div>
 
           <div className="lg:col-span-2">
-            <h4 className="text-white font-medium mb-6">Company</h4>
+            <h4 className="text-white font-medium mb-6">{t('footer.company')}</h4>
             <nav className="space-y-3">
               {links.company.map((link) => (
                 <Link
@@ -84,7 +86,7 @@ export const Footer: React.FC = () => {
                   to={link.to}
                   className="block text-white/50 hover:text-white transition-colors text-sm"
                 >
-                  {link.label}
+                  {t(link.labelKey)}
                 </Link>
               ))}
             </nav>
@@ -92,7 +94,7 @@ export const Footer: React.FC = () => {
 
           {/* Contact Column */}
           <div className="lg:col-span-4">
-            <h4 className="text-white font-medium mb-6">Get In Touch</h4>
+            <h4 className="text-white font-medium mb-6">{t('footer.getInTouch')}</h4>
             <div className="space-y-4">
               <a
                 href="tel:+66638450372"
@@ -128,20 +130,20 @@ export const Footer: React.FC = () => {
         <div className="container mx-auto px-6 py-6">
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">
             <p className="text-white/30 text-sm">
-              © {currentYear} UNICAR. All rights reserved.
+              {t('footer.copyright', { year: currentYear })}
             </p>
             <div className="flex gap-6 text-sm">
               <Link
                 to="/privacy"
                 className="text-white/30 hover:text-white transition-colors"
               >
-                Privacy Policy
+                {t('footer.privacy')}
               </Link>
               <Link
                 to="/terms"
                 className="text-white/30 hover:text-white transition-colors"
               >
-                Terms of Service
+                {t('footer.terms')}
               </Link>
             </div>
           </div>
@@ -152,7 +154,7 @@ export const Footer: React.FC = () => {
       <div className="border-t border-white/10">
         <div className="container mx-auto px-6 py-5">
           <p className="text-center text-white/40 text-sm">
-            Designed & Developed by{' '}
+            {t('footer.designedBy')}{' '}
             <a
               href="https://sintara.io/"
               target="_blank"

@@ -1,37 +1,40 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { 
-  Clock, 
-  CreditCard, 
-  FileText, 
-  Headphones, 
-  Camera, 
-  Navigation, 
-  Smartphone, 
-  Umbrella, 
-  Droplets, 
+import { useTranslation } from 'react-i18next';
+import {
+  Clock,
+  CreditCard,
+  FileText,
+  Headphones,
+  Camera,
+  Navigation,
+  Smartphone,
+  Umbrella,
+  Droplets,
   Baby,
   MapPin,
   Gift
 } from 'lucide-react';
 
-export const TermsService: React.FC = () => {
-  const paymentOptions = [
-    { currency: 'THB', description: 'Тайские баты' },
-    { currency: 'RUB', description: 'Российские рубли' },
-    { currency: 'USD', description: 'Доллары США' },
-    { currency: 'USDT', description: 'USDT криптовалюта' }
-  ];
+const PAYMENT_OPTIONS = [
+  { currency: 'THB', key: 'thb' },
+  { currency: 'RUB', key: 'rub' },
+  { currency: 'USD', key: 'usd' },
+  { currency: 'USDT', key: 'usdt' },
+] as const;
 
-  const carFeatures = [
-    { icon: Camera, title: 'Видеорегистратор', description: 'Для вашей безопасности' },
-    { icon: Navigation, title: 'Навигация', description: 'GPS система' },
-    { icon: Smartphone, title: 'Кабели для зарядки', description: 'iPhone и Android' },
-    { icon: Smartphone, title: 'CarPlay', description: 'Подключение смартфона' },
-    { icon: Umbrella, title: 'Зонтик', description: 'На случай дождя' },
-    { icon: Droplets, title: 'Вода и салфетки', description: 'Для комфорта' },
-    { icon: Baby, title: 'Детские кресла', description: 'Бесплатно по запросу' }
-  ];
+const CAR_FEATURES = [
+  { key: 'dashcam', icon: Camera },
+  { key: 'navigation', icon: Navigation },
+  { key: 'chargers', icon: Smartphone },
+  { key: 'carplay', icon: Smartphone },
+  { key: 'umbrella', icon: Umbrella },
+  { key: 'waterTissues', icon: Droplets },
+  { key: 'babySeat', icon: Baby },
+] as const;
+
+export const TermsService: React.FC = () => {
+  const { t } = useTranslation('pages');
 
   return (
     <section className="py-20 bg-gray-900">
@@ -43,10 +46,10 @@ export const TermsService: React.FC = () => {
           className="text-center mb-16"
         >
           <h2 className="text-4xl md:text-5xl font-bold text-white mb-4 font-display">
-            Клиентский сервис
+            {t('terms.service.title')}
           </h2>
           <p className="text-xl text-gray-400 max-w-3xl mx-auto">
-            Полный комфорт и профессиональное обслуживание на каждом этапе
+            {t('terms.service.subtitle')}
           </p>
         </motion.div>
 
@@ -61,8 +64,8 @@ export const TermsService: React.FC = () => {
             <div className="bg-gradient-to-r from-yellow-500 to-red-500 w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-4">
               <Clock className="w-6 h-6 text-white" />
             </div>
-            <h3 className="text-lg font-bold text-white mb-2">Аренда от суток</h3>
-            <p className="text-gray-400 text-sm">Минимальный срок - 24 часа</p>
+            <h3 className="text-lg font-bold text-white mb-2">{t('terms.service.rentalFromDay.title')}</h3>
+            <p className="text-gray-400 text-sm">{t('terms.service.rentalFromDay.description')}</p>
           </motion.div>
 
           <motion.div
@@ -74,8 +77,8 @@ export const TermsService: React.FC = () => {
             <div className="bg-gradient-to-r from-yellow-500 to-red-500 w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-4">
               <FileText className="w-6 h-6 text-white" />
             </div>
-            <h3 className="text-lg font-bold text-white mb-2">Официальный договор</h3>
-            <p className="text-gray-400 text-sm">От нашей компании</p>
+            <h3 className="text-lg font-bold text-white mb-2">{t('terms.service.contract.title')}</h3>
+            <p className="text-gray-400 text-sm">{t('terms.service.contract.description')}</p>
           </motion.div>
 
           <motion.div
@@ -87,8 +90,8 @@ export const TermsService: React.FC = () => {
             <div className="bg-gradient-to-r from-yellow-500 to-red-500 w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-4">
               <Headphones className="w-6 h-6 text-white" />
             </div>
-            <h3 className="text-lg font-bold text-white mb-2">Поддержка 24/7</h3>
-            <p className="text-gray-400 text-sm">На русском языке</p>
+            <h3 className="text-lg font-bold text-white mb-2">{t('terms.service.support.title')}</h3>
+            <p className="text-gray-400 text-sm">{t('terms.service.support.description')}</p>
           </motion.div>
 
           <motion.div
@@ -100,8 +103,8 @@ export const TermsService: React.FC = () => {
             <div className="bg-gradient-to-r from-yellow-500 to-red-500 w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-4">
               <CreditCard className="w-6 h-6 text-white" />
             </div>
-            <h3 className="text-lg font-bold text-white mb-2">Удобная оплата</h3>
-            <p className="text-gray-400 text-sm">Карты и наличные</p>
+            <h3 className="text-lg font-bold text-white mb-2">{t('terms.service.payment.title')}</h3>
+            <p className="text-gray-400 text-sm">{t('terms.service.payment.description')}</p>
           </motion.div>
         </div>
 
@@ -113,11 +116,11 @@ export const TermsService: React.FC = () => {
           className="bg-gray-800 rounded-2xl p-8 mb-16"
         >
           <h3 className="text-2xl font-bold text-white mb-6 text-center font-display">
-            Способы оплаты
+            {t('terms.service.paymentMethodsTitle')}
           </h3>
-          
+
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            {paymentOptions.map((option) => (
+            {PAYMENT_OPTIONS.map((option) => (
               <div
                 key={option.currency}
                 className="bg-gray-700 rounded-lg p-4 text-center"
@@ -126,7 +129,7 @@ export const TermsService: React.FC = () => {
                   {option.currency}
                 </div>
                 <div className="text-gray-400 text-sm">
-                  {option.description}
+                  {t(`terms.service.paymentOptions.${option.key}`)}
                 </div>
               </div>
             ))}
@@ -141,13 +144,13 @@ export const TermsService: React.FC = () => {
           className="bg-gray-800 rounded-2xl p-8 mb-16"
         >
           <h3 className="text-2xl font-bold text-white mb-6 text-center font-display">
-            В наших автомобилях есть
+            {t('terms.service.carFeaturesTitle')}
           </h3>
-          
+
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {carFeatures.map((feature, index) => (
+            {CAR_FEATURES.map((feature, index) => (
               <motion.div
-                key={feature.title}
+                key={feature.key}
                 initial={{ opacity: 0, scale: 0.9 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ duration: 0.4, delay: 0.1 * index }}
@@ -157,8 +160,8 @@ export const TermsService: React.FC = () => {
                   <feature.icon className="w-4 h-4 text-white" />
                 </div>
                 <div>
-                  <h4 className="text-white font-semibold text-sm">{feature.title}</h4>
-                  <p className="text-gray-400 text-xs">{feature.description}</p>
+                  <h4 className="text-white font-semibold text-sm">{t(`terms.service.carFeatures.${feature.key}.title`)}</h4>
+                  <p className="text-gray-400 text-xs">{t(`terms.service.carFeatures.${feature.key}.description`)}</p>
                 </div>
               </motion.div>
             ))}
@@ -176,16 +179,16 @@ export const TermsService: React.FC = () => {
             <div className="bg-gradient-to-r from-yellow-500 to-red-500 p-3 rounded-full">
               <Gift className="w-6 h-6 text-white" />
             </div>
-            <h4 className="text-2xl font-bold text-white font-display">Подарок каждому клиенту</h4>
+            <h4 className="text-2xl font-bold text-white font-display">{t('terms.service.giftTitle')}</h4>
           </div>
-          
+
           <p className="text-gray-300 text-lg">
-            Гайд-путеводитель по Пхукету с топовыми и инстаграмными локациями
+            {t('terms.service.giftText')}
           </p>
-          
+
           <div className="flex items-center justify-center gap-2 mt-4">
             <MapPin className="w-5 h-5 text-yellow-400" />
-            <span className="text-yellow-400 font-semibold">Эксклюзивные места для фото</span>
+            <span className="text-yellow-400 font-semibold">{t('terms.service.giftBadge')}</span>
           </div>
         </motion.div>
       </div>

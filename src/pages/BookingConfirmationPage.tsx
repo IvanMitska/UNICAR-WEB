@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
+import { useTranslation } from 'react-i18next';
 import {
   CheckCircle,
   Copy,
@@ -13,6 +14,7 @@ import {
 export const BookingConfirmationPage: React.FC = () => {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
+  const { t } = useTranslation('pages');
   const referenceCode = searchParams.get('ref');
   const [copied, setCopied] = useState(false);
 
@@ -38,10 +40,10 @@ export const BookingConfirmationPage: React.FC = () => {
               <CheckCircle className="w-12 h-12 text-green-500" />
             </div>
             <h1 className="text-3xl font-light text-gray-900 mb-3">
-              Спасибо за бронирование!
+              {t('bookingConfirmation.thankYou')}
             </h1>
             <p className="text-gray-500 text-lg">
-              Ваша заявка успешно отправлена. Наш менеджер свяжется с вами в ближайшее время для подтверждения.
+              {t('bookingConfirmation.subtitle')}
             </p>
           </motion.div>
 
@@ -53,7 +55,7 @@ export const BookingConfirmationPage: React.FC = () => {
               transition={{ delay: 0.1 }}
               className="bg-white rounded-2xl shadow-lg p-6 mb-6"
             >
-              <p className="text-sm text-gray-400 mb-2">Номер заявки</p>
+              <p className="text-sm text-gray-400 mb-2">{t('bookingConfirmation.referenceLabel')}</p>
               <div className="flex items-center justify-between">
                 <span className="text-2xl font-mono font-bold text-gray-900">
                   {referenceCode}
@@ -65,12 +67,12 @@ export const BookingConfirmationPage: React.FC = () => {
                   {copied ? (
                     <>
                       <Check className="w-4 h-4" />
-                      <span className="text-sm">Скопировано</span>
+                      <span className="text-sm">{t('bookingConfirmation.copied')}</span>
                     </>
                   ) : (
                     <>
                       <Copy className="w-4 h-4" />
-                      <span className="text-sm">Копировать</span>
+                      <span className="text-sm">{t('bookingConfirmation.copy')}</span>
                     </>
                   )}
                 </button>
@@ -85,19 +87,19 @@ export const BookingConfirmationPage: React.FC = () => {
             transition={{ delay: 0.2 }}
             className="bg-white rounded-2xl shadow-lg p-6 mb-6"
           >
-            <h3 className="text-lg font-medium text-gray-900 mb-4">Что дальше?</h3>
+            <h3 className="text-lg font-medium text-gray-900 mb-4">{t('bookingConfirmation.whatNextTitle')}</h3>
             <ul className="space-y-3 text-gray-600">
               <li className="flex items-start gap-3">
                 <span className="w-6 h-6 bg-green-100 text-green-600 rounded-full flex items-center justify-center flex-shrink-0 text-sm font-medium">1</span>
-                <span>Менеджер свяжется с вами для уточнения деталей</span>
+                <span>{t('bookingConfirmation.step1')}</span>
               </li>
               <li className="flex items-start gap-3">
                 <span className="w-6 h-6 bg-green-100 text-green-600 rounded-full flex items-center justify-center flex-shrink-0 text-sm font-medium">2</span>
-                <span>Подтвердите бронирование и способ оплаты</span>
+                <span>{t('bookingConfirmation.step2')}</span>
               </li>
               <li className="flex items-start gap-3">
                 <span className="w-6 h-6 bg-green-100 text-green-600 rounded-full flex items-center justify-center flex-shrink-0 text-sm font-medium">3</span>
-                <span>Получите автомобиль в выбранном месте</span>
+                <span>{t('bookingConfirmation.step3')}</span>
               </li>
             </ul>
           </motion.div>
@@ -109,14 +111,14 @@ export const BookingConfirmationPage: React.FC = () => {
             transition={{ delay: 0.3 }}
             className="bg-white rounded-2xl shadow-lg p-6 mb-6"
           >
-            <h3 className="text-lg font-medium text-gray-900 mb-4">Есть вопросы? Свяжитесь с нами</h3>
+            <h3 className="text-lg font-medium text-gray-900 mb-4">{t('bookingConfirmation.questionsTitle')}</h3>
             <div className="grid grid-cols-2 gap-4">
               <a
                 href="tel:+66638450372"
                 className="flex items-center justify-center gap-2 py-4 border border-gray-200 text-gray-700 rounded-xl hover:border-gray-400 transition-colors"
               >
                 <Phone className="w-5 h-5" />
-                <span>Позвонить</span>
+                <span>{t('bookingConfirmation.callBtn')}</span>
               </a>
               <a
                 href="https://wa.me/66638450372"
@@ -142,13 +144,13 @@ export const BookingConfirmationPage: React.FC = () => {
               className="flex items-center gap-2 px-6 py-3 text-gray-600 hover:text-gray-900 transition-colors"
             >
               <ArrowLeft className="w-5 h-5" />
-              <span>На главную</span>
+              <span>{t('bookingConfirmation.homeBtn')}</span>
             </button>
             <button
               onClick={() => navigate('/cars')}
               className="px-8 py-4 bg-gray-900 text-white rounded-full hover:bg-gray-800 transition-colors"
             >
-              Смотреть другие авто
+              {t('bookingConfirmation.otherCarsBtn')}
             </button>
           </motion.div>
         </div>

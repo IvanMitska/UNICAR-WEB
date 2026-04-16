@@ -1,19 +1,21 @@
 import React, { useState, useMemo, useEffect, useCallback, useRef } from 'react';
 import { useSearchParams } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence } from 'framer-motion';
 import { SlidersHorizontal, ChevronDown, Check, X } from 'lucide-react';
 import { motorcycles } from '../data/motorcycles';
 import { MotorcycleFiltersAdvanced } from '../components/sections/MotorcycleFiltersAdvanced';
 import { MotorcycleGrid } from '../components/sections/MotorcycleGrid';
 
-const sortOptions = [
-  { value: 'price-asc', label: 'Сначала дешевле' },
-  { value: 'price-desc', label: 'Сначала дороже' },
-  { value: 'rating', label: 'По рейтингу' },
-  { value: 'popular', label: 'По популярности' },
-];
-
 export const MotorcyclesPage: React.FC = () => {
+  const { t } = useTranslation();
+
+  const sortOptions = [
+    { value: 'price-asc', label: t('sort.priceAsc') },
+    { value: 'price-desc', label: t('sort.priceDesc') },
+    { value: 'rating', label: t('sort.byRating') },
+    { value: 'popular', label: t('sort.byPopularity') },
+  ];
   const [searchParams] = useSearchParams();
   const categoryFromUrl = searchParams.get('category');
   const [isMobileFilterOpen, setIsMobileFilterOpen] = useState(false);
@@ -73,14 +75,14 @@ export const MotorcyclesPage: React.FC = () => {
   }, []);
 
   const getCategoryName = (cat: string) => {
-    const names: Record<string, string> = {
-      scooter: 'Скутеры',
-      sport: 'Спортбайки',
-      touring: 'Туринги',
-      cruiser: 'Круизеры',
-      adventure: 'Адвенчер',
+    const categoryKeys: Record<string, string> = {
+      scooter: 'scooters',
+      sport: 'sportbikes',
+      touring: 'tourings',
+      cruiser: 'cruisers',
+      adventure: 'adventures',
     };
-    return names[cat] || cat;
+    return t(`motorcycleCategories.${categoryKeys[cat] || cat}`);
   };
 
   const filteredMotorcycles = useMemo(() => {
@@ -122,7 +124,7 @@ export const MotorcyclesPage: React.FC = () => {
             animate={{ opacity: 1, y: 0 }}
             className="text-4xl lg:text-5xl font-light text-primary-900 mb-3"
           >
-            {filters.category ? getCategoryName(filters.category) : 'Мотоциклы'}
+            {filters.category ? getCategoryName(filters.category) : t('motorcycles.title')}
           </motion.h1>
           <motion.p
             initial={{ opacity: 0, y: 20 }}
@@ -130,8 +132,8 @@ export const MotorcyclesPage: React.FC = () => {
             transition={{ delay: 0.1 }}
             className="text-primary-400 text-lg"
           >
-            {filteredMotorcycles.length} {filteredMotorcycles.length === 1 ? 'мотоцикл' :
-              filteredMotorcycles.length < 5 ? 'мотоцикла' : 'мотоциклов'} в наличии
+            {filteredMotorcycles.length} {filteredMotorcycles.length === 1 ? t('motorcycles.count_one') :
+              filteredMotorcycles.length < 5 ? t('motorcycles.count_few') : t('motorcycles.count_many')} {t('motorcycles.inStock')}
           </motion.p>
         </div>
 
@@ -143,7 +145,7 @@ export const MotorcyclesPage: React.FC = () => {
             className="lg:hidden flex items-center gap-2 px-4 py-2.5 bg-primary-50 rounded-lg text-primary-900 hover:bg-primary-100 transition-colors"
           >
             <SlidersHorizontal className="w-4 h-4" />
-            <span className="font-medium text-sm">Фильтры</span>
+            <span className="font-medium text-sm">{t('filters.filters')}</span>
           </button>
 
           {/* Spacer for desktop */}
@@ -217,7 +219,7 @@ export const MotorcyclesPage: React.FC = () => {
                   onClick={(e) => e.stopPropagation()}
                 >
                   <div className="sticky top-0 bg-white border-b border-primary-100 px-4 py-4 flex items-center justify-between">
-                    <span className="font-medium text-primary-900">Фильтры</span>
+                    <span className="font-medium text-primary-900">{t('filters.filters')}</span>
                     <button onClick={handleMobileFilterClose} className="p-2 -mr-2">
                       <X className="w-5 h-5 text-primary-500" />
                     </button>

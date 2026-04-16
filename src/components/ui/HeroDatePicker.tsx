@@ -1,7 +1,8 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Calendar, ChevronLeft, ChevronRight } from 'lucide-react';
 import { format, startOfMonth, eachDayOfInterval, isSameMonth, isSameDay, addMonths, subMonths, isBefore } from 'date-fns';
-import { ru } from 'date-fns/locale';
+import { ru, enUS } from 'date-fns/locale';
 
 interface HeroDatePickerProps {
   value: string;
@@ -19,6 +20,9 @@ export const HeroDatePicker: React.FC<HeroDatePickerProps> = ({
   const [isOpen, setIsOpen] = useState(false);
   const [currentMonth, setCurrentMonth] = useState(new Date());
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const { t, i18n } = useTranslation('common');
+  const dateLocale = (i18n.language || 'ru').startsWith('en') ? enUS : ru;
+  const weekDays = t('datePicker.weekDays', { returnObjects: true }) as string[];
 
   const selectedDate = value ? new Date(value) : null;
 
@@ -87,7 +91,7 @@ export const HeroDatePicker: React.FC<HeroDatePickerProps> = ({
             </button>
 
             <h3 className="text-sm font-medium text-gray-900 capitalize">
-              {format(currentMonth, 'LLLL yyyy', { locale: ru })}
+              {format(currentMonth, 'LLLL yyyy', { locale: dateLocale })}
             </h3>
 
             <button
@@ -101,7 +105,7 @@ export const HeroDatePicker: React.FC<HeroDatePickerProps> = ({
 
           {/* Weekdays */}
           <div className="grid grid-cols-7 border-b border-gray-100">
-            {['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс'].map((day) => (
+            {weekDays.map((day) => (
               <div key={day} className="p-2 text-center text-xs font-medium text-gray-400">
                 {day}
               </div>
@@ -144,14 +148,14 @@ export const HeroDatePicker: React.FC<HeroDatePickerProps> = ({
               onClick={() => handleDateSelect(new Date())}
               className="flex-1 px-3 py-2 text-xs font-medium bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors"
             >
-              Сегодня
+              {t('datePicker.today')}
             </button>
             <button
               type="button"
               onClick={() => handleDateSelect(new Date(Date.now() + 24 * 60 * 60 * 1000))}
               className="flex-1 px-3 py-2 text-xs font-medium bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors"
             >
-              Завтра
+              {t('datePicker.tomorrow')}
             </button>
           </div>
         </div>

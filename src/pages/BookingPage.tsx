@@ -1,10 +1,12 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { ArrowLeft } from 'lucide-react';
 import { BookingForm } from '../components/forms/BookingForm';
 
 export const BookingPage: React.FC = () => {
   const navigate = useNavigate();
+  const { t } = useTranslation('pages');
 
   return (
     <div className="bg-gray-50 min-h-screen">
@@ -16,7 +18,7 @@ export const BookingPage: React.FC = () => {
           >
             <ArrowLeft className="w-5 h-5 text-gray-600" />
           </button>
-          <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900">Оформление бронирования</h1>
+          <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900">{t('bookingPage.title')}</h1>
         </div>
         <BookingForm />
       </div>

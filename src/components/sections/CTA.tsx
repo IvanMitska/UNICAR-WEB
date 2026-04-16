@@ -1,9 +1,12 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
+import { useTranslation } from 'react-i18next';
 import { ArrowRight } from 'lucide-react';
 
 export const CTA: React.FC = () => {
+  const { t } = useTranslation('pages');
+
   return (
     <section className="relative h-[500px] lg:h-[600px] overflow-hidden">
       {/* Background Image */}
@@ -23,7 +26,7 @@ export const CTA: React.FC = () => {
               transition={{ duration: 0.5 }}
               className="text-gray-500 uppercase tracking-[0.2em] text-xs font-medium mb-4"
             >
-              Start Your Journey
+              {t('cta.eyebrow')}
             </motion.p>
 
             <motion.h2
@@ -33,7 +36,7 @@ export const CTA: React.FC = () => {
               transition={{ duration: 0.5, delay: 0.1 }}
               className="text-4xl lg:text-6xl font-light text-gray-900 tracking-tight mb-6"
             >
-              Your adventure awaits
+              {t('cta.title')}
             </motion.h2>
 
             <motion.p
@@ -43,7 +46,7 @@ export const CTA: React.FC = () => {
               transition={{ duration: 0.5, delay: 0.2 }}
               className="text-lg text-gray-500 mb-10"
             >
-              Premium vehicles delivered to your location. Explore Phuket your way.
+              {t('cta.subtitle')}
             </motion.p>
 
             <motion.div
@@ -57,7 +60,7 @@ export const CTA: React.FC = () => {
                 to="/cars"
                 className="group inline-flex items-center justify-center gap-3 px-8 py-4 bg-gray-900 text-white rounded-full font-medium hover:bg-gray-800 transition-all duration-300"
               >
-                <span>Browse Vehicles</span>
+                <span>{t('cta.browseVehicles')}</span>
                 <ArrowRight className="w-5 h-5 transition-transform group-hover:translate-x-1" />
               </Link>
 

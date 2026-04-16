@@ -1,4 +1,5 @@
 import React, { useState, useCallback } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Search, ChevronDown } from 'lucide-react';
 import { cn } from '../../utils/cn';
 
@@ -21,31 +22,32 @@ interface CarFiltersAdvancedProps {
   onClose?: () => void;
 }
 
-const categories = [
-  { id: '', name: 'Все' },
-  { id: 'suv', name: 'Внедорожники' },
-  { id: 'premium', name: 'Премиум' },
-  { id: 'business', name: 'Бизнес' },
-  { id: 'sport', name: 'Спорткары' },
-  { id: 'comfort', name: 'Комфорт' },
-  { id: 'electric', name: 'Электро' },
-];
-
-const transmissionOptions = [
-  { value: '', label: 'Любая' },
-  { value: 'automatic', label: 'Автомат' },
-  { value: 'manual', label: 'Механика' },
-];
-
-const fuelOptions = [
-  { value: '', label: 'Любое' },
-  { value: 'petrol', label: 'Бензин' },
-  { value: 'diesel', label: 'Дизель' },
-  { value: 'hybrid', label: 'Гибрид' },
-  { value: 'electric', label: 'Электро' },
-];
-
 export const CarFiltersAdvanced: React.FC<CarFiltersAdvancedProps> = ({ filters, setFilters, onClose }) => {
+  const { t } = useTranslation();
+
+  const categories = [
+    { id: '', name: t('categories.all') },
+    { id: 'suv', name: t('categories.suv') },
+    { id: 'premium', name: t('categories.premium') },
+    { id: 'business', name: t('categories.business') },
+    { id: 'sport', name: t('categories.sport') },
+    { id: 'comfort', name: t('categories.comfort') },
+    { id: 'electric', name: t('categories.electric') },
+  ];
+
+  const transmissionOptions = [
+    { value: '', label: t('transmission.any') },
+    { value: 'automatic', label: t('transmission.automatic') },
+    { value: 'manual', label: t('transmission.manual') },
+  ];
+
+  const fuelOptions = [
+    { value: '', label: t('fuel.any') },
+    { value: 'petrol', label: t('fuel.petrol') },
+    { value: 'diesel', label: t('fuel.diesel') },
+    { value: 'hybrid', label: t('fuel.hybrid') },
+    { value: 'electric', label: t('fuel.electric') },
+  ];
   const [expanded, setExpanded] = useState({
     categories: true,
     price: true,
@@ -86,7 +88,7 @@ export const CarFiltersAdvanced: React.FC<CarFiltersAdvancedProps> = ({ filters,
             type="text"
             value={filters.searchQuery}
             onChange={(e) => updateFilter('searchQuery', e.target.value)}
-            placeholder="Поиск по марке..."
+            placeholder={t('form.searchByBrand')}
             className="w-full pl-10 pr-4 py-3 bg-primary-50 border border-primary-200 text-primary-900 text-sm rounded-md focus:outline-none focus:border-primary-400 placeholder-primary-400 transition-colors"
           />
         </div>
@@ -98,7 +100,7 @@ export const CarFiltersAdvanced: React.FC<CarFiltersAdvancedProps> = ({ filters,
           onClick={() => toggle('categories')}
           className="w-full px-4 lg:px-0 py-4 flex items-center justify-between hover:bg-primary-50 lg:hover:bg-transparent transition-colors"
         >
-          <span className="text-sm font-medium text-primary-900">Категория</span>
+          <span className="text-sm font-medium text-primary-900">{t('filters.category')}</span>
           <ChevronDown className={cn('w-4 h-4 text-primary-400 transition-transform', expanded.categories && 'rotate-180')} />
         </button>
         {expanded.categories && (
@@ -127,7 +129,7 @@ export const CarFiltersAdvanced: React.FC<CarFiltersAdvancedProps> = ({ filters,
           onClick={() => toggle('price')}
           className="w-full px-4 lg:px-0 py-4 flex items-center justify-between hover:bg-primary-50 lg:hover:bg-transparent transition-colors"
         >
-          <span className="text-sm font-medium text-primary-900">Цена за день</span>
+          <span className="text-sm font-medium text-primary-900">{t('filters.pricePerDay')}</span>
           <ChevronDown className={cn('w-4 h-4 text-primary-400 transition-transform', expanded.price && 'rotate-180')} />
         </button>
         {expanded.price && (
@@ -137,7 +139,7 @@ export const CarFiltersAdvanced: React.FC<CarFiltersAdvancedProps> = ({ filters,
                 type="number"
                 value={filters.priceMin || ''}
                 onChange={(e) => updateFilter('priceMin', Number(e.target.value) || 0)}
-                placeholder="От"
+                placeholder={t('form.from')}
                 className="w-full px-3 py-2 bg-primary-50 border border-primary-200 text-primary-900 text-sm rounded-md focus:outline-none focus:border-primary-400 transition-colors"
               />
               <span className="text-primary-300">—</span>
@@ -145,7 +147,7 @@ export const CarFiltersAdvanced: React.FC<CarFiltersAdvancedProps> = ({ filters,
                 type="number"
                 value={filters.priceMax || ''}
                 onChange={(e) => updateFilter('priceMax', Number(e.target.value) || 20000)}
-                placeholder="До"
+                placeholder={t('form.to')}
                 className="w-full px-3 py-2 bg-primary-50 border border-primary-200 text-primary-900 text-sm rounded-md focus:outline-none focus:border-primary-400 transition-colors"
               />
             </div>
@@ -173,7 +175,7 @@ export const CarFiltersAdvanced: React.FC<CarFiltersAdvancedProps> = ({ filters,
           onClick={() => toggle('transmission')}
           className="w-full px-4 lg:px-0 py-4 flex items-center justify-between hover:bg-primary-50 lg:hover:bg-transparent transition-colors"
         >
-          <span className="text-sm font-medium text-primary-900">Коробка передач</span>
+          <span className="text-sm font-medium text-primary-900">{t('filters.transmission')}</span>
           <ChevronDown className={cn('w-4 h-4 text-primary-400 transition-transform', expanded.transmission && 'rotate-180')} />
         </button>
         {expanded.transmission && (
@@ -202,7 +204,7 @@ export const CarFiltersAdvanced: React.FC<CarFiltersAdvancedProps> = ({ filters,
           onClick={() => toggle('fuel')}
           className="w-full px-4 lg:px-0 py-4 flex items-center justify-between hover:bg-primary-50 lg:hover:bg-transparent transition-colors"
         >
-          <span className="text-sm font-medium text-primary-900">Топливо</span>
+          <span className="text-sm font-medium text-primary-900">{t('filters.fuel')}</span>
           <ChevronDown className={cn('w-4 h-4 text-primary-400 transition-transform', expanded.fuel && 'rotate-180')} />
         </button>
         {expanded.fuel && (
@@ -231,7 +233,7 @@ export const CarFiltersAdvanced: React.FC<CarFiltersAdvancedProps> = ({ filters,
           onClick={handleReset}
           className="text-sm text-primary-500 hover:text-primary-900 transition-colors"
         >
-          Сбросить фильтры
+          {t('buttons.resetFilters')}
         </button>
       </div>
 
@@ -242,7 +244,7 @@ export const CarFiltersAdvanced: React.FC<CarFiltersAdvancedProps> = ({ filters,
             onClick={onClose}
             className="w-full bg-primary-900 text-white py-3 rounded-md text-sm font-medium hover:bg-primary-800 transition-colors"
           >
-            Показать результаты
+            {t('buttons.showResults')}
           </button>
         </div>
       )}

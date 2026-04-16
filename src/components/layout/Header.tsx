@@ -3,6 +3,7 @@ import { createPortal } from 'react-dom';
 import { Link, NavLink, useLocation } from 'react-router-dom';
 import { Menu, X } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useTranslation } from 'react-i18next';
 import { cn } from '../../utils/cn';
 import { useAuth } from '../../contexts/AuthContext';
 import { useBookingStore } from '../../store/useBookingStore';
@@ -43,7 +44,7 @@ const featuredCarsRow1 = [
   },
 ];
 
-// Row 2 (BMWs + All Cars)
+// Row 2 (BMWs + All Cars). labelKey used when translation needed (e.g. "All Cars")
 const featuredCarsRow2 = [
   {
     id: 'bmw-x5-2020',
@@ -61,21 +62,21 @@ const featuredCarsRow2 = [
   },
   {
     id: 'all-cars',
-    name: 'All Cars',
+    labelKey: 'nav.allCars',
     image: '/cars/menu/mustang-white.png',
     category: 'all',
     isInventory: true,
   },
-];
+] as const;
 
-const quickLinks = [
-  { label: 'All Cars', to: '/cars' },
-  { label: 'Luxury Cars', to: '/cars?category=premium' },
-  { label: 'Luxury SUVs', to: '/cars?category=suv' },
-  { label: 'Sports Cars', to: '/cars?category=sport' },
-  { label: 'Economy', to: '/cars?category=economy' },
-  { label: 'Contacts', to: '/contacts' },
-];
+const quickLinkDefs = [
+  { labelKey: 'nav.allCars', to: '/cars' },
+  { labelKey: 'nav.luxuryCars', to: '/cars?category=premium' },
+  { labelKey: 'buttons.luxurySuvs', to: '/cars?category=suv' },
+  { labelKey: 'buttons.sportsCars', to: '/cars?category=sport' },
+  { labelKey: 'nav.economy', to: '/cars?category=economy' },
+  { labelKey: 'nav.contacts', to: '/contacts' },
+] as const;
 
 export const Header: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -86,6 +87,7 @@ export const Header: React.FC = () => {
   const location = useLocation();
   const { user, isAuthenticated } = useAuth();
   const { clearSearch } = useBookingStore();
+  const { t } = useTranslation(['common', 'pages']);
 
   // Check if current page has light background
   const isLightPage = lightBackgroundPages.some(page => location.pathname.startsWith(page));
@@ -140,10 +142,10 @@ export const Header: React.FC = () => {
   };
 
   const navLinks = [
-    { to: '/cars', label: 'Rent a Car', hasDropdown: true, dropdownKey: 'rent' },
-    { to: '/buy', label: 'Buy a Car', hasDropdown: true, dropdownKey: 'buy' },
-    { to: '/about', label: 'About Us', hasDropdown: false },
-    { to: '/contacts', label: 'Contacts', hasDropdown: false },
+    { to: '/cars', label: t('nav.rentCar'), hasDropdown: true, dropdownKey: 'rent' },
+    { to: '/buy', label: t('nav.buyCar'), hasDropdown: true, dropdownKey: 'buy' },
+    { to: '/about', label: t('nav.aboutUs'), hasDropdown: false },
+    { to: '/contacts', label: t('nav.contacts'), hasDropdown: false },
   ];
 
   return (
@@ -247,7 +249,7 @@ export const Header: React.FC = () => {
                         : "text-white/80 hover:text-white"
                     )}
                   >
-                    Sign In
+                    {t('nav.signIn')}
                   </Link>
 
                   <Link
@@ -260,7 +262,7 @@ export const Header: React.FC = () => {
                         : "text-white border-2 border-white/60 hover:bg-white hover:text-gray-900"
                     )}
                   >
-                    Get Started
+                    {t('nav.getStarted')}
                   </Link>
                 </>
               )}
@@ -349,10 +351,10 @@ export const Header: React.FC = () => {
                             </h3>
                             <div className="flex items-center justify-center gap-4 text-xs">
                               <span className="text-gray-500 hover:text-gray-900 underline underline-offset-2 cursor-pointer transition-colors">
-                                Details
+                                {t('buttons.details')}
                               </span>
                               <span className="text-gray-500 hover:text-gray-900 underline underline-offset-2 cursor-pointer transition-colors">
-                                Rent
+                                {t('buttons.rent')}
                               </span>
                             </div>
                           </Link>
@@ -362,7 +364,9 @@ export const Header: React.FC = () => {
 
                     {/* Row 2 - Inventory */}
                     <div className="grid grid-cols-4 gap-8">
-                      {featuredCarsRow2.map((car, index) => (
+                      {featuredCarsRow2.map((car, index) => {
+                        const displayName = 'name' in car ? car.name : t((car as { labelKey: string }).labelKey);
+                        return (
                         <motion.div
                           key={car.id}
                           initial={{ opacity: 0, y: 15 }}
@@ -374,47 +378,48 @@ export const Header: React.FC = () => {
                           }}
                         >
                           <Link
-                            to={car.isInventory ? '/cars' : `/cars/${car.id}`}
+                            to={'isInventory' in car && car.isInventory ? '/cars' : `/cars/${car.id}`}
                             onClick={() => {
                               setActiveDropdown(null);
-                              if (car.isInventory) clearSearch();
+                              if ('isInventory' in car && car.isInventory) clearSearch();
                             }}
                             className="group text-center block"
                           >
                             <div className="relative mb-4 h-40 flex items-end justify-center">
                               <img
                                 src={car.image}
-                                alt={car.name}
+                                alt={displayName}
                                 className="max-h-full w-auto object-contain transition-transform duration-500 group-hover:scale-105"
                               />
                             </div>
                             <h3 className="text-sm font-medium text-gray-900 mb-1.5">
-                              {car.name}
+                              {displayName}
                             </h3>
                             <div className="flex items-center justify-center gap-4 text-xs">
-                              {car.isInventory ? (
+                              {'isInventory' in car && car.isInventory ? (
                                 <>
                                   <span className="text-gray-500 hover:text-gray-900 underline underline-offset-2 cursor-pointer transition-colors">
-                                    View All
+                                    {t('buttons.viewAll')}
                                   </span>
                                   <span className="text-gray-500 hover:text-gray-900 underline underline-offset-2 cursor-pointer transition-colors">
-                                    Browse
+                                    {t('buttons.browse')}
                                   </span>
                                 </>
                               ) : (
                                 <>
                                   <span className="text-gray-500 hover:text-gray-900 underline underline-offset-2 cursor-pointer transition-colors">
-                                    Details
+                                    {t('buttons.details')}
                                   </span>
                                   <span className="text-gray-500 hover:text-gray-900 underline underline-offset-2 cursor-pointer transition-colors">
-                                    Rent
+                                    {t('buttons.rent')}
                                   </span>
                                 </>
                               )}
                             </div>
                           </Link>
                         </motion.div>
-                      ))}
+                        );
+                      })}
                     </div>
                   </div>
 
@@ -426,7 +431,7 @@ export const Header: React.FC = () => {
                     className="w-48 border-l border-gray-200 pl-8"
                   >
                     <nav className="space-y-0.5">
-                      {quickLinks.map((link, index) => (
+                      {quickLinkDefs.map((link, index) => (
                         <motion.div
                           key={link.to}
                           initial={{ opacity: 0 }}
@@ -444,7 +449,7 @@ export const Header: React.FC = () => {
                             }}
                             className="block py-1.5 text-sm text-gray-700 hover:text-gray-900 transition-colors"
                           >
-                            {link.label}
+                            {t(link.labelKey)}
                           </Link>
                         </motion.div>
                       ))}
@@ -510,7 +515,7 @@ export const Header: React.FC = () => {
                   className="mt-8 pt-6 border-t border-gray-100 animate-menu-item"
                   style={{ animationDelay: '350ms' }}
                 >
-                  <p className="text-xs uppercase tracking-wider text-gray-400 mb-4">Featured</p>
+                  <p className="text-xs uppercase tracking-wider text-gray-400 mb-4">{t('carsMenu.featured', { ns: 'pages' })}</p>
                   <div className="grid grid-cols-2 gap-4">
                     {featuredCarsRow1.map((car) => (
                       <Link
@@ -554,14 +559,14 @@ export const Header: React.FC = () => {
                         onClick={() => setIsMenuOpen(false)}
                         className="block py-3 text-lg text-gray-500 hover:text-gray-900 transition-colors"
                       >
-                        Sign In
+                        {t('nav.signIn')}
                       </Link>
                       <Link
                         to="/get-started"
                         onClick={() => setIsMenuOpen(false)}
                         className="block text-center py-4 text-gray-900 text-lg font-medium border-2 border-gray-900 rounded-full hover:bg-gray-900 hover:text-white transition-all duration-300"
                       >
-                        Get Started
+                        {t('nav.getStarted')}
                       </Link>
                     </>
                   )}

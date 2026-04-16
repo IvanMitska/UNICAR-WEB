@@ -21,7 +21,7 @@ export const motorcycles: Motorcycle[] = [
     available: true,
     rating: 4.6,
     reviews: 234,
-    description: 'Популярный автоматический скутер для городских поездок',
+    description: { ru: 'Популярный автоматический скутер для городских поездок', en: 'Popular automatic scooter for city rides' },
     specifications: {
       engine: '125cc',
       power: '11 л.с.',
@@ -48,7 +48,7 @@ export const motorcycles: Motorcycle[] = [
     available: true,
     rating: 4.7,
     reviews: 189,
-    description: 'Спортивный скутер с отличной управляемостью',
+    description: { ru: 'Спортивный скутер с отличной управляемостью', en: 'Sporty scooter with excellent handling' },
     specifications: {
       engine: '155cc',
       power: '15 л.с.',
@@ -75,7 +75,7 @@ export const motorcycles: Motorcycle[] = [
     available: true,
     rating: 4.8,
     reviews: 156,
-    description: 'Премиальный скутер для комфортных поездок',
+    description: { ru: 'Премиальный скутер для комфортных поездок', en: 'Premium scooter for comfortable rides' },
     specifications: {
       engine: '150cc',
       power: '14.5 л.с.',
@@ -104,7 +104,7 @@ export const motorcycles: Motorcycle[] = [
     available: true,
     rating: 4.9,
     reviews: 98,
-    description: 'Агрессивный спортбайк для любителей скорости',
+    description: { ru: 'Агрессивный спортбайк для любителей скорости', en: 'Aggressive sportbike for speed enthusiasts' },
     specifications: {
       engine: '155cc',
       power: '18.4 л.с.',
@@ -131,7 +131,7 @@ export const motorcycles: Motorcycle[] = [
     available: true,
     rating: 4.8,
     reviews: 134,
-    description: 'Классический спортбайк Honda с отличной надежностью',
+    description: { ru: 'Классический спортбайк Honda с отличной надёжностью', en: 'Classic Honda sportbike with outstanding reliability' },
     specifications: {
       engine: '150cc',
       power: '17.1 л.с.',
@@ -160,7 +160,7 @@ export const motorcycles: Motorcycle[] = [
     available: true,
     rating: 4.7,
     reviews: 87,
-    description: 'Универсальный приключенческий мотоцикл для дальних поездок',
+    description: { ru: 'Универсальный приключенческий мотоцикл для дальних поездок', en: 'Versatile adventure bike for long trips' },
     specifications: {
       engine: '500cc',
       power: '47 л.с.',
@@ -187,7 +187,7 @@ export const motorcycles: Motorcycle[] = [
     available: true,
     rating: 4.6,
     reviews: 76,
-    description: 'Легкий и маневренный адвенчер для исследования острова',
+    description: { ru: 'Лёгкий и манёвренный адвенчер для исследования острова', en: 'Light and agile adventure bike to explore the island' },
     specifications: {
       engine: '300cc',
       power: '39 л.с.',
@@ -216,7 +216,7 @@ export const motorcycles: Motorcycle[] = [
     available: true,
     rating: 4.5,
     reviews: 112,
-    description: 'Стильный круизер в духе американских мотоциклов',
+    description: { ru: 'Стильный круизер в духе американских мотоциклов', en: 'Stylish cruiser in the spirit of American motorcycles' },
     specifications: {
       engine: '300cc',
       power: '27 л.с.',
@@ -245,7 +245,7 @@ export const motorcycles: Motorcycle[] = [
     available: true,
     rating: 4.4,
     reviews: 89,
-    description: 'Экологичный электрический скутер для городских поездок',
+    description: { ru: 'Экологичный электрический скутер для городских поездок', en: 'Eco-friendly electric scooter for city rides' },
     specifications: {
       engine: 'Электромотор',
       power: '3.5 кВт',
@@ -272,7 +272,7 @@ export const motorcycles: Motorcycle[] = [
     available: true,
     rating: 4.7,
     reviews: 67,
-    description: 'Премиальный электрический скутер с передовыми технологиями',
+    description: { ru: 'Премиальный электрический скутер с передовыми технологиями', en: 'Premium electric scooter with cutting-edge technology' },
     specifications: {
       engine: 'Электромотор',
       power: '7.6 кВт',

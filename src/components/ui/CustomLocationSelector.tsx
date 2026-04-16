@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { MapPin, Check, ChevronDown } from 'lucide-react';
 
 interface Location {
@@ -21,6 +22,7 @@ export const CustomLocationSelector: React.FC<CustomLocationSelectorProps> = ({
   label,
   locations
 }) => {
+  const { t } = useTranslation();
   const [isOpen, setIsOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -68,7 +70,7 @@ export const CustomLocationSelector: React.FC<CustomLocationSelectorProps> = ({
         <div className="flex items-center gap-2 truncate">
           <MapPin className="w-4 h-4 text-gray-400 flex-shrink-0" />
           <span className="truncate">
-            {selectedLocation ? selectedLocation.name : 'Выберите место'}
+            {selectedLocation ? selectedLocation.name : t('locationSelector.selectLocation')}
           </span>
         </div>
         <ChevronDown className={`w-4 h-4 text-gray-400 transition-transform flex-shrink-0 ${isOpen ? 'rotate-180' : ''}`} />
@@ -82,7 +84,7 @@ export const CustomLocationSelector: React.FC<CustomLocationSelectorProps> = ({
           <div className="p-3 border-b border-gray-100">
             <input
               type="text"
-              placeholder="Поиск локации..."
+              placeholder={t('locationSelector.searchLocation')}
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-900 text-gray-900 text-sm placeholder-gray-400"
@@ -94,7 +96,7 @@ export const CustomLocationSelector: React.FC<CustomLocationSelectorProps> = ({
             {popularLocations.length > 0 && (
               <div>
                 <div className="px-4 py-2 text-xs font-medium text-gray-400 uppercase tracking-wider">
-                  Популярные места
+                  {t('locationSelector.popularLocations')}
                 </div>
                 {popularLocations.map((location) => (
                   <button
@@ -121,7 +123,7 @@ export const CustomLocationSelector: React.FC<CustomLocationSelectorProps> = ({
               <div>
                 {popularLocations.length > 0 && (
                   <div className="border-t border-gray-100 px-4 py-2 text-xs font-medium text-gray-400 uppercase tracking-wider">
-                    Другие места
+                    {t('locationSelector.otherLocations')}
                   </div>
                 )}
                 {otherLocations.map((location) => (
@@ -148,7 +150,7 @@ export const CustomLocationSelector: React.FC<CustomLocationSelectorProps> = ({
             {filteredLocations.length === 0 && (
               <div className="px-4 py-8 text-center text-gray-400">
                 <MapPin className="w-8 h-8 mx-auto mb-2 opacity-50" />
-                <div className="text-sm">Локация не найдена</div>
+                <div className="text-sm">{t('locationSelector.notFound')}</div>
               </div>
             )}
           </div>

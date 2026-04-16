@@ -1,5 +1,6 @@
 import React, { memo, useCallback } from 'react';
 import { Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
 import { Heart, ArrowUpRight, Settings, Gauge } from 'lucide-react';
 import type { Motorcycle } from '../../types/index';
@@ -14,20 +15,8 @@ interface MotorcycleCardProps {
   showRentalPrice?: boolean;
 }
 
-const categoryNames: Record<string, string> = {
-  scooter: 'Скутер',
-  sport: 'Спорт',
-  touring: 'Туринг',
-  cruiser: 'Круизер',
-  adventure: 'Адвенчер',
-};
-
-const fuelLabels: Record<string, string> = {
-  petrol: 'Бензин',
-  electric: 'Электро',
-};
-
 const MotorcycleCardComponent: React.FC<MotorcycleCardProps> = ({ motorcycle, index = 0, showRentalPrice = false }) => {
+  const { t } = useTranslation();
   const { toggleFavorite, isFavorite } = useFavoritesStore();
   const { startDate, endDate } = useBookingStore();
   const favorite = isFavorite(motorcycle.id);
@@ -66,7 +55,7 @@ const MotorcycleCardComponent: React.FC<MotorcycleCardProps> = ({ motorcycle, in
             {/* Price Badge - Top Right */}
             <div className="absolute top-4 right-4 px-4 py-2 bg-white/90 backdrop-blur-md rounded-full shadow-lg">
               <span className="font-medium text-primary-900">
-                {formatCurrency(motorcycle.pricePerDay)}/день
+                {formatCurrency(motorcycle.pricePerDay)}{t('price.perDay')}
               </span>
             </div>
 
@@ -95,7 +84,7 @@ const MotorcycleCardComponent: React.FC<MotorcycleCardProps> = ({ motorcycle, in
               <div className="flex gap-2">
                 <div className="px-3 py-1.5 bg-white/90 backdrop-blur-md rounded-full flex items-center gap-1.5 text-sm text-primary-700">
                   <Settings className="w-3.5 h-3.5" />
-                  <span>{motorcycle.transmission === 'automatic' ? 'Авто' : 'Механика'}</span>
+                  <span>{motorcycle.transmission === 'automatic' ? t('car.automatic') : t('car.manual')}</span>
                 </div>
                 <div className="px-3 py-1.5 bg-white/90 backdrop-blur-md rounded-full flex items-center gap-1.5 text-sm text-primary-700">
                   <Gauge className="w-3.5 h-3.5" />
@@ -107,14 +96,14 @@ const MotorcycleCardComponent: React.FC<MotorcycleCardProps> = ({ motorcycle, in
             {/* Category Badge */}
             <div className="absolute top-4 left-16 ml-2 px-3 py-1.5 bg-primary-900/90 backdrop-blur-md rounded-full">
               <span className="text-xs font-medium text-white">
-                {categoryNames[motorcycle.category]}
+                {t(`motorcycleCategories.${motorcycle.category}`)}
               </span>
             </div>
 
             {/* Unavailable overlay */}
             {!motorcycle.available && (
               <div className="absolute inset-0 bg-white/90 backdrop-blur-sm flex items-center justify-center">
-                <span className="text-primary-500 font-medium text-lg">Забронирован</span>
+                <span className="text-primary-500 font-medium text-lg">{t('car.booked')}</span>
               </div>
             )}
           </div>
@@ -127,7 +116,7 @@ const MotorcycleCardComponent: React.FC<MotorcycleCardProps> = ({ motorcycle, in
                   {motorcycle.brand} {motorcycle.model}
                 </h3>
                 <p className="text-sm text-primary-400 mt-1">
-                  {motorcycle.year} • {fuelLabels[motorcycle.fuel] || motorcycle.fuel}
+                  {motorcycle.year} • {t(`fuel.${motorcycle.fuel}`)}
                 </p>
               </div>
             </div>
@@ -136,7 +125,7 @@ const MotorcycleCardComponent: React.FC<MotorcycleCardProps> = ({ motorcycle, in
             {rentalDays > 0 && (
               <div className="mt-4 pt-4 border-t border-primary-100 flex items-center justify-between">
                 <span className="text-sm text-primary-500">
-                  {rentalDays} {rentalDays === 1 ? 'день' : rentalDays < 5 ? 'дня' : 'дней'}
+                  {rentalDays} {rentalDays === 1 ? t('time.day') : rentalDays < 5 ? t('time.days_few') : t('time.days_many')}
                 </span>
                 <span className="font-semibold text-primary-900 text-lg">
                   {formatCurrency(totalPrice)}

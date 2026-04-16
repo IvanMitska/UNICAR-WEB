@@ -1,4 +1,5 @@
 import React, { memo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { CarCard } from '../ui/CarCard';
 import type { Car } from '../../types/index';
 
@@ -8,14 +9,16 @@ interface CarGridProps {
 }
 
 const CarGridComponent: React.FC<CarGridProps> = ({ cars, showRentalPrice = false }) => {
+  const { t } = useTranslation();
+
   if (cars.length === 0) {
     return (
       <div className="bg-primary-50 rounded-lg p-12 text-center">
         <p className="text-primary-600 text-lg">
-          No vehicles found matching your criteria
+          {t('cars.noResults', { ns: 'pages' })}
         </p>
         <p className="text-primary-400 mt-2 text-sm">
-          Try adjusting your search filters
+          {t('cars.tryOther', { ns: 'pages' })}
         </p>
       </div>
     );

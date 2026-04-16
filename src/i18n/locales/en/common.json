@@ -2,11 +2,20 @@
   "nav": {
     "home": "Home",
     "cars": "Cars",
+    "motorcycles": "Motorcycles",
     "about": "About",
     "contact": "Contact",
     "favorites": "Favorites",
     "signIn": "Sign In",
-    "signOut": "Sign Out"
+    "signOut": "Sign Out",
+    "rentCar": "Rent a Car",
+    "buyCar": "Buy a Car",
+    "aboutUs": "About Us",
+    "contacts": "Contacts",
+    "allCars": "All Cars",
+    "luxuryCars": "Luxury Cars",
+    "economy": "Economy",
+    "getStarted": "Get Started"
   },
   "buttons": {
     "search": "Search",
@@ -17,44 +26,190 @@
     "sportsCars": "Sports Cars",
     "sendMessage": "Send Message",
     "back": "Back",
+    "next": "Next",
     "confirm": "Confirm",
-    "cancel": "Cancel"
+    "cancel": "Cancel",
+    "call": "Call",
+    "whatsapp": "WhatsApp",
+    "resetFilters": "Reset Filters",
+    "showResults": "Show Results",
+    "backToCatalog": "Back to Catalog",
+    "viewAll": "View All",
+    "details": "Details",
+    "rent": "Rent",
+    "browse": "Browse"
   },
   "form": {
     "pickupLocation": "Pick-Up Location",
     "pickupDate": "Pick-Up Date",
     "dropoffDate": "Drop-Off Date",
+    "returnLocation": "Return Location",
     "name": "Name",
     "email": "Email",
     "phone": "Phone",
-    "message": "Message"
+    "message": "Message",
+    "searchByBrand": "Search by brand...",
+    "from": "From",
+    "to": "To",
+    "selectLocation": "Select location",
+    "popularLocations": "Popular locations"
   },
   "price": {
     "perDay": "/day",
     "forDays": "for {{days}} days",
     "total": "Total",
     "discount": "-{{percent}}%",
-    "onRequest": "On Request"
+    "onRequest": "On Request",
+    "priceFrom": "Price from",
+    "pricePerDay": "Price per day",
+    "days": "d."
   },
   "car": {
     "available": "Available",
     "unavailable": "Unavailable",
-    "seats": "{{count}} Seats",
-    "automatic": "Automatic Transmission",
+    "booked": "Booked",
+    "seats": "seats",
+    "seatsCount": "{{count}} seats",
+    "automatic": "Automatic",
+    "manual": "Manual",
     "zeroEmissions": "Zero Emissions",
-    "hybrid": "Hybrid Engine"
+    "hybrid": "Hybrid Engine",
+    "loading": "Loading...",
+    "notFound": "Car not found",
+    "similarCars": "Similar Cars"
+  },
+  "fuel": {
+    "petrol": "Petrol",
+    "diesel": "Diesel",
+    "hybrid": "Hybrid",
+    "electric": "Electric",
+    "any": "Any"
+  },
+  "transmission": {
+    "any": "Any",
+    "automatic": "Automatic",
+    "manual": "Manual"
   },
   "categories": {
-    "suv": "Luxury SUV",
-    "premium": "Premium Sedan",
+    "all": "All",
+    "suv": "SUV",
+    "premium": "Premium",
     "sport": "Sports Car",
-    "business": "Business Class",
-    "comfort": "Comfort Sedan",
-    "economy": "Economy"
+    "business": "Business",
+    "comfort": "Comfort",
+    "economy": "Economy",
+    "electric": "Electric"
+  },
+  "filters": {
+    "category": "Category",
+    "pricePerDay": "Price per day",
+    "transmission": "Transmission",
+    "fuel": "Fuel",
+    "filters": "Filters"
+  },
+  "locations": {
+    "phuketAirport": "Phuket Airport",
+    "patong": "Patong",
+    "kata": "Kata",
+    "karon": "Karon",
+    "phuketTown": "Phuket Town",
+    "rawai": "Rawai",
+    "kamala": "Kamala",
+    "surin": "Surin",
+    "internationalAirport": "International Airport",
+    "centralBeach": "Central beach",
+    "kataBeach": "Kata Beach",
+    "karonBeach": "Karon Beach",
+    "oldTown": "Old Town",
+    "southBeach": "South beach",
+    "kamalaBeach": "Kamala Beach",
+    "surinBeach": "Surin Beach"
+  },
+  "booking": {
+    "quickBooking": "Quick Booking",
+    "pickup": "Pick-up",
+    "return": "Return",
+    "freeCancellation": "Free Cancellation",
+    "freeCancellationDesc": "Free cancellation up to 24 hours before rental start",
+    "insuranceIncluded": "Full Insurance Included",
+    "insuranceDesc": "Comprehensive and liability insurance included in price"
+  },
+  "specs": {
+    "engine": "Engine",
+    "power": "Power",
+    "acceleration": "0-100 km/h",
+    "topSpeed": "Top Speed",
+    "year": "Year"
   },
   "footer": {
     "rights": "All rights reserved",
     "privacy": "Privacy Policy",
-    "terms": "Terms of Service"
+    "terms": "Terms of Service",
+    "vehicles": "Vehicles",
+    "company": "Company",
+    "getInTouch": "Get In Touch",
+    "brandDescription": "Premium car rental service in Phuket. Experience luxury, comfort, and freedom on the island.",
+    "allVehicles": "All Vehicles",
+    "premiumCars": "Premium Cars",
+    "luxurySuvs": "Luxury SUVs",
+    "sportsCars": "Sports Cars",
+    "aboutUs": "About Us",
+    "howItWorks": "How It Works",
+    "contact": "Contact",
+    "termsConditions": "Terms & Conditions",
+    "copyright": "© {{year}} UNICAR. All rights reserved.",
+    "designedBy": "Designed & Developed by"
+  },
+  "datePicker": {
+    "today": "Today",
+    "tomorrow": "Tomorrow",
+    "selectDate": "Select date",
+    "weekDays": ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
+  },
+  "locationSelector": {
+    "selectLocation": "Select location",
+    "searchLocation": "Search location...",
+    "popularLocations": "Popular locations",
+    "otherLocations": "Other locations",
+    "notFound": "Location not found"
+  },
+  "motorcycles": {
+    "title": "Motorcycles",
+    "count_one": "motorcycle",
+    "count_few": "motorcycles",
+    "count_many": "motorcycles",
+    "inStock": "in stock",
+    "noResults": "No motorcycles found for your query",
+    "tryAdjusting": "Try adjusting your search parameters"
+  },
+  "motorcycleCategories": {
+    "scooter": "Scooter",
+    "sport": "Sport",
+    "touring": "Touring",
+    "cruiser": "Cruiser",
+    "adventure": "Adventure",
+    "scooters": "Scooters",
+    "sportbikes": "Sportbikes",
+    "tourings": "Tourings",
+    "cruisers": "Cruisers",
+    "adventures": "Adventure",
+    "scooterDesc": "For city rides",
+    "sportDesc": "For speed enthusiasts",
+    "adventureDesc": "For long trips",
+    "cruiserDesc": "Comfort and style",
+    "categoriesTitle": "Motorcycle Categories",
+    "categoriesSubtitle": "Choose the perfect motorcycle for your Phuket rides",
+    "allMotorcycles": "All Motorcycles"
+  },
+  "sort": {
+    "priceAsc": "Price: Low to High",
+    "priceDesc": "Price: High to Low",
+    "byRating": "By Rating",
+    "byPopularity": "By Popularity"
+  },
+  "time": {
+    "day": "day",
+    "days_few": "days",
+    "days_many": "days"
   }
 }

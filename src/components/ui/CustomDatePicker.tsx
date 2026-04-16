@@ -1,7 +1,8 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Calendar, ChevronLeft, ChevronRight } from 'lucide-react';
 import { format, startOfMonth, endOfMonth, eachDayOfInterval, isSameMonth, isSameDay, addMonths, subMonths, isAfter, isBefore } from 'date-fns';
-import { ru } from 'date-fns/locale';
+import { ru, enUS } from 'date-fns/locale';
 
 interface CustomDatePickerProps {
   value: string;
@@ -18,11 +19,14 @@ export const CustomDatePicker: React.FC<CustomDatePickerProps> = ({
   minDate = new Date(),
   maxDate
 }) => {
+  const { t, i18n } = useTranslation();
   const [isOpen, setIsOpen] = useState(false);
   const [currentMonth, setCurrentMonth] = useState(new Date());
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   const selectedDate = value ? new Date(value) : null;
+  const locale = i18n.language === 'ru' ? ru : enUS;
+  const weekDays = t('datePicker.weekDays', { returnObjects: true }) as string[];
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -69,7 +73,7 @@ export const CustomDatePicker: React.FC<CustomDatePickerProps> = ({
           isOpen ? 'ring-2 ring-gray-900 border-transparent' : 'border-gray-200'
         }`}
       >
-        <span>{selectedDate ? format(selectedDate, 'dd.MM.yyyy', { locale: ru }) : 'Выберите дату'}</span>
+        <span>{selectedDate ? format(selectedDate, 'dd.MM.yyyy', { locale }) : t('datePicker.selectDate')}</span>
         <Calendar className="w-4 h-4 text-gray-400" />
       </button>
 
@@ -88,7 +92,7 @@ export const CustomDatePicker: React.FC<CustomDatePickerProps> = ({
             </button>
 
             <h3 className="text-base font-medium text-gray-900 capitalize">
-              {format(currentMonth, 'LLLL yyyy', { locale: ru })}
+              {format(currentMonth, 'LLLL yyyy', { locale })}
             </h3>
 
             <button
@@ -101,7 +105,7 @@ export const CustomDatePicker: React.FC<CustomDatePickerProps> = ({
           </div>
 
           <div className="grid grid-cols-7 border-b border-gray-100">
-            {['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс'].map((day) => (
+            {weekDays.map((day) => (
               <div key={day} className="p-2 text-center text-xs font-medium text-gray-400">
                 {day}
               </div>
@@ -143,14 +147,14 @@ export const CustomDatePicker: React.FC<CustomDatePickerProps> = ({
                 onClick={() => handleDateSelect(new Date())}
                 className="px-3 py-1.5 text-xs bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200"
               >
-                Сегодня
+                {t('datePicker.today')}
               </button>
               <button
                 type="button"
                 onClick={() => handleDateSelect(new Date(Date.now() + 24 * 60 * 60 * 1000))}
                 className="px-3 py-1.5 text-xs bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200"
               >
-                Завтра
+                {t('datePicker.tomorrow')}
               </button>
             </div>
           </div>

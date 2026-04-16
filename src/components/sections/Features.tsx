@@ -1,43 +1,26 @@
 import React, { memo } from 'react';
 import { motion } from 'framer-motion';
+import { useTranslation } from 'react-i18next';
 import { Clock, Shield, Headphones, MapPin, ArrowRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
-const features = [
-  {
-    number: '01',
-    title: '2-Hour Delivery',
-    description: 'We deliver your car anywhere on the island within 2 hours. Airport, hotel, or villa.',
-    icon: Clock,
-  },
-  {
-    number: '02',
-    title: 'Full Insurance',
-    description: 'All vehicles are fully insured. First-class protection for your peace of mind.',
-    icon: Shield,
-  },
-  {
-    number: '03',
-    title: 'Concierge Service',
-    description: 'Personal manager available 24/7. We solve any question.',
-    icon: Headphones,
-  },
-  {
-    number: '04',
-    title: 'Island Guide',
-    description: 'Exclusive guide with the best locations as a gift with every rental.',
-    icon: MapPin,
-  },
-];
+const FEATURE_KEYS = [
+  { key: 'delivery', number: '01', icon: Clock },
+  { key: 'insurance', number: '02', icon: Shield },
+  { key: 'concierge', number: '03', icon: Headphones },
+  { key: 'guide', number: '04', icon: MapPin },
+] as const;
 
-const stats = [
-  { value: '40+', label: 'Vehicles' },
-  { value: '3', label: 'Years Experience' },
-  { value: '500+', label: 'Happy Clients' },
-  { value: '24/7', label: 'Support' },
-];
+const STAT_KEYS = [
+  { key: 'vehicles', value: '40+' },
+  { key: 'yearsExperience', value: '3' },
+  { key: 'happyClients', value: '500+' },
+  { key: 'support', value: '24/7' },
+] as const;
 
 const FeaturesComponent: React.FC = () => {
+  const { t } = useTranslation('pages');
+
   return (
     <section className="pt-20 lg:pt-32 pb-0 bg-gray-50 overflow-hidden">
       <div className="container mx-auto px-6">
@@ -53,20 +36,20 @@ const FeaturesComponent: React.FC = () => {
               className="mb-12"
             >
               <p className="text-gray-400 uppercase tracking-[0.2em] text-xs font-medium mb-3">
-                Why UNICAR
+                {t('features.eyebrow')}
               </p>
               <h2 className="text-3xl lg:text-5xl font-light text-gray-900 leading-tight mb-6">
-                We create experiences,{' '}
-                <span className="text-gray-400">not just rent cars</span>
+                {t('features.title1')}{' '}
+                <span className="text-gray-400">{t('features.title2')}</span>
               </h2>
               <p className="text-gray-500 text-lg max-w-md">
-                Premium service with attention to every detail. Your comfort is our priority.
+                {t('features.subtitle')}
               </p>
             </motion.div>
 
             {/* Features Grid */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              {features.map((feature, index) => {
+              {FEATURE_KEYS.map((feature, index) => {
                 const Icon = feature.icon;
                 return (
                   <motion.div
@@ -82,11 +65,11 @@ const FeaturesComponent: React.FC = () => {
                         <Icon className="w-5 h-5 text-gray-900 group-hover:text-white transition-colors duration-300" />
                       </div>
                       <h3 className="text-lg font-semibold text-gray-900 group-hover:text-white transition-colors duration-300">
-                        {feature.title}
+                        {t(`features.items.${feature.key}.title`)}
                       </h3>
                     </div>
                     <p className="text-gray-500 group-hover:text-gray-400 text-sm leading-relaxed pl-15">
-                      {feature.description}
+                      {t(`features.items.${feature.key}.description`)}
                     </p>
                   </motion.div>
                 );
@@ -105,7 +88,7 @@ const FeaturesComponent: React.FC = () => {
                 to="/about"
                 className="inline-flex items-center gap-2 text-gray-900 font-medium hover:gap-4 transition-all duration-300"
               >
-                Learn more about us
+                {t('features.learnMore')}
                 <ArrowRight className="w-4 h-4" />
               </Link>
             </motion.div>
@@ -151,8 +134,8 @@ const FeaturesComponent: React.FC = () => {
                       </div>
                     </div>
                     <div>
-                      <p className="text-gray-900 font-medium text-sm">500+ happy customers</p>
-                      <p className="text-gray-500 text-xs">Join them today</p>
+                      <p className="text-gray-900 font-medium text-sm">{t('features.happyCustomers')}</p>
+                      <p className="text-gray-500 text-xs">{t('features.joinThem')}</p>
                     </div>
                   </div>
                 </motion.div>
@@ -174,9 +157,9 @@ const FeaturesComponent: React.FC = () => {
           className="py-12 border-t border-gray-200"
         >
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
-            {stats.map((stat, index) => (
+            {STAT_KEYS.map((stat, index) => (
               <motion.div
-                key={stat.label}
+                key={stat.key}
                 initial={{ opacity: 0, scale: 0.9 }}
                 whileInView={{ opacity: 1, scale: 1 }}
                 viewport={{ once: true }}
@@ -187,7 +170,7 @@ const FeaturesComponent: React.FC = () => {
                   {stat.value}
                 </p>
                 <p className="text-gray-400 text-sm uppercase tracking-wider">
-                  {stat.label}
+                  {t(`features.stats.${stat.key}`)}
                 </p>
               </motion.div>
             ))}

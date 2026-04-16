@@ -1,4 +1,5 @@
 import React, { memo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { MotorcycleCard } from '../ui/MotorcycleCard';
 import type { Motorcycle } from '../../types/index';
 
@@ -8,14 +9,16 @@ interface MotorcycleGridProps {
 }
 
 const MotorcycleGridComponent: React.FC<MotorcycleGridProps> = ({ motorcycles, showRentalPrice = false }) => {
+  const { t } = useTranslation();
+
   if (motorcycles.length === 0) {
     return (
       <div className="bg-primary-50 rounded-lg p-12 text-center">
         <p className="text-primary-600 text-lg">
-          По вашему запросу мотоциклов не найдено
+          {t('motorcycles.noResults')}
         </p>
         <p className="text-primary-400 mt-2 text-sm">
-          Попробуйте изменить параметры поиска
+          {t('motorcycles.tryAdjusting')}
         </p>
       </div>
     );
