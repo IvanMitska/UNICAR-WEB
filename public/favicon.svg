@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" role="img" aria-label="UNICAR">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#1c1c1c"/>
+      <stop offset="100%" stop-color="#0a0a0a"/>
+    </linearGradient>
+    <linearGradient id="u" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#ffffff"/>
+      <stop offset="100%" stop-color="#dcdcdc"/>
+    </linearGradient>
+  </defs>
+  <rect width="100" height="100" rx="24" fill="url(#bg)"/>
+  <rect x="0.75" y="0.75" width="98.5" height="98.5" rx="23.25" fill="none" stroke="#ffffff" stroke-opacity="0.08" stroke-width="1.5"/>
+  <path d="M33 28 V52 A17 17 0 0 0 67 52 V28"
+        fill="none" stroke="url(#u)" stroke-width="11"
+        stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="50" cy="76" r="3.2" fill="#3b82f6"/>
+</svg>
