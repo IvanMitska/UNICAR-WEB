@@ -21,6 +21,15 @@ const POPULAR_CAR_IDS = [
   'bmw-x5-2020',
 ];
 
+// Keep the home-page Popular Models covers fixed to the original photos,
+// independent of the cards/covers shown on /cars and the model detail pages.
+const POPULAR_IMAGE_OVERRIDES: Record<string, { image: string; imagePosition?: string }> = {
+  'mustang-yellow-2021': { image: '/images/cars/mustang-yellow-2021/post inst0.jpg' },
+  'mustang-yellow-2016': { image: '/images/cars/mustang-yellow-2016/post inst-11.jpg', imagePosition: 'center 70%' },
+  'mustang-blue-2018': { image: '/images/cars/mustang-blue-2020/post inst1.jpg' },
+  'mustang-white-2017': { image: '/images/cars/mustang-white-2020/post inst.jpg' },
+};
+
 const PopularCarsComponent: React.FC = () => {
   const scrollRef = useRef<HTMLDivElement>(null);
   const [activeIndex, setActiveIndex] = useState(0);
@@ -162,16 +171,23 @@ const PopularCarsComponent: React.FC = () => {
                 <Link to={`/cars/${car.id}`} className="group block">
                   {/* Image Container */}
                   <div className="relative aspect-[4/3] rounded-2xl overflow-hidden mb-5 bg-gray-100">
-                    <picture>
-                      <source srcSet={getWebPPath(car.image)} type="image/webp" />
-                      <img
-                        src={car.image}
-                        alt={`${car.brand} ${car.model}`}
-                        loading={index < 2 ? "eager" : "lazy"}
-                        className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                        style={car.imagePosition ? { objectPosition: car.imagePosition } : undefined}
-                      />
-                    </picture>
+                    {(() => {
+                      const override = POPULAR_IMAGE_OVERRIDES[car.id];
+                      const coverImage = override?.image ?? car.image;
+                      const coverPosition = override?.imagePosition ?? car.imagePosition;
+                      return (
+                        <picture>
+                          <source srcSet={getWebPPath(coverImage)} type="image/webp" />
+                          <img
+                            src={coverImage}
+                            alt={`${car.brand} ${car.model}`}
+                            loading={index < 2 ? "eager" : "lazy"}
+                            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                            style={coverPosition ? { objectPosition: coverPosition } : undefined}
+                          />
+                        </picture>
+                      );
+                    })()}
                   </div>
 
                   {/* Info */}

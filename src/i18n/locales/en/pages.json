@@ -361,7 +361,7 @@
       "firstName": "First name must be at least 2 characters",
       "lastName": "Last name must be at least 2 characters",
       "email": "Enter a valid email",
-      "phone": "Format: +7XXXXXXXXXX",
+      "phone": "Enter a valid phone number",
       "birthDate": "Please enter date of birth",
       "licenseNumber": "Enter your driver's license number",
       "licenseDate": "Please enter license issue date"
@@ -395,6 +395,7 @@
     "managerNotice": "After confirmation, our manager will contact you to clarify details and arrange payment.",
     "fillStep3": "Please complete all fields in step 3:",
     "genericError": "An error occurred during booking. Please try again later.",
+    "connectionError": "We couldn't submit your request — looks like a connection issue. Please contact us directly and we'll complete the booking for you:",
     "rentalPeriod": "Rental period",
     "dayOne": "day",
     "dayFew": "days",

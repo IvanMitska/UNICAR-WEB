@@ -37,13 +37,23 @@ const createCustomerSchema = (t: (k: string) => string) => z.object({
   firstName: z.string().min(2, t('bookingForm.validation.firstName')),
   lastName: z.string().min(2, t('bookingForm.validation.lastName')),
   email: z.string().email(t('bookingForm.validation.email')),
-  phone: z.string().regex(/^\+7\d{10}$/, t('bookingForm.validation.phone')),
+  phone: z
+    .string()
+    .min(6, t('bookingForm.validation.phone'))
+    .refine(
+      (v) => /^\+?\d{6,15}$/.test(v.replace(/[\s\-()]/g, '')),
+      t('bookingForm.validation.phone')
+    ),
   birthDate: z.string().min(1, t('bookingForm.validation.birthDate')),
   licenseNumber: z.string().min(10, t('bookingForm.validation.licenseNumber')),
   licenseDate: z.string().min(1, t('bookingForm.validation.licenseDate')),
 });
 
 type CustomerFormData = z.infer<ReturnType<typeof createCustomerSchema>>;
+
+// Контакт для запасной связи, если заявку не удалось отправить
+const CONTACT_PHONE = '+66 95-965-7805';
+const CONTACT_PHONE_DIGITS = '66959657805';
 
 const STEP_DEFS = [
   { id: 1, key: 'dates', icon: Calendar },
@@ -211,9 +221,11 @@ export const BookingForm: React.FC = () => {
       navigate(`/booking/confirmation?ref=${response.referenceCode}`);
     } catch (error) {
       if (error instanceof CarsApiError) {
+        // Сервер ответил ошибкой — показываем её текст
         setSubmitError(error.message);
       } else {
-        setSubmitError(t('bookingForm.genericError'));
+        // Запрос не дошёл до сервера (сеть/CORS) — предлагаем связаться напрямую
+        setSubmitError(t('bookingForm.connectionError'));
       }
     } finally {
       setIsSubmitting(false);
@@ -468,7 +480,7 @@ export const BookingForm: React.FC = () => {
                     <input
                       {...register('phone')}
                       type="tel"
-                      placeholder="+7XXXXXXXXXX"
+                      placeholder="+7 999 123-45-67"
                       className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
                     />
                     {errors.phone && (
@@ -604,7 +616,26 @@ export const BookingForm: React.FC = () => {
                 {submitError && (
                   <div className="bg-red-50 border border-red-200 rounded-lg p-4 flex items-start gap-3">
                     <AlertCircle className="w-5 h-5 text-red-500 flex-shrink-0 mt-0.5" />
-                    <p className="text-sm text-red-800">{submitError}</p>
+                    <div className="text-sm text-red-800">
+                      <p>{submitError}</p>
+                      <div className="mt-3 flex flex-wrap gap-2">
+                        <a
+                          href={`tel:+${CONTACT_PHONE_DIGITS}`}
+                          className="inline-flex items-center gap-1.5 px-3 py-2 bg-white border border-red-200 rounded-lg font-medium text-red-700 hover:bg-red-100 transition-colors"
+                        >
+                          <Phone className="w-4 h-4" />
+                          {CONTACT_PHONE}
+                        </a>
+                        <a
+                          href={`https://wa.me/${CONTACT_PHONE_DIGITS}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center gap-1.5 px-3 py-2 bg-green-600 text-white rounded-lg font-medium hover:bg-green-700 transition-colors"
+                        >
+                          WhatsApp
+                        </a>
+                      </div>
+                    </div>
                   </div>
                 )}
 

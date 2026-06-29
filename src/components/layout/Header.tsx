@@ -10,7 +10,7 @@ import { useBookingStore } from '../../store/useBookingStore';
 import { LanguageSwitcher } from '../ui/LanguageSwitcher';
 
 // Pages that have a light background from the start (no dark hero)
-const lightBackgroundPages = ['/cars', '/buy', '/about', '/contacts', '/terms', '/privacy', '/sign-in', '/get-started', '/profile', '/forgot-password', '/reset-password'];
+const lightBackgroundPages = ['/cars', '/about', '/contacts', '/terms', '/privacy', '/sign-in', '/get-started', '/profile', '/forgot-password', '/reset-password'];
 
 // Featured cars for mega menu - Row 1 (4 cars)
 const featuredCarsRow1 = [
@@ -143,7 +143,6 @@ export const Header: React.FC = () => {
 
   const navLinks = [
     { to: '/cars', label: t('nav.rentCar'), hasDropdown: true, dropdownKey: 'rent' },
-    { to: '/buy', label: t('nav.buyCar'), hasDropdown: true, dropdownKey: 'buy' },
     { to: '/about', label: t('nav.aboutUs'), hasDropdown: false },
     { to: '/contacts', label: t('nav.contacts'), hasDropdown: false },
   ];
