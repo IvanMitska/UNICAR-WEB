@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<title>UNICAR — Брендбук</title>
+<style>
+  @font-face {
+    font-family: 'Inter';
+    src: url('assets/InterVariable.woff2') format('woff2');
+    font-weight: 100 900;
+    font-style: normal;
+  }
+
+  :root {
+    --ink: #0a0a0a;
+    --paper: #ffffff;
+    --gray: #737373;
+    --gray-light: #a3a3a3;
+    --hairline: #e5e5e5;
+    --blue: #49659F;
+    --accent: #3b82f6;
+    --m: 18mm; /* page margin */
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  @page { size: 297mm 210mm; margin: 0; }
+
+  html, body {
+    font-family: 'Inter', sans-serif;
+    font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
+    color: var(--ink);
+    background: var(--paper);
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  .page {
+    width: 297mm;
+    height: 210mm;
+    position: relative;
+    overflow: hidden;
+    page-break-after: always;
+    background: var(--paper);
+    padding: var(--m);
+  }
+  .page.dark { background: var(--ink); color: #fff; }
+
+  /* ---------- shared elements ---------- */
+
+  .label {
+    font-size: 7pt;
+    font-weight: 500;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--gray);
+  }
+  .dark .label { color: #8a8a8a; }
+
+  .footer {
+    position: absolute;
+    left: var(--m); right: var(--m); bottom: 12mm;
+    display: flex; justify-content: space-between; align-items: baseline;
+    border-top: 0.4pt solid var(--hairline);
+    padding-top: 3.5mm;
+  }
+  .dark .footer { border-top-color: #2a2a2a; }
+  .footer .label { font-size: 6.5pt; }
+
+  .section-head {
+    display: flex; align-items: baseline; gap: 6mm;
+    border-bottom: 0.4pt solid var(--hairline);
+    padding-bottom: 5mm;
+    margin-bottom: 10mm;
+  }
+  .section-head .num {
+    font-size: 26pt; font-weight: 200; letter-spacing: -0.02em;
+    color: var(--gray-light);
+  }
+  .section-head h2 {
+    font-size: 15pt; font-weight: 600; letter-spacing: -0.01em;
+  }
+  .section-head .label { margin-left: auto; }
+
+  /* ---------- 1. cover ---------- */
+
+  .cover { display: flex; flex-direction: column; }
+  .cover-top { display: flex; justify-content: space-between; }
+  .cover-mid { flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; }
+  .cover-mid img { width: 158mm; display: block; }
+  .cover-mid .tagline {
+    margin-top: 9mm;
+    font-size: 8pt; font-weight: 400; letter-spacing: 0.42em;
+    text-transform: uppercase; color: #9a9a9a;
+  }
+  .cover-bottom { display: flex; justify-content: space-between; align-items: flex-end; }
+
+  /* ---------- 2. contents ---------- */
+
+  .toc-wrap { display: grid; grid-template-columns: 88mm 1fr; gap: 16mm; height: 152mm; }
+  .toc-intro h1 { font-size: 30pt; font-weight: 600; letter-spacing: -0.03em; line-height: 1.06; margin-top: 8mm; }
+  .toc-intro p { font-size: 9.5pt; line-height: 1.75; color: var(--gray); margin-top: 9mm; max-width: 80mm; }
+  .toc-list { display: flex; flex-direction: column; justify-content: flex-end; }
+  .toc-row {
+    display: flex; align-items: baseline; gap: 8mm;
+    padding: 5.2mm 0;
+    border-top: 0.4pt solid var(--hairline);
+  }
+  .toc-row:last-child { border-bottom: 0.4pt solid var(--hairline); }
+  .toc-row .n { font-size: 8.5pt; font-weight: 400; color: var(--gray-light); width: 10mm; font-variant-numeric: tabular-nums; }
+  .toc-row .t { font-size: 14.5pt; font-weight: 500; letter-spacing: -0.01em; }
+  .toc-row .p { margin-left: auto; font-size: 8.5pt; color: var(--gray-light); font-variant-numeric: tabular-nums; }
+
+  /* ---------- 3. brand ---------- */
+
+  .brand-statement {
+    font-size: 24.5pt; font-weight: 500; letter-spacing: -0.025em; line-height: 1.28;
+    max-width: 225mm; margin-top: 4mm;
+  }
+  .brand-statement em { font-style: normal; color: var(--gray-light); }
+  .values { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10mm; margin-top: 17mm; }
+  .value { border-top: 1.2pt solid var(--ink); padding-top: 5mm; }
+  .value .vn { font-size: 8pt; color: var(--gray-light); font-variant-numeric: tabular-nums; }
+  .value h3 { font-size: 12.5pt; font-weight: 600; margin: 2.5mm 0 3mm; letter-spacing: -0.01em; }
+  .value p { font-size: 8.8pt; line-height: 1.65; color: var(--gray); }
+
+  /* ---------- 4. logo ---------- */
+
+  .logo-grid { display: grid; grid-template-columns: 1.35fr 1fr; gap: 14mm; height: 138mm; }
+  .logo-showcase {
+    background: #f7f7f7;
+    display: flex; align-items: center; justify-content: center;
+    position: relative;
+  }
+  .logo-showcase img { width: 78%; }
+  .clearspace {
+    position: relative;
+    display: inline-block;
+    padding: 13mm 15mm;
+    border: 0.5pt dashed #b9b9b9;
+  }
+  .clearspace img { width: 100mm; display: block; }
+  .cs-tick { position: absolute; font-size: 6.5pt; color: var(--gray); letter-spacing: 0.08em; }
+  .logo-side { display: flex; flex-direction: column; justify-content: space-between; }
+  .logo-side .block h4 { font-size: 10pt; font-weight: 600; margin-bottom: 3mm; }
+  .logo-side .block p { font-size: 8.8pt; line-height: 1.65; color: var(--gray); }
+  .minsize { display: flex; align-items: flex-end; gap: 10mm; margin-top: 5mm; }
+  .minsize .ms { text-align: left; }
+  .minsize img { display: block; margin-bottom: 2.5mm; }
+  .minsize .cap { font-size: 6.8pt; color: var(--gray-light); letter-spacing: 0.05em; }
+
+  /* ---------- 5. versions ---------- */
+
+  .versions { display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr; gap: 6mm; height: 138mm; }
+  .vtile { position: relative; display: flex; align-items: center; justify-content: center; }
+  .vtile img { width: 62%; }
+  .vtile .vcap {
+    position: absolute; left: 6mm; bottom: 5mm;
+    font-size: 6.8pt; letter-spacing: 0.16em; text-transform: uppercase;
+  }
+  .vt-black { background: var(--ink); } .vt-black .vcap { color: #8a8a8a; }
+  .vt-white { background: #fff; border: 0.4pt solid var(--hairline); } .vt-white .vcap { color: var(--gray-light); }
+  .vt-blue { background: var(--blue); } .vt-blue .vcap { color: rgba(255,255,255,.65); }
+  .vt-gray { background: #f5f5f5; } .vt-gray .vcap { color: var(--gray-light); }
+
+  /* ---------- 6. monogram ---------- */
+
+  .mono-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14mm; height: 138mm; }
+  .mono-left { background: var(--ink); display: flex; align-items: center; justify-content: center; }
+  .mono-left img { width: 62mm; }
+  .mono-right { display: flex; flex-direction: column; justify-content: space-between; }
+  .mono-right .block p { font-size: 8.8pt; line-height: 1.7; color: var(--gray); max-width: 105mm; margin-top: 3mm; }
+  .mono-right .block h4 { font-size: 10pt; font-weight: 600; }
+  .mono-sizes { display: flex; align-items: flex-end; gap: 9mm; }
+  .mono-sizes .ms { text-align: center; }
+  .mono-sizes img { display: block; margin: 0 auto 2.5mm; border-radius: 22%; }
+  .mono-sizes .cap { font-size: 6.8pt; color: var(--gray-light); }
+
+  /* ---------- 7. misuse ---------- */
+
+  .misuse { display: grid; grid-template-columns: repeat(3, 1fr); grid-template-rows: 1fr 1fr; gap: 6mm; height: 138mm; }
+  .mtile { position: relative; background: #f7f7f7; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+  .mtile img { width: 58%; }
+  .mtile .mcap {
+    position: absolute; left: 5mm; bottom: 4.5mm; right: 5mm;
+    font-size: 7.2pt; font-weight: 500; color: var(--ink);
+  }
+  .mtile .cross {
+    position: absolute; top: 4mm; left: 5mm;
+    width: 4.2mm; height: 4.2mm; z-index: 2;
+  }
+  .cross::before, .cross::after {
+    content: ''; position: absolute; top: 50%; left: 0;
+    width: 100%; height: 0.5mm; background: #c33;
+  }
+  .cross::before { transform: rotate(45deg); }
+  .cross::after { transform: rotate(-45deg); }
+  .m-stretch img { transform: scaleX(1.45); }
+  .m-rotate img { transform: rotate(-9deg); }
+  .m-color img { filter: sepia(1) saturate(9) hue-rotate(-38deg); }
+  .m-shadow img { filter: drop-shadow(2.2mm 2.2mm 1.4mm rgba(0,0,0,0.5)); }
+  .m-photo { background: url('../../public/images/features-car.jpg') center/cover; }
+  .m-photo .mcap { color: #fff; }
+  .m-contrast { background: #b9b9b9; }
+  .m-contrast img { opacity: .55; }
+
+  /* ---------- 8. color ---------- */
+
+  .palette { display: grid; grid-template-columns: 1.6fr 1fr 1fr 1fr; gap: 6mm; height: 108mm; }
+  .swatch { display: flex; flex-direction: column; justify-content: flex-end; padding: 6mm; }
+  .swatch .sn { font-size: 11pt; font-weight: 600; letter-spacing: -0.01em; }
+  .swatch .sv { font-size: 7pt; line-height: 1.9; margin-top: 2.5mm; letter-spacing: 0.06em; font-variant-numeric: tabular-nums; }
+  .sw-black { background: var(--ink); color: #fff; } .sw-black .sv { color: #9a9a9a; }
+  .sw-white { background: #fff; border: 0.4pt solid var(--hairline); } .sw-white .sv { color: var(--gray-light); }
+  .sw-blue { background: var(--blue); color: #fff; } .sw-blue .sv { color: rgba(255,255,255,.7); }
+  .sw-accent { background: var(--accent); color: #fff; } .sw-accent .sv { color: rgba(255,255,255,.75); }
+  .grayscale-row { display: flex; margin-top: 6mm; height: 16mm; }
+  .grayscale-row .g { flex: 1; position: relative; }
+  .grayscale-row .g span {
+    position: absolute; left: 3mm; bottom: 2.5mm;
+    font-size: 6pt; letter-spacing: 0.06em; color: var(--gray);
+  }
+  .grayscale-row .g.dark-g span { color: #9a9a9a; }
+  .prop-note { display: flex; justify-content: space-between; align-items: baseline; margin-top: 4mm; }
+  .prop-note p { font-size: 8pt; color: var(--gray); }
+
+  /* ---------- 9. typography ---------- */
+
+  .type-grid { display: grid; grid-template-columns: 1fr 1.5fr; gap: 16mm; height: 138mm; }
+  .type-left .family { font-size: 44pt; font-weight: 600; letter-spacing: -0.035em; line-height: 1; }
+  .type-left .sub { font-size: 9.5pt; color: var(--gray); line-height: 1.7; margin-top: 7mm; max-width: 82mm; }
+  .specimen { margin-top: 12mm; border-top: 0.4pt solid var(--hairline); padding-top: 6mm; }
+  .specimen p { font-size: 10.5pt; line-height: 1.75; letter-spacing: 0.01em; color: var(--ink); word-wrap: break-word; }
+  .specimen p.gray { color: var(--gray-light); margin-top: 2mm; }
+  .type-scale { display: flex; flex-direction: column; justify-content: space-between; }
+  .ts-row { display: flex; align-items: baseline; gap: 8mm; border-top: 0.4pt solid var(--hairline); padding: 4.6mm 0; }
+  .ts-row:last-child { border-bottom: 0.4pt solid var(--hairline); }
+  .ts-row .ts-label { width: 30mm; flex-shrink: 0; font-size: 6.8pt; color: var(--gray-light); letter-spacing: 0.12em; text-transform: uppercase; }
+  .ts-row .ts-sample { white-space: nowrap; letter-spacing: -0.02em; }
+
+  /* ---------- 10. photography ---------- */
+
+  .photo-grid { display: grid; grid-template-columns: 1.45fr 1fr; gap: 6mm; height: 108mm; }
+  .photo-grid .ph { background-size: cover; background-position: center; position: relative; }
+  .ph-cap { font-size: 6.8pt; letter-spacing: 0.14em; text-transform: uppercase; color: #fff; position: absolute; left: 5mm; bottom: 4.5mm; }
+  .photo-principles { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8mm; margin-top: 8mm; }
+  .principle { border-top: 0.8pt solid var(--ink); padding-top: 3.5mm; }
+  .principle h5 { font-size: 9pt; font-weight: 600; margin-bottom: 2mm; }
+  .principle p { font-size: 7.6pt; line-height: 1.55; color: var(--gray); }
+
+  /* ---------- 11. applications ---------- */
+
+  .apps-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14mm; height: 138mm; }
+  .apps-left { display: flex; flex-direction: column; gap: 6mm; }
+  .bizcard {
+    flex: 1; background: var(--ink); color: #fff;
+    padding: 9mm; display: flex; flex-direction: column; justify-content: space-between;
+    box-shadow: 0 10px 40px -12px rgba(0,0,0,.35);
+  }
+  .bizcard img { width: 34mm; }
+  .bizcard .bc-info { font-size: 6.6pt; line-height: 1.9; color: #b9b9b9; letter-spacing: 0.04em; }
+  .bizcard .bc-info strong { color: #fff; font-weight: 500; }
+  .bizcard-w {
+    flex: 1; background: #fff; border: 0.4pt solid var(--hairline);
+    padding: 9mm; display: flex; align-items: center; justify-content: space-between;
+  }
+  .bizcard-w img { width: 34mm; }
+  .bizcard-w .bc-side { font-size: 6.6pt; color: var(--gray); text-align: right; line-height: 1.9; letter-spacing: 0.04em; }
+  .apps-right { display: flex; flex-direction: column; justify-content: space-between; }
+  .ui-sample { border: 0.4pt solid var(--hairline); padding: 8mm; }
+  .ui-sample .label { margin-bottom: 5mm; display: block; }
+  .btn-row { display: flex; gap: 4mm; align-items: center; }
+  .btn { font-size: 8.5pt; font-weight: 500; padding: 3.4mm 7.5mm; border-radius: 1.6mm; white-space: nowrap; }
+  .btn-dark { background: var(--ink); color: #fff; }
+  .btn-ghost { border: 0.5pt solid #d4d4d4; color: var(--ink); }
+  .btn-accent { background: var(--accent); color: #fff; }
+  .avatar-row { display: flex; gap: 6mm; align-items: center; margin-top: 6mm; }
+  .avatar-row img { border-radius: 50%; }
+  .avatar-row .cap { font-size: 7.4pt; color: var(--gray); line-height: 1.6; }
+
+  /* ---------- 12. back cover ---------- */
+
+  .back { display: flex; flex-direction: column; }
+  .back-mid { flex: 1; display: flex; flex-direction: column; justify-content: center; }
+  .back-mid img { width: 74mm; margin-bottom: 14mm; }
+  .contacts { display: grid; grid-template-columns: repeat(3, auto); gap: 22mm; }
+  .contact .label { margin-bottom: 3mm; }
+  .contact p { font-size: 10pt; font-weight: 500; color: #fff; line-height: 1.75; }
+</style>
+</head>
+<body>
+
+<!-- ============ 1 / COVER ============ -->
+<div class="page dark cover">
+  <div class="cover-top">
+    <span class="label">Брендбук</span>
+    <span class="label">Версия 1.0 — 2026</span>
+  </div>
+  <div class="cover-mid">
+    <img src="../logo/svg/unicar-logo-white.svg" alt="UNICAR">
+    <div class="tagline">Exclusive Cars of Phuket</div>
+  </div>
+  <div class="cover-bottom">
+    <span class="label">unicar-rent.com</span>
+    <span class="label">Руководство по фирменному стилю</span>
+  </div>
+</div>
+
+<!-- ============ 2 / CONTENTS ============ -->
+<div class="page">
+  <span class="label">Содержание</span>
+  <div class="toc-wrap">
+    <div class="toc-intro">
+      <h1>Один бренд.<br>Одна система.</h1>
+      <p>Это руководство описывает визуальный язык UNICAR: логотип, цвет, типографику и фотостиль. Последовательное применение этих правил делает бренд узнаваемым на каждом носителе — от сайта до наружной рекламы.</p>
+    </div>
+    <div class="toc-list">
+      <div class="toc-row"><span class="n">01</span><span class="t">Бренд</span><span class="p">03</span></div>
+      <div class="toc-row"><span class="n">02</span><span class="t">Логотип</span><span class="p">04</span></div>
+      <div class="toc-row"><span class="n">03</span><span class="t">Цвет</span><span class="p">08</span></div>
+      <div class="toc-row"><span class="n">04</span><span class="t">Типографика</span><span class="p">09</span></div>
+      <div class="toc-row"><span class="n">05</span><span class="t">Фотостиль</span><span class="p">10</span></div>
+      <div class="toc-row"><span class="n">06</span><span class="t">Носители</span><span class="p">11</span></div>
+    </div>
+  </div>
+  <div class="footer"><span class="label">UNICAR — Брендбук</span><span class="label">02</span></div>
+</div>
+
+<!-- ============ 3 / BRAND ============ -->
+<div class="page">
+  <div class="section-head">
+    <span class="num">01</span><h2>Бренд</h2><span class="label">Позиционирование</span>
+  </div>
+  <p class="brand-statement">UNICAR — сервис аренды автомобилей на Пхукете. <em>Премиальные машины, честные условия и доставка к двери — без лишних слов и лишних шагов.</em></p>
+  <div class="values">
+    <div class="value">
+      <span class="vn">01</span>
+      <h3>Сдержанность</h3>
+      <p>Мы не кричим. Чистая вёрстка, много воздуха, минимум декора. Автомобиль — главный герой, бренд — рамка вокруг него.</p>
+    </div>
+    <div class="value">
+      <span class="vn">02</span>
+      <h3>Точность</h3>
+      <p>Прозрачные цены, понятные условия, аккуратные формулировки. В коммуникации — только то, что важно клиенту.</p>
+    </div>
+    <div class="value">
+      <span class="vn">03</span>
+      <h3>Скорость</h3>
+      <p>Бронирование в пару касаний, ответ в мессенджере за минуты, подача машины к отелю или аэропорту точно в срок.</p>
+    </div>
+  </div>
+  <div class="footer"><span class="label">UNICAR — Брендбук</span><span class="label">03</span></div>
+</div>
+
+<!-- ============ 4 / LOGO ============ -->
+<div class="page">
+  <div class="section-head">
+    <span class="num">02</span><h2>Логотип</h2><span class="label">Основная версия</span>
+  </div>
+  <div class="logo-grid">
+    <div class="logo-showcase">
+      <div class="clearspace">
+        <img src="../logo/svg/unicar-logo-black.svg" alt="UNICAR">
+        <span class="cs-tick" style="top:4mm; left:50%; transform:translateX(-50%);">×</span>
+        <span class="cs-tick" style="bottom:4mm; left:50%; transform:translateX(-50%);">×</span>
+        <span class="cs-tick" style="left:5mm; top:50%; transform:translateY(-50%);">×</span>
+        <span class="cs-tick" style="right:5mm; top:50%; transform:translateY(-50%);">×</span>
+      </div>
+    </div>
+    <div class="logo-side">
+      <div class="block">
+        <h4>Wordmark</h4>
+        <p>Основная версия логотипа — набранное капителью слово UNICAR. Логотип используется только в виде готовых файлов из этого пакета: его нельзя перенабирать шрифтом, менять межбуквенные расстояния или пропорции штрихов.</p>
+      </div>
+      <div class="block">
+        <h4>Охранное поле</h4>
+        <p>Минимальный свободный отступ вокруг логотипа равен высоте буквы «I» (обозначен «×»). В этой зоне не должно быть текста, графики и края макета.</p>
+      </div>
+      <div class="block">
+        <h4>Минимальный размер</h4>
+        <div class="minsize">
+          <div class="ms">
+            <img src="../logo/svg/unicar-logo-black.svg" style="width:24mm;">
+            <span class="cap">Печать — 24 мм</span>
+          </div>
+          <div class="ms">
+            <img src="../logo/svg/unicar-logo-black.svg" style="width:17mm;">
+            <span class="cap">Экран — 96 px</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="footer"><span class="label">UNICAR — Брендбук</span><span class="label">04</span></div>
+</div>
+
+<!-- ============ 5 / VERSIONS ============ -->
+<div class="page">
+  <div class="section-head">
+    <span class="num">02</span><h2>Логотип</h2><span class="label">Версии</span>
+  </div>
+  <div class="versions">
+    <div class="vtile vt-black">
+      <img src="../logo/svg/unicar-logo-white.svg" alt="">
+      <span class="vcap">Белый на чёрном — основная</span>
+    </div>
+    <div class="vtile vt-white">
+      <img src="../logo/svg/unicar-logo-black.svg" alt="">
+      <span class="vcap">Чёрный на белом</span>
+    </div>
+    <div class="vtile vt-blue">
+      <img src="../logo/svg/unicar-logo-white.svg" alt="">
+      <span class="vcap">Белый на фирменном синем</span>
+    </div>
+    <div class="vtile vt-gray">
+      <img src="../logo/svg/unicar-logo-black.svg" alt="">
+      <span class="vcap">Чёрный на светло-сером</span>
+    </div>
+  </div>
+  <div class="footer"><span class="label">UNICAR — Брендбук</span><span class="label">05</span></div>
+</div>
+
+<!-- ============ 6 / MONOGRAM ============ -->
+<div class="page">
+  <div class="section-head">
+    <span class="num">02</span><h2>Логотип</h2><span class="label">Монограмма</span>
+  </div>
+  <div class="mono-grid">
+    <div class="mono-left">
+      <img src="../logo/svg/unicar-mark-white.svg" alt="U">
+    </div>
+    <div class="mono-right">
+      <div class="block">
+        <h4>Знак «U»</h4>
+        <p>Монограмма используется там, где полный wordmark не читается: иконка приложения, аватары соцсетей, фавиконка, брелоки и мелкая сувенирная продукция. Монограмма никогда не заменяет полный логотип в макетах шире 30 мм.</p>
+      </div>
+      <div class="block">
+        <h4>Иконка приложения</h4>
+        <div class="mono-sizes">
+          <div class="ms"><img src="../logo/svg/unicar-mark-app-icon.svg" style="width:26mm;"><span class="cap">1024 px</span></div>
+          <div class="ms"><img src="../logo/svg/unicar-mark-app-icon.svg" style="width:17mm;"><span class="cap">512 px</span></div>
+          <div class="ms"><img src="../logo/svg/unicar-mark-app-icon.svg" style="width:11mm;"><span class="cap">180 px</span></div>
+          <div class="ms"><img src="../logo/svg/unicar-mark-app-icon.svg" style="width:7mm;"><span class="cap">64 px</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="footer"><span class="label">UNICAR — Брендбук</span><span class="label">06</span></div>
+</div>
+
+<!-- ============ 7 / MISUSE ============ -->
+<div class="page">
+  <div class="section-head">
+    <span class="num">02</span><h2>Логотип</h2><span class="label">Недопустимое использование</span>
+  </div>
+  <div class="misuse">
+    <div class="mtile m-stretch">
+      <span class="cross"></span>
+      <img src="../logo/svg/unicar-logo-black.svg" alt="">
+      <span class="mcap">Не искажать пропорции</span>
+    </div>
+    <div class="mtile m-rotate">
+      <span class="cross"></span>
+      <img src="../logo/svg/unicar-logo-black.svg" alt="">
+      <span class="mcap">Не наклонять и не вращать</span>
+    </div>
+    <div class="mtile m-color">
+      <span class="cross"></span>
+      <img src="../logo/svg/unicar-logo-black.svg" alt="">
+      <span class="mcap">Не менять фирменные цвета</span>
+    </div>
+    <div class="mtile m-shadow">
+      <span class="cross"></span>
+      <img src="../logo/svg/unicar-logo-black.svg" alt="">
+      <span class="mcap">Не добавлять тени и эффекты</span>
+    </div>
+    <div class="mtile m-photo">
+      <span class="cross"></span>
+      <img src="../logo/svg/unicar-logo-white.svg" alt="">
+      <span class="mcap">Не ставить на пёстрое фото без плашки</span>
+    </div>
+    <div class="mtile m-contrast">
+      <span class="cross"></span>
+      <img src="../logo/svg/unicar-logo-white.svg" alt="">
+      <span class="mcap">Не использовать при низком контрасте</span>
+    </div>
+  </div>
+  <div class="footer"><span class="label">UNICAR — Брендбук</span><span class="label">07</span></div>
+</div>
+
+<!-- ============ 8 / COLOR ============ -->
+<div class="page">
+  <div class="section-head">
+    <span class="num">03</span><h2>Цвет</h2><span class="label">Палитра</span>
+  </div>
+  <div class="palette">
+    <div class="swatch sw-black">
+      <span class="sn">Чёрный</span>
+      <span class="sv">HEX 0A0A0A<br>RGB 10 · 10 · 10<br>CMYK 0 · 0 · 0 · 96</span>
+    </div>
+    <div class="swatch sw-white">
+      <span class="sn">Белый</span>
+      <span class="sv">HEX FFFFFF<br>RGB 255 · 255 · 255<br>CMYK 0 · 0 · 0 · 0</span>
+    </div>
+    <div class="swatch sw-blue">
+      <span class="sn">Синий</span>
+      <span class="sv">HEX 49659F<br>RGB 73 · 101 · 159<br>CMYK 54 · 36 · 0 · 38</span>
+    </div>
+    <div class="swatch sw-accent">
+      <span class="sn">Акцент</span>
+      <span class="sv">HEX 3B82F6<br>RGB 59 · 130 · 246<br>CMYK 76 · 47 · 0 · 4</span>
+    </div>
+  </div>
+  <div class="grayscale-row">
+    <div class="g" style="background:#fafafa;"><span>50</span></div>
+    <div class="g" style="background:#f5f5f5;"><span>100</span></div>
+    <div class="g" style="background:#e5e5e5;"><span>200</span></div>
+    <div class="g" style="background:#d4d4d4;"><span>300</span></div>
+    <div class="g" style="background:#a3a3a3;"><span>400</span></div>
+    <div class="g dark-g" style="background:#737373;"><span>500</span></div>
+    <div class="g dark-g" style="background:#525252;"><span>600</span></div>
+    <div class="g dark-g" style="background:#404040;"><span>700</span></div>
+    <div class="g dark-g" style="background:#262626;"><span>800</span></div>
+    <div class="g dark-g" style="background:#171717;"><span>900</span></div>
+  </div>
+  <div class="prop-note">
+    <p>Основа макетов — белый и чёрный. Синий #49659F — цвет плашек и печатных носителей, акцент #3B82F6 — только для интерактивных элементов в digital.</p>
+    <p style="color:#a3a3a3;">Пропорции ≈ 70 / 20 / 10</p>
+  </div>
+  <div class="footer"><span class="label">UNICAR — Брендбук</span><span class="label">08</span></div>
+</div>
+
+<!-- ============ 9 / TYPOGRAPHY ============ -->
+<div class="page">
+  <div class="section-head">
+    <span class="num">04</span><h2>Типографика</h2><span class="label">Фирменный шрифт</span>
+  </div>
+  <div class="type-grid">
+    <div class="type-left">
+      <div class="family">Inter</div>
+      <p class="sub">Единственная гарнитура бренда — для сайта, рекламы и документов. Геометричный гротеск с открытыми формами, поддерживает кириллицу и латиницу. В заголовках — плотный трекинг (−2…−3%), в наборе — обычный.</p>
+      <div class="specimen">
+        <p>АБВГДЕЖЗИКЛМНОПРСТУФХЦЧШЩЭЮЯ</p>
+        <p>ABCDEFGHIJKLMNOPQRSTUVWXYZ</p>
+        <p class="gray">абвгдежзиклмнопрстуфхцчшщэюя abcdefghijklmnopqrstuvwxyz 0123456789</p>
+      </div>
+    </div>
+    <div class="type-scale">
+      <div class="ts-row"><span class="ts-label">Display · 600</span><span class="ts-sample" style="font-size:27pt; font-weight:600;">Аренда авто на Пхукете</span></div>
+      <div class="ts-row"><span class="ts-label">H1 · 600</span><span class="ts-sample" style="font-size:20pt; font-weight:600;">Премиальный автопарк</span></div>
+      <div class="ts-row"><span class="ts-label">H2 · 500</span><span class="ts-sample" style="font-size:15pt; font-weight:500;">Доставка к отелю и в аэропорт</span></div>
+      <div class="ts-row"><span class="ts-label">Body · 400</span><span class="ts-sample" style="font-size:10pt; font-weight:400; letter-spacing:0;">Прозрачные цены без скрытых платежей. Страховка включена.</span></div>
+      <div class="ts-row"><span class="ts-label">Caption · 500</span><span class="ts-sample" style="font-size:7pt; font-weight:500; letter-spacing:0.18em; text-transform:uppercase;">Exclusive cars of Phuket</span></div>
+    </div>
+  </div>
+  <div class="footer"><span class="label">UNICAR — Брендбук</span><span class="label">09</span></div>
+</div>
+
+<!-- ============ 10 / PHOTOGRAPHY ============ -->
+<div class="page">
+  <div class="section-head">
+    <span class="num">05</span><h2>Фотостиль</h2><span class="label">Принципы съёмки</span>
+  </div>
+  <div class="photo-grid">
+    <div class="ph" style="background-image:url('../../public/images/features-car.jpg');">
+      <span class="ph-cap">Локации — город и природа Пхукета</span>
+    </div>
+    <div class="ph" style="background-image:url('../../public/images/cta-bg.jpg');">
+      <span class="ph-cap" style="color:#737373;">Каталог — чистая студия</span>
+    </div>
+  </div>
+  <div class="photo-principles">
+    <div class="principle"><h5>Автомобиль — герой</h5><p>Машина занимает главное место в кадре. Без людей-моделей, без реквизита, без визуального шума.</p></div>
+    <div class="principle"><h5>Естественный свет</h5><p>Дневной свет, мягкие тени, реальные локации острова. Без агрессивной HDR-обработки и перенасыщения.</p></div>
+    <div class="principle"><h5>Чистые фоны</h5><p>Для каталога — светлая студия и единый ракурс ¾. Все машины парка снимаются в одинаковых условиях.</p></div>
+    <div class="principle"><h5>Детали</h5><p>Крупные планы фактур: диски, оптика, кожа салона. Детальные кадры дополняют, но не заменяют общий план.</p></div>
+  </div>
+  <div class="footer"><span class="label">UNICAR — Брендбук</span><span class="label">10</span></div>
+</div>
+
+<!-- ============ 11 / APPLICATIONS ============ -->
+<div class="page">
+  <div class="section-head">
+    <span class="num">06</span><h2>Носители</h2><span class="label">Примеры применения</span>
+  </div>
+  <div class="apps-grid">
+    <div class="apps-left">
+      <div class="bizcard">
+        <img src="../logo/svg/unicar-logo-white.svg" alt="UNICAR">
+        <div class="bc-info">
+          <strong>UNICAR — Exclusive Cars of Phuket</strong><br>
+          +66 63 845 0372 · unicar-rent.com<br>
+          Phuket, Thailand
+        </div>
+      </div>
+      <div class="bizcard-w">
+        <img src="../logo/svg/unicar-logo-black.svg" alt="UNICAR">
+        <div class="bc-side">unicar-rent.com<br>+66 63 845 0372</div>
+      </div>
+    </div>
+    <div class="apps-right">
+      <div class="ui-sample">
+        <span class="label">Кнопки — сайт и приложение</span>
+        <div class="btn-row">
+          <span class="btn btn-dark">Забронировать</span>
+          <span class="btn btn-ghost">Весь автопарк</span>
+          <span class="btn btn-accent">WhatsApp</span>
+        </div>
+        <div class="avatar-row">
+          <img src="../logo/svg/unicar-mark-app-icon.svg" style="width:15mm;">
+          <img src="../logo/svg/unicar-mark-app-icon.svg" style="width:10mm;">
+          <span class="cap">Аватар соцсетей — монограмма «U»<br>на тёмной плашке, без wordmark</span>
+        </div>
+      </div>
+      <div class="ui-sample" style="background:#0a0a0a; border:none;">
+        <span class="label" style="color:#8a8a8a;">Плашка для сторис и баннеров</span>
+        <div style="display:flex; align-items:center; justify-content:center; padding:9mm 0 5mm;">
+          <img src="../logo/svg/unicar-logo-white.svg" style="width:62mm;">
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="footer"><span class="label">UNICAR — Брендбук</span><span class="label">11</span></div>
+</div>
+
+<!-- ============ 12 / BACK COVER ============ -->
+<div class="page dark back">
+  <span class="label">Контакты</span>
+  <div class="back-mid">
+    <img src="../logo/svg/unicar-logo-white.svg" alt="UNICAR">
+    <div class="contacts">
+      <div class="contact">
+        <span class="label">Сайт</span>
+        <p>unicar-rent.com</p>
+      </div>
+      <div class="contact">
+        <span class="label">Телефон / WhatsApp</span>
+        <p>+66 63 845 0372</p>
+      </div>
+      <div class="contact">
+        <span class="label">Соцсети</span>
+        <p>@unicar_rent_phuket<br>t.me/unicar_phuket</p>
+      </div>
+    </div>
+  </div>
+  <div class="footer">
+    <span class="label">UNICAR — Брендбук · Версия 1.0 · 2026</span>
+    <span class="label">Exclusive Cars of Phuket</span>
+  </div>
+</div>
+
+</body>
+</html>

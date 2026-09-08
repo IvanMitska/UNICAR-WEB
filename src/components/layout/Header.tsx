@@ -12,7 +12,7 @@ import { cars as carsData } from '../../data/cars';
 import { Picture } from '../ui/Picture';
 
 // Pages that have a light background from the start (no dark hero)
-const lightBackgroundPages = ['/cars', '/about', '/contacts', '/terms', '/privacy', '/sign-in', '/get-started', '/profile', '/forgot-password', '/reset-password'];
+const lightBackgroundPages = ['/cars', '/about', '/contacts', '/privacy', '/sign-in', '/get-started', '/profile', '/forgot-password', '/reset-password'];
 
 // Featured cars for mega menu - Row 1 (4 cars)
 const featuredCarsRow1 = [

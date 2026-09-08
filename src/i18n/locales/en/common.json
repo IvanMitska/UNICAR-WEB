@@ -75,8 +75,7 @@
     "discountLine": "Promo discount",
     "badgeLabel": "offer",
     "untilSentence": "Valid until {{date}}. No promo codes, no conditions.",
-    "stripNote": "The discount is already included in every price and runs until {{date}}.",
-    "terms": "Rental terms"
+    "stripNote": "The discount is already included in every price and runs until {{date}}."
   },
   "car": {
     "available": "Available",

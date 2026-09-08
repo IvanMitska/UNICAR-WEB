@@ -88,18 +88,12 @@ export const PromoBanner: React.FC<PromoBannerProps> = ({ variant = 'full', clas
                 {t('promo.subtitle')} {t('promo.untilSentence', { date: endsOn })}
               </p>
 
-              <div className="mt-7 flex flex-wrap items-center gap-x-8 gap-y-4">
+              <div className="mt-7">
                 <Link
                   to="/cars"
-                  className="rounded-full bg-white px-7 py-3 text-[15px] font-medium text-gray-900 transition-colors duration-300 hover:bg-white/90"
+                  className="inline-flex rounded-full bg-white px-7 py-3 text-[15px] font-medium text-gray-900 transition-colors duration-300 hover:bg-white/90"
                 >
                   {t('promo.cta')}
-                </Link>
-                <Link
-                  to="/terms"
-                  className="text-[15px] text-white/80 transition-colors duration-300 hover:text-white"
-                >
-                  {t('promo.terms')} <span aria-hidden>›</span>
                 </Link>
               </div>
             </div>

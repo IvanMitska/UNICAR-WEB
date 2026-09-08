@@ -19,7 +19,6 @@ export const Footer: React.FC = () => {
       { to: '/about', labelKey: 'footer.aboutUs' },
       { to: '/how-it-works', labelKey: 'footer.howItWorks' },
       { to: '/contacts', labelKey: 'footer.contact' },
-      { to: '/terms', labelKey: 'footer.termsConditions' },
     ],
   };
 
@@ -138,12 +137,6 @@ export const Footer: React.FC = () => {
                 className="text-white/30 hover:text-white transition-colors"
               >
                 {t('footer.privacy')}
-              </Link>
-              <Link
-                to="/terms"
-                className="text-white/30 hover:text-white transition-colors"
-              >
-                {t('footer.terms')}
               </Link>
             </div>
           </div>

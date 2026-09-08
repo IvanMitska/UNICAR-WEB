@@ -270,14 +270,7 @@ export const GetStartedPage: React.FC = () => {
                 {agreedToTerms && <Check className="w-3 h-3 text-white" />}
               </button>
               <span className="text-sm text-gray-600">
-                I agree to the{' '}
-                <Link to="/terms" className="text-gray-900 hover:underline">
-                  Terms of Service
-                </Link>{' '}
-                and{' '}
-                <Link to="/privacy" className="text-gray-900 hover:underline">
-                  Privacy Policy
-                </Link>
+                I agree to the Terms of Service and Privacy Policy
               </span>
             </div>
 
