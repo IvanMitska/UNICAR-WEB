@@ -26,6 +26,8 @@ import { useAuth } from '../contexts/AuthContext';
 import { useFavorites } from '../contexts/FavoritesContext';
 import { api } from '../lib/api';
 import { cars as carsData } from '../data/cars';
+import { Picture } from '../components/ui/Picture';
+import { applyPromo } from '../config/promo';
 
 type TabType = 'bookings' | 'favorites' | 'notifications' | 'security' | 'settings';
 
@@ -284,7 +286,7 @@ export const ProfilePage: React.FC = () => {
                   <div key={car.id} className="bg-white rounded-xl p-4 border border-gray-100 flex items-center justify-between">
                     <Link to={`/cars/${car.id}`} className="flex items-center gap-4 flex-1">
                       <div className="w-24 h-16 bg-gray-100 rounded-lg overflow-hidden flex-shrink-0">
-                        <img
+                        <Picture
                           src={car.image}
                           alt={`${car.brand} ${car.model}`}
                           className="w-full h-full object-cover"
@@ -292,7 +294,14 @@ export const ProfilePage: React.FC = () => {
                       </div>
                       <div>
                         <p className="text-gray-900 font-medium">{car.brand} {car.model}</p>
-                        <p className="text-sm text-gray-500">{car.year} • ฿{car.pricePerDay.toLocaleString()}/day</p>
+                        <p className="text-sm text-gray-500">
+                          {car.year} • ฿{applyPromo(car.pricePerDay).toLocaleString()}/day
+                          {applyPromo(car.pricePerDay) < car.pricePerDay && (
+                            <span className="ml-2 text-gray-400 line-through">
+                              ฿{car.pricePerDay.toLocaleString()}
+                            </span>
+                          )}
+                        </p>
                       </div>
                     </Link>
                     <button

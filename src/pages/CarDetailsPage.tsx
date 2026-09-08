@@ -30,9 +30,14 @@ import { useBookingStore } from '../store/useBookingStore';
 import { format, addDays } from 'date-fns';
 import { cn } from '../utils/cn';
 import { SimilarCars } from '../components/sections/SimilarCars';
+import { applyPromo } from '../config/promo';
+import { usePromo } from '../hooks/usePromo';
+import { PromoBadge } from '../components/ui/PromoBadge';
+import { Picture } from '../components/ui/Picture';
 
 export const CarDetailsPage: React.FC = () => {
   const { t, i18n } = useTranslation();
+  const { active: promoActive, percent: promoPercent, endsOn: promoEndsOn } = usePromo();
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const { toggleFavorite, isFavorite } = useFavorites();
@@ -168,8 +173,12 @@ export const CarDetailsPage: React.FC = () => {
   }
 
   const days = calculateDays(new Date(startDate), new Date(endDate));
-  const dailyRate = getDailyRateForDuration(car.pricePerDay, days);
-  const totalPrice = calculateRentalTotal(car.pricePerDay, days);
+  // Базовые цены (сетка по сроку) + цены с учётом акции
+  const baseDailyRate = getDailyRateForDuration(car.pricePerDay, days);
+  const baseTotalPrice = calculateRentalTotal(car.pricePerDay, days);
+  const dailyRate = applyPromo(baseDailyRate);
+  const totalPrice = dailyRate * days;
+  const promoSaving = baseTotalPrice - totalPrice;
 
   const locations = [
     { id: 'phuket-airport', name: t('locations.phuketAirport'), description: t('locations.internationalAirport'), popular: true },
@@ -208,7 +217,7 @@ export const CarDetailsPage: React.FC = () => {
               transition={{ duration: 0.7 }}
               className="absolute inset-0"
             >
-              <img
+              <Picture
                 src={car.images[currentImage]}
                 alt={`${car.brand} ${car.model}`}
                 className="w-full h-full object-cover cursor-pointer"
@@ -334,7 +343,7 @@ export const CarDetailsPage: React.FC = () => {
                           : "opacity-50 hover:opacity-80"
                       )}
                     >
-                      <img
+                      <Picture
                         src={image}
                         alt={`View ${index + 1}`}
                         loading="lazy"
@@ -410,7 +419,7 @@ export const CarDetailsPage: React.FC = () => {
                       : "border-transparent opacity-60"
                   )}
                 >
-                  <img
+                  <Picture
                     src={image}
                     alt={`View ${index + 1}`}
                     loading="lazy"
@@ -438,11 +447,21 @@ export const CarDetailsPage: React.FC = () => {
                 className="flex items-center justify-between p-6 bg-primary-50 rounded-2xl"
               >
                 <div>
-                  <p className="text-primary-400 text-sm mb-1">{t('price.priceFrom')}</p>
+                  <div className="flex items-center gap-3 mb-1">
+                    <p className="text-primary-400 text-sm">{t('price.priceFrom')}</p>
+                    <PromoBadge />
+                  </div>
                   <p className="text-4xl font-light text-primary-900">
-                    {formatPrice(car.pricePerDay)}
+                    {formatPrice(applyPromo(car.pricePerDay))}
                     <span className="text-lg text-primary-400 ml-2">{t('price.perDay')}</span>
                   </p>
+                  {promoActive && (
+                    <p className="mt-1.5 text-sm text-primary-400">
+                      <span className="line-through">{formatPrice(car.pricePerDay)}</span>
+                      <span className="mx-2 text-primary-300">·</span>
+                      {t('promo.until', { date: promoEndsOn })}
+                    </p>
+                  )}
                 </div>
                 <div className={cn(
                   "px-4 py-2 rounded-full text-sm font-medium",
@@ -587,19 +606,33 @@ export const CarDetailsPage: React.FC = () => {
                     <div className="bg-white rounded-2xl p-5 text-center">
                       <p className="text-primary-400 text-sm mb-1">{t('price.pricePerDay')}</p>
                       <p className="text-2xl md:text-3xl font-light text-primary-900">
-                        {formatPrice(getDailyRateForDuration(car.pricePerDay, sliderDays))}
+                        {formatPrice(applyPromo(getDailyRateForDuration(car.pricePerDay, sliderDays)))}
                       </p>
-                      {sliderDays > 1 && (
-                        <p className="text-green-600 text-sm mt-1 font-medium">
-                          -{Math.round((1 - getDailyRateForDuration(car.pricePerDay, sliderDays) / car.pricePerDay) * 100)}%
+                      {promoActive ? (
+                        <p className="text-sm mt-1">
+                          <span className="text-primary-400 line-through">
+                            {formatPrice(getDailyRateForDuration(car.pricePerDay, sliderDays))}
+                          </span>
+                          <PromoBadge className="ml-2 align-middle" />
                         </p>
+                      ) : (
+                        sliderDays > 1 && (
+                          <p className="text-green-600 text-sm mt-1 font-medium">
+                            -{Math.round((1 - getDailyRateForDuration(car.pricePerDay, sliderDays) / car.pricePerDay) * 100)}%
+                          </p>
+                        )
                       )}
                     </div>
                     <div className="bg-primary-900 rounded-2xl p-5 text-center">
                       <p className="text-white/60 text-sm mb-1">{t('price.total')}</p>
                       <p className="text-2xl md:text-3xl font-light text-white">
-                        {formatPrice(calculateRentalTotal(car.pricePerDay, sliderDays))}
+                        {formatPrice(applyPromo(getDailyRateForDuration(car.pricePerDay, sliderDays)) * sliderDays)}
                       </p>
+                      {promoActive && (
+                        <p className="text-white/40 text-sm mt-1 line-through">
+                          {formatPrice(calculateRentalTotal(car.pricePerDay, sliderDays))}
+                        </p>
+                      )}
                       <p className="text-white/50 text-sm mt-1">
                         {t('price.forDays', { days: sliderDays })}
                       </p>
@@ -653,7 +686,10 @@ export const CarDetailsPage: React.FC = () => {
               >
                 {/* Card Header */}
                 <div className="p-6 bg-primary-900 text-white rounded-t-3xl">
-                  <p className="text-white/70 text-sm mb-1">{t('booking.quickBooking')}</p>
+                  <div className="flex items-center justify-between gap-3 mb-1">
+                    <p className="text-white/70 text-sm">{t('booking.quickBooking')}</p>
+                    <PromoBadge tone="onDark" />
+                  </div>
                   <p className="text-3xl font-light">
                     {formatPrice(dailyRate)}
                     <span className="text-lg text-white/60 ml-2">{t('price.perDay')}</span>
@@ -700,9 +736,19 @@ export const CarDetailsPage: React.FC = () => {
                   {/* Price Summary */}
                   <div className="pt-4 border-t border-primary-100">
                     <div className="flex justify-between mb-2">
-                      <span className="text-primary-500">{formatPrice(dailyRate)} × {days} {t('price.days')}</span>
-                      <span className="text-primary-900">{formatPrice(totalPrice)}</span>
+                      <span className="text-primary-500">
+                        {formatPrice(promoActive ? baseDailyRate : dailyRate)} × {days} {t('price.days')}
+                      </span>
+                      <span className="text-primary-900">
+                        {formatPrice(promoActive ? baseTotalPrice : totalPrice)}
+                      </span>
                     </div>
+                    {promoActive && promoSaving > 0 && (
+                      <div className="flex justify-between mb-2 text-green-600">
+                        <span>{t('promo.discountLine')} −{promoPercent}%</span>
+                        <span>−{formatPrice(promoSaving)}</span>
+                      </div>
+                    )}
                     <div className="flex justify-between text-lg font-medium">
                       <span className="text-primary-900">{t('price.total')}</span>
                       <span className="text-primary-900">{formatPrice(totalPrice)}</span>
@@ -825,7 +871,7 @@ export const CarDetailsPage: React.FC = () => {
                       : "opacity-50 hover:opacity-80"
                   )}
                 >
-                  <img
+                  <Picture
                     src={image}
                     alt={`Thumbnail ${index + 1}`}
                     loading="lazy"

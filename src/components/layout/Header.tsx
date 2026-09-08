@@ -8,6 +8,8 @@ import { cn } from '../../utils/cn';
 import { useAuth } from '../../contexts/AuthContext';
 import { useBookingStore } from '../../store/useBookingStore';
 import { LanguageSwitcher } from '../ui/LanguageSwitcher';
+import { cars as carsData } from '../../data/cars';
+import { Picture } from '../ui/Picture';
 
 // Pages that have a light background from the start (no dark hero)
 const lightBackgroundPages = ['/cars', '/about', '/contacts', '/terms', '/privacy', '/sign-in', '/get-started', '/profile', '/forgot-password', '/reset-password'];
@@ -15,14 +17,14 @@ const lightBackgroundPages = ['/cars', '/about', '/contacts', '/terms', '/privac
 // Featured cars for mega menu - Row 1 (4 cars)
 const featuredCarsRow1 = [
   {
-    id: 'mustang-white-2020',
+    id: 'mustang-white-2017',
     name: 'Ford Mustang',
     image: '/cars/menu/mustang-white.png',
     category: 'sport',
     offsetY: 0,
   },
   {
-    id: 'mustang-blue-2020',
+    id: 'mustang-blue-2018',
     name: 'Ford Mustang',
     image: '/cars/menu/mustang-blue.png',
     category: 'sport',
@@ -68,6 +70,18 @@ const featuredCarsRow2 = [
     isInventory: true,
   },
 ] as const;
+
+// Featured cars reference ids from data/cars.ts. If an id is renamed there, fall back
+// to the catalog instead of sending the user to a "Car not found" page.
+const carHref = (id: string) => {
+  if (carsData.some(c => c.id === id)) {
+    return `/cars/${id}`;
+  }
+  if (import.meta.env.DEV) {
+    console.warn(`[Header] Featured car "${id}" is missing from data/cars.ts — linking to /cars instead`);
+  }
+  return '/cars';
+};
 
 const quickLinkDefs = [
   { labelKey: 'nav.allCars', to: '/cars' },
@@ -332,13 +346,13 @@ export const Header: React.FC = () => {
                           }}
                         >
                           <Link
-                            to={`/cars/${car.id}`}
+                            to={carHref(car.id)}
                             onClick={() => setActiveDropdown(null)}
                             className="group text-center block"
                           >
                             <div className="relative mb-4 h-40 flex items-end justify-center">
                               <div style={{ transform: `translateY(${car.offsetY || 0}px)` }}>
-                                <img
+                                <Picture
                                   src={car.image}
                                   alt={car.name}
                                   className="max-h-40 w-auto object-contain transition-transform duration-500 group-hover:scale-105"
@@ -348,12 +362,9 @@ export const Header: React.FC = () => {
                             <h3 className="text-sm font-medium text-gray-900 mb-1.5">
                               {car.name}
                             </h3>
-                            <div className="flex items-center justify-center gap-4 text-xs">
-                              <span className="text-gray-500 hover:text-gray-900 underline underline-offset-2 cursor-pointer transition-colors">
+                            <div className="flex items-center justify-center text-xs">
+                              <span className="text-gray-500 group-hover:text-gray-900 underline underline-offset-2 transition-colors">
                                 {t('buttons.details')}
-                              </span>
-                              <span className="text-gray-500 hover:text-gray-900 underline underline-offset-2 cursor-pointer transition-colors">
-                                {t('buttons.rent')}
                               </span>
                             </div>
                           </Link>
@@ -377,7 +388,7 @@ export const Header: React.FC = () => {
                           }}
                         >
                           <Link
-                            to={'isInventory' in car && car.isInventory ? '/cars' : `/cars/${car.id}`}
+                            to={'isInventory' in car && car.isInventory ? '/cars' : carHref(car.id)}
                             onClick={() => {
                               setActiveDropdown(null);
                               if ('isInventory' in car && car.isInventory) clearSearch();
@@ -385,7 +396,7 @@ export const Header: React.FC = () => {
                             className="group text-center block"
                           >
                             <div className="relative mb-4 h-40 flex items-end justify-center">
-                              <img
+                              <Picture
                                 src={car.image}
                                 alt={displayName}
                                 className="max-h-full w-auto object-contain transition-transform duration-500 group-hover:scale-105"
@@ -394,26 +405,12 @@ export const Header: React.FC = () => {
                             <h3 className="text-sm font-medium text-gray-900 mb-1.5">
                               {displayName}
                             </h3>
-                            <div className="flex items-center justify-center gap-4 text-xs">
-                              {'isInventory' in car && car.isInventory ? (
-                                <>
-                                  <span className="text-gray-500 hover:text-gray-900 underline underline-offset-2 cursor-pointer transition-colors">
-                                    {t('buttons.viewAll')}
-                                  </span>
-                                  <span className="text-gray-500 hover:text-gray-900 underline underline-offset-2 cursor-pointer transition-colors">
-                                    {t('buttons.browse')}
-                                  </span>
-                                </>
-                              ) : (
-                                <>
-                                  <span className="text-gray-500 hover:text-gray-900 underline underline-offset-2 cursor-pointer transition-colors">
-                                    {t('buttons.details')}
-                                  </span>
-                                  <span className="text-gray-500 hover:text-gray-900 underline underline-offset-2 cursor-pointer transition-colors">
-                                    {t('buttons.rent')}
-                                  </span>
-                                </>
-                              )}
+                            <div className="flex items-center justify-center text-xs">
+                              <span className="text-gray-500 group-hover:text-gray-900 underline underline-offset-2 transition-colors">
+                                {'isInventory' in car && car.isInventory
+                                  ? t('buttons.viewAll')
+                                  : t('buttons.details')}
+                              </span>
                             </div>
                           </Link>
                         </motion.div>
@@ -519,12 +516,12 @@ export const Header: React.FC = () => {
                     {featuredCarsRow1.map((car) => (
                       <Link
                         key={car.id}
-                        to={`/cars/${car.id}`}
+                        to={carHref(car.id)}
                         onClick={() => setIsMenuOpen(false)}
                         className="group block"
                       >
                         <div className="aspect-[4/3] overflow-hidden rounded-lg bg-gray-100 mb-2">
-                          <img
+                          <Picture
                             src={car.image}
                             alt={car.name}
                             className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"

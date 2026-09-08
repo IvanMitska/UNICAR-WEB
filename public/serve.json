@@ -1,0 +1,9 @@
+{
+  "$schema": "https://raw.githubusercontent.com/vercel/serve-handler/main/schema.json",
+  "headers": [
+    {
+      "source": "**/*.avif",
+      "headers": [{ "key": "Content-Type", "value": "image/avif" }]
+    }
+  ]
+}

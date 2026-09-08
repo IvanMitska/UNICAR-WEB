@@ -1,3 +1,5 @@
+import { applyPromo } from '../config/promo';
+
 export const formatPrice = (price: number, showOnRequest = true): string => {
   if (price === 0 && showOnRequest) {
     return 'По запросу';
@@ -125,3 +127,14 @@ export const getRentalPriceInfo = (basePrice: number, days: number): {
     discountPercent,
   };
 };
+
+/**
+ * Цены с учётом действующей акции.
+ * Базовые функции выше остаются «чистыми» — они нужны, чтобы показать
+ * старую цену зачёркнутой рядом с акционной.
+ */
+export const getPromoDailyRate = (basePrice: number, days: number): number =>
+  applyPromo(getDailyRateForDuration(basePrice, days));
+
+export const getPromoRentalTotal = (basePrice: number, days: number): number =>
+  getPromoDailyRate(basePrice, days) * days;

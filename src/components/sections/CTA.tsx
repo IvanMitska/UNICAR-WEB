@@ -10,10 +10,7 @@ export const CTA: React.FC = () => {
   return (
     <section className="relative h-[500px] lg:h-[600px] overflow-hidden">
       {/* Background Image */}
-      <div
-        className="absolute inset-0 bg-cover bg-[center_bottom] bg-no-repeat"
-        style={{ backgroundImage: 'url(/images/cta-bg.jpg)' }}
-      />
+      <div className="bg-image-cta absolute inset-0 bg-cover bg-[center_bottom] bg-no-repeat" />
 
       {/* Content */}
       <div className="relative z-10 h-full flex items-center">

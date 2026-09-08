@@ -9,6 +9,8 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
+    "images:avif": "node scripts/convert-to-avif.mjs",
+    "images:verify": "node scripts/verify-image-variants.mjs",
     "start": "serve dist -s -l $PORT",
     "lint": "eslint .",
     "preview": "vite preview"

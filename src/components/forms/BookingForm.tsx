@@ -26,6 +26,9 @@ import {
 import { Button } from '../ui/Button';
 import { useBookingStore } from '../../store/useBookingStore';
 import { formatCurrency, getDailyRateForDuration, calculateRentalTotal } from '../../utils/formatters';
+import { applyPromo } from '../../config/promo';
+import { usePromo } from '../../hooks/usePromo';
+import { PromoBadge } from '../ui/PromoBadge';
 import { services } from '../../data/services';
 import { offices } from '../../data/offices';
 import { differenceInDays } from 'date-fns';
@@ -84,7 +87,8 @@ function pluralizeDays(days: number, t: (k: string) => string): string {
 
 export const BookingForm: React.FC = () => {
   const navigate = useNavigate();
-  const { t } = useTranslation('pages');
+  const { t } = useTranslation(['pages', 'common']);
+  const { active: promoActive, percent: promoPercent } = usePromo();
   const [currentStep, setCurrentStep] = useState(1);
   const [selectedServices, setSelectedServices] = useState<string[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -127,15 +131,29 @@ export const BookingForm: React.FC = () => {
     return Math.max(1, days);
   }, [bookingDates]);
 
-  const dailyRate = useMemo(() => {
+  // Базовая ставка по сетке сроков — нужна, чтобы показать её зачёркнутой
+  const baseDailyRate = useMemo(() => {
     if (!selectedCar || rentalDays === 0) return selectedCar?.pricePerDay || 0;
     return getDailyRateForDuration(selectedCar.pricePerDay, rentalDays);
   }, [selectedCar, rentalDays]);
 
+  // Ставка с учётом акции — по ней и считается заказ
+  const dailyRate = useMemo(() => applyPromo(baseDailyRate), [baseDailyRate]);
+
+  const carPriceBeforePromo = useMemo(
+    () => (selectedCar ? calculateRentalTotal(selectedCar.pricePerDay, rentalDays) : 0),
+    [selectedCar, rentalDays]
+  );
+
+  const promoSaving = useMemo(
+    () => Math.max(0, carPriceBeforePromo - dailyRate * rentalDays),
+    [carPriceBeforePromo, dailyRate, rentalDays]
+  );
+
   const calculateTotal = useMemo(() => {
     if (!selectedCar) return 0;
 
-    const carPrice = calculateRentalTotal(selectedCar.pricePerDay, rentalDays);
+    const carPrice = dailyRate * rentalDays;
     const servicesPrice = selectedServices.reduce((total, serviceId) => {
       const service = services.find(s => s.id === serviceId);
       if (service) {
@@ -145,7 +163,7 @@ export const BookingForm: React.FC = () => {
     }, 0);
 
     return carPrice + servicesPrice;
-  }, [selectedCar, rentalDays, selectedServices]);
+  }, [selectedCar, rentalDays, selectedServices, dailyRate]);
 
   const handleServiceToggle = (serviceId: string) => {
     setSelectedServices(prev =>
@@ -282,13 +300,16 @@ export const BookingForm: React.FC = () => {
           <h2 className="text-2xl font-bold text-gray-900">
             {selectedCar.brand} {selectedCar.model}
           </h2>
-          <p className="text-gray-600">
-            {formatCurrency(dailyRate)}{t('bookingForm.perDay')}
-            {dailyRate < selectedCar.pricePerDay && (
-              <span className="ml-2 text-gray-400 line-through text-sm">
-                {formatCurrency(selectedCar.pricePerDay)}
-              </span>
-            )}
+          <p className="text-gray-600 flex items-center gap-2 flex-wrap">
+            <span>
+              {formatCurrency(dailyRate)}{t('bookingForm.perDay')}
+              {dailyRate < selectedCar.pricePerDay && (
+                <span className="ml-2 text-gray-400 line-through text-sm">
+                  {formatCurrency(selectedCar.pricePerDay)}
+                </span>
+              )}
+            </span>
+            <PromoBadge />
           </p>
         </div>
 
@@ -557,17 +578,24 @@ export const BookingForm: React.FC = () => {
                   <div className="flex justify-between">
                     <span className="text-gray-600">{t('bookingForm.rentalCostLabel')}</span>
                     <span className="font-semibold">
-                      {formatCurrency(calculateRentalTotal(selectedCar.pricePerDay, rentalDays))}
+                      {formatCurrency(carPriceBeforePromo)}
                     </span>
                   </div>
+
+                  {promoActive && promoSaving > 0 && (
+                    <div className="flex justify-between text-green-600">
+                      <span>{t('promo.discountLine', { ns: 'common' })} −{promoPercent}%</span>
+                      <span className="font-semibold">−{formatCurrency(promoSaving)}</span>
+                    </div>
+                  )}
 
                   <div className="flex justify-between text-sm">
                     <span className="text-gray-500">
                       {t('bookingForm.currentDailyRate', { price: formatCurrency(dailyRate), days: rentalDays })}
                     </span>
-                    {dailyRate < selectedCar.pricePerDay && (
+                    {baseDailyRate < selectedCar.pricePerDay && (
                       <span className="text-green-600 font-medium">
-                        {t('bookingForm.discountLabel', { percent: Math.round((1 - dailyRate / selectedCar.pricePerDay) * 100) })}
+                        {t('bookingForm.discountLabel', { percent: Math.round((1 - baseDailyRate / selectedCar.pricePerDay) * 100) })}
                       </span>
                     )}
                   </div>

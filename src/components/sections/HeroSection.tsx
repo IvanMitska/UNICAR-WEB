@@ -39,17 +39,27 @@ const HeroSectionComponent: React.FC = () => {
     <section className="h-screen relative overflow-hidden">
       {/* Background Image - using img tag for better iOS Safari support */}
       {/* Desktop version */}
-      <img
-        src="/imager-web/hero-desctop.jpg"
-        alt=""
-        className="absolute inset-0 w-full h-full object-cover hidden md:block"
-      />
+      <picture className="contents">
+        <source srcSet="/imager-web/hero-desctop.avif" type="image/avif" />
+        <source srcSet="/imager-web/hero-desctop.webp" type="image/webp" />
+        <img
+          src="/imager-web/hero-desctop.jpg"
+          alt=""
+          fetchPriority="high"
+          className="absolute inset-0 w-full h-full object-cover hidden md:block"
+        />
+      </picture>
       {/* Mobile version */}
-      <img
-        src="/imager-web/hero-mobile-new.png"
-        alt=""
-        className="absolute inset-0 w-full h-full object-cover md:hidden"
-      />
+      <picture className="contents">
+        <source srcSet="/imager-web/hero-mobile-new.avif" type="image/avif" />
+        <source srcSet="/imager-web/hero-mobile-new.webp" type="image/webp" />
+        <img
+          src="/imager-web/hero-mobile-new.png"
+          alt=""
+          fetchPriority="high"
+          className="absolute inset-0 w-full h-full object-cover md:hidden"
+        />
+      </picture>
 
       {/* Dark overlay */}
       <div className="absolute inset-0 bg-black/10" />

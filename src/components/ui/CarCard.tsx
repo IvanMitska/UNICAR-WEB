@@ -8,13 +8,10 @@ import { formatPrice, calculateDays, getDailyRateForDuration, calculateRentalTot
 import { useFavorites } from '../../contexts/FavoritesContext';
 import { useAuth } from '../../contexts/AuthContext';
 import { useBookingStore } from '../../store/useBookingStore';
-
-// Helper to get WebP path from original image path
-const getWebPPath = (src: string): string => {
-  const lastDot = src.lastIndexOf('.');
-  if (lastDot === -1) return src;
-  return `${src.substring(0, lastDot)}.webp`;
-};
+import { getAvifPath, getWebPPath } from '../../utils/imageFormats';
+import { applyPromo } from '../../config/promo';
+import { usePromo } from '../../hooks/usePromo';
+import { PromoBadge } from './PromoBadge';
 
 interface CarCardProps {
   car: Car;
@@ -62,8 +59,13 @@ const CarCardComponent: React.FC<CarCardProps> = ({ car, index = 0 }) => {
   // Расчёт цены за период только если пользователь явно выбрал даты через поиск
   const hasDates = searchPerformed && startDate && endDate;
   const days = hasDates ? calculateDays(new Date(startDate), new Date(endDate)) : 0;
-  const dailyRate = hasDates ? getDailyRateForDuration(car.pricePerDay, days) : car.pricePerDay;
-  const totalPrice = hasDates ? calculateRentalTotal(car.pricePerDay, days) : 0;
+  const baseDailyRate = hasDates ? getDailyRateForDuration(car.pricePerDay, days) : car.pricePerDay;
+  const baseTotalPrice = hasDates ? calculateRentalTotal(car.pricePerDay, days) : 0;
+
+  // Акция: показываем итоговую цену, а базовую — зачёркнутой рядом
+  const { active: promoActive } = usePromo();
+  const dailyRate = applyPromo(baseDailyRate);
+  const totalPrice = hasDates ? dailyRate * days : 0;
 
   const handleFavoriteClick = async (e: React.MouseEvent) => {
     e.preventDefault();
@@ -109,23 +111,41 @@ const CarCardComponent: React.FC<CarCardProps> = ({ car, index = 0 }) => {
                       <span className="text-2xl font-bold text-gray-900">
                         {formatPrice(totalPrice)}
                       </span>
+                      {promoActive && (
+                        <>
+                          <span className="ml-2 text-sm text-gray-400 line-through">
+                            {formatPrice(baseTotalPrice)}
+                          </span>
+                          <PromoBadge size="md" className="ml-2 align-middle" />
+                        </>
+                      )}
                       <span className="text-gray-400 text-sm ml-1">{t('price.forDays', { days })}</span>
                       <div className="text-sm text-gray-500 mt-0.5">
                         {formatPrice(dailyRate)}{t('price.perDay')}
-                        {dailyRate < car.pricePerDay && (
+                        {baseDailyRate < car.pricePerDay && (
                           <span className="ml-2 text-green-600 font-medium">
-                            -{Math.round((1 - dailyRate / car.pricePerDay) * 100)}%
+                            -{Math.round((1 - baseDailyRate / car.pricePerDay) * 100)}%
                           </span>
                         )}
                       </div>
                     </>
                   ) : (
-                    <>
+                    <div className="flex flex-wrap items-baseline gap-x-2 gap-y-1">
                       <span className="text-2xl font-bold text-gray-900">
-                        {formatPrice(car.pricePerDay)}
+                        {formatPrice(dailyRate)}
+                        <span className="text-gray-400 text-sm font-normal ml-1">
+                          {t('price.perDay')}
+                        </span>
                       </span>
-                      <span className="text-gray-400 text-sm ml-1">{t('price.perDay')}</span>
-                    </>
+                      {promoActive && (
+                        <>
+                          <span className="text-sm text-gray-400 line-through">
+                            {formatPrice(car.pricePerDay)}
+                          </span>
+                          <PromoBadge size="md" className="translate-y-[-1px]" />
+                        </>
+                      )}
+                    </div>
                   )}
                 </div>
 
@@ -150,6 +170,7 @@ const CarCardComponent: React.FC<CarCardProps> = ({ car, index = 0 }) => {
             <div className="sm:w-[45%] relative bg-gray-50 order-first sm:order-last">
               <div className="aspect-[4/3] sm:aspect-auto sm:absolute sm:inset-0 relative overflow-hidden">
                 <picture>
+                  <source srcSet={getAvifPath(car.image)} type="image/avif" />
                   <source srcSet={getWebPPath(car.image)} type="image/webp" />
                   <img
                     src={car.image}

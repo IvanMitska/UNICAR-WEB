@@ -8,6 +8,7 @@ import { formatCurrency, calculateDays } from '../../utils/formatters';
 import { cn } from '../../utils/cn';
 import { useFavoritesStore } from '../../store/useFavoritesStore';
 import { useBookingStore } from '../../store/useBookingStore';
+import { Picture } from './Picture';
 
 interface MotorcycleCardProps {
   motorcycle: Motorcycle;
@@ -41,7 +42,7 @@ const MotorcycleCardComponent: React.FC<MotorcycleCardProps> = ({ motorcycle, in
         <div className="relative">
           {/* Image Container */}
           <div className="aspect-[4/3] relative bg-primary-100 rounded-2xl overflow-hidden">
-            <img
+            <Picture
               src={motorcycle.image}
               alt={`${motorcycle.brand} ${motorcycle.model}`}
               loading="lazy"

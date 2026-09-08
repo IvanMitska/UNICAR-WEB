@@ -4,30 +4,26 @@ import { motion } from 'framer-motion';
 import { cars } from '../../data/cars';
 import { formatPrice } from '../../utils/formatters';
 import { ChevronLeft, ChevronRight, ArrowRight } from 'lucide-react';
-
-// Helper to get WebP path from original image path
-const getWebPPath = (src: string): string => {
-  const lastDot = src.lastIndexOf('.');
-  if (lastDot === -1) return src;
-  return `${src.substring(0, lastDot)}.webp`;
-};
+import { getAvifPath, getWebPPath } from '../../utils/imageFormats';
+import { applyPromo } from '../../config/promo';
+import { usePromo } from '../../hooks/usePromo';
+import { PromoBadge } from '../ui/PromoBadge';
 
 // Explicitly define which cars to show in Popular Models
+// По одной машине на модель — чтобы в карусели не шли четыре Мустанга подряд
 const POPULAR_CAR_IDS = [
   'mustang-yellow-2021',
-  'mustang-yellow-2016',
-  'mustang-blue-2018',
-  'mustang-white-2017',
+  'mercedes-c300-chameleon',
   'bmw-x5-2020',
+  'raptor-2024',
+  'bmw-420i-blue',
+  'mercedes-vito-maybach',
 ];
 
 // Keep the home-page Popular Models covers fixed to the original photos,
 // independent of the cards/covers shown on /cars and the model detail pages.
 const POPULAR_IMAGE_OVERRIDES: Record<string, { image: string; imagePosition?: string }> = {
   'mustang-yellow-2021': { image: '/images/cars/mustang-yellow-2021/post inst0.jpg' },
-  'mustang-yellow-2016': { image: '/images/cars/mustang-yellow-2016/post inst-11.jpg', imagePosition: 'center 70%' },
-  'mustang-blue-2018': { image: '/images/cars/mustang-blue-2020/post inst1.jpg' },
-  'mustang-white-2017': { image: '/images/cars/mustang-white-2020/post inst.jpg' },
 };
 
 const PopularCarsComponent: React.FC = () => {
@@ -35,6 +31,7 @@ const PopularCarsComponent: React.FC = () => {
   const [activeIndex, setActiveIndex] = useState(0);
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(true);
+  const { active: promoActive } = usePromo();
 
   const popularCars = useMemo(() =>
     POPULAR_CAR_IDS.map(id => cars.find(car => car.id === id)).filter(Boolean) as typeof cars,
@@ -177,6 +174,7 @@ const PopularCarsComponent: React.FC = () => {
                       const coverPosition = override?.imagePosition ?? car.imagePosition;
                       return (
                         <picture>
+                          <source srcSet={getAvifPath(coverImage)} type="image/avif" />
                           <source srcSet={getWebPPath(coverImage)} type="image/webp" />
                           <img
                             src={coverImage}
@@ -198,10 +196,20 @@ const PopularCarsComponent: React.FC = () => {
                     <p className="text-gray-400 text-sm">
                       {car.year} • {car.transmission === 'automatic' ? 'Automatic' : 'Manual'} • {car.seats} seats
                     </p>
-                    <p className="text-gray-900 font-medium">
-                      {formatPrice(car.pricePerDay)}
-                      <span className="text-gray-400 font-normal">/day</span>
-                    </p>
+                    <div className="flex flex-wrap items-baseline gap-x-2 gap-y-1">
+                      <p className="text-gray-900 font-medium">
+                        {formatPrice(applyPromo(car.pricePerDay))}
+                        <span className="text-gray-400 font-normal">/day</span>
+                      </p>
+                      {promoActive && (
+                        <>
+                          <span className="text-sm text-gray-400 line-through">
+                            {formatPrice(car.pricePerDay)}
+                          </span>
+                          <PromoBadge size="md" />
+                        </>
+                      )}
+                    </div>
                   </div>
                 </Link>
               </motion.div>

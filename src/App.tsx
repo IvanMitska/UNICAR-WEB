@@ -73,6 +73,9 @@ function App() {
               <Route path="buy" element={<Navigate to="/cars" replace />} />
               <Route path="about" element={<Navigate to="/" replace />} />
             </Route>
+
+            {/* Unknown URLs render nothing otherwise — send them home */}
+            <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
           </Suspense>
         </FavoritesProvider>

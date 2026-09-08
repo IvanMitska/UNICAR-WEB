@@ -105,11 +105,17 @@ const FeaturesComponent: React.FC = () => {
             <div className="sticky top-32">
               {/* Main Image */}
               <div className="relative rounded-3xl overflow-hidden aspect-[4/5]">
-                <img
-                  src="/images/features-car.jpg"
-                  alt="Luxury car experience"
-                  className="w-full h-full object-cover"
-                />
+                <picture className="contents">
+                  <source srcSet="/images/features-car.avif" type="image/avif" />
+                  <source srcSet="/images/features-car.webp" type="image/webp" />
+                  <img
+                    src="/images/features-car.jpg"
+                    alt="Luxury car experience"
+                    loading="lazy"
+                    decoding="async"
+                    className="w-full h-full object-cover"
+                  />
+                </picture>
                 {/* Overlay gradient */}
                 <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
 

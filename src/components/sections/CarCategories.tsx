@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import { ArrowUpRight } from 'lucide-react';
+import { Picture } from '../ui/Picture';
 
 interface CategoryMeta {
   id: string;
@@ -95,7 +96,7 @@ const CarCategoriesComponent: React.FC<CarCategoriesProps> = ({
               >
                 {/* Image */}
                 <div className="absolute inset-0">
-                  <img
+                  <Picture
                     src={category.image}
                     alt={name}
                     loading={index < 2 ? "eager" : "lazy"}

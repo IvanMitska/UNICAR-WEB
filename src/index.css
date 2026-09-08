@@ -212,3 +212,45 @@ html {
 .animate-slide-up {
   animation: slide-up 0.3s ease-out;
 }
+
+/*
+ * Background images. `background-image` cannot use <picture>, so each class
+ * declares a plain url() first and then an image-set() that only browsers
+ * supporting it will apply — everyone else keeps the original file.
+ */
+.bg-image-cta {
+  background-image: url('/images/cta-bg.jpg');
+  background-image: image-set(
+    url('/images/cta-bg.avif') type('image/avif'),
+    url('/images/cta-bg.webp') type('image/webp'),
+    url('/images/cta-bg.jpg') type('image/jpeg')
+  );
+}
+
+/* cta-bg.png is a different photo than cta-bg.jpg, hence the -png outputs. */
+.bg-image-cta-portrait {
+  background-image: url('/images/cta-bg.png');
+  background-image: image-set(
+    url('/images/cta-bg-png.avif') type('image/avif'),
+    url('/images/cta-bg-png.webp') type('image/webp'),
+    url('/images/cta-bg.png') type('image/png')
+  );
+}
+
+.bg-image-parallax-road {
+  background-image: url('/imager-web/parallax-road.png');
+  background-image: image-set(
+    url('/imager-web/parallax-road.avif') type('image/avif'),
+    url('/imager-web/parallax-road.webp') type('image/webp'),
+    url('/imager-web/parallax-road.png') type('image/png')
+  );
+}
+
+.bg-image-hero-desktop {
+  background-image: url('/imager-web/hero-desctop.jpg');
+  background-image: image-set(
+    url('/imager-web/hero-desctop.avif') type('image/avif'),
+    url('/imager-web/hero-desctop.webp') type('image/webp'),
+    url('/imager-web/hero-desctop.jpg') type('image/jpeg')
+  );
+}

@@ -63,6 +63,19 @@
     "pricePerDay": "Price per day",
     "days": "d."
   },
+  "promo": {
+    "label": "Offer of the month",
+    "badge": "−{{percent}}%",
+    "headline": "on the entire fleet",
+    "subtitle": "The discount is already included in every price.",
+    "cta": "Choose a car",
+    "until": "until {{date}}",
+    "discountLine": "Promo discount",
+    "badgeLabel": "offer",
+    "untilSentence": "Valid until {{date}}. No promo codes, no conditions.",
+    "stripNote": "The discount is already included in every price and runs until {{date}}.",
+    "terms": "Rental terms"
+  },
   "car": {
     "available": "Available",
     "unavailable": "Unavailable",
@@ -163,7 +176,15 @@
     "today": "Today",
     "tomorrow": "Tomorrow",
     "selectDate": "Select date",
-    "weekDays": ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
+    "weekDays": [
+      "Mon",
+      "Tue",
+      "Wed",
+      "Thu",
+      "Fri",
+      "Sat",
+      "Sun"
+    ]
   },
   "locationSelector": {
     "selectLocation": "Select location",

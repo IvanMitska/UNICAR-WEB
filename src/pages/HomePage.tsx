@@ -1,6 +1,7 @@
 import React from 'react';
 import { HeroSection } from '../components/sections/HeroSection';
 import { PopularCars } from '../components/sections/PopularCars';
+import { PromoBanner } from '../components/sections/PromoBanner';
 import { Features } from '../components/sections/Features';
 import { ParallaxSection } from '../components/sections/ParallaxSection';
 import { CTA } from '../components/sections/CTA';
@@ -9,6 +10,7 @@ export const HomePage: React.FC = () => {
   return (
     <div className="bg-white">
       <HeroSection />
+      <PromoBanner />
       <PopularCars />
       <Features />
       <ParallaxSection />

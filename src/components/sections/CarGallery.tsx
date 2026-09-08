@@ -1,13 +1,7 @@
 import React, { useState } from 'react';
 import { ChevronLeft, ChevronRight, X } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-
-// Helper to get WebP path from original image path
-const getWebPPath = (src: string): string => {
-  const lastDot = src.lastIndexOf('.');
-  if (lastDot === -1) return src;
-  return `${src.substring(0, lastDot)}.webp`;
-};
+import { getAvifPath, getWebPPath } from '../../utils/imageFormats';
 
 interface CarGalleryProps {
   images: string[];
@@ -30,6 +24,7 @@ export const CarGallery: React.FC<CarGalleryProps> = ({ images }) => {
       <div className="bg-gray-50 rounded-xl overflow-hidden mb-6">
         <div className="relative aspect-video">
           <picture>
+            <source srcSet={getAvifPath(images[currentImage])} type="image/avif" />
             <source srcSet={getWebPPath(images[currentImage])} type="image/webp" />
             <img
               src={images[currentImage]}
@@ -80,6 +75,7 @@ export const CarGallery: React.FC<CarGalleryProps> = ({ images }) => {
                 }`}
               >
                 <picture>
+                  <source srcSet={getAvifPath(image)} type="image/avif" />
                   <source srcSet={getWebPPath(image)} type="image/webp" />
                   <img
                     src={image}
@@ -112,6 +108,7 @@ export const CarGallery: React.FC<CarGalleryProps> = ({ images }) => {
             </button>
 
             <picture onClick={(e) => e.stopPropagation()}>
+              <source srcSet={getAvifPath(images[currentImage])} type="image/avif" />
               <source srcSet={getWebPPath(images[currentImage])} type="image/webp" />
               <img
                 src={images[currentImage]}

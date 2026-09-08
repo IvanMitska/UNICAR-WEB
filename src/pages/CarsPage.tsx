@@ -6,6 +6,7 @@ import { cars as staticCars } from '../data/cars';
 import { ChevronDown, Check } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '../utils/cn';
+import { PromoBanner } from '../components/sections/PromoBanner';
 
 const sortOptions = [
   { value: 'price-asc', label: 'Price: Low to High' },
@@ -104,6 +105,9 @@ export const CarsPage: React.FC = () => {
             Browse our collection of premium vehicles
           </motion.p>
         </div>
+
+        {/* Promo strip */}
+        <PromoBanner variant="strip" className="mb-8" />
 
         {/* Tabs and Sort */}
         <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pb-8 border-b border-gray-200">

@@ -4,9 +4,8 @@ import { motion } from 'framer-motion';
 const ParallaxSectionComponent: React.FC = () => {
   return (
     <section
-      className="relative h-screen flex items-center justify-center"
+      className="bg-image-parallax-road relative h-screen flex items-center justify-center"
       style={{
-        backgroundImage: 'url(/imager-web/parallax-road.png)',
         backgroundSize: 'cover',
         backgroundPosition: 'center',
         backgroundRepeat: 'no-repeat',

@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { getAvifPath, getWebPPath } from '../../utils/imageFormats';
 
 interface OptimizedImageProps {
   src: string;
@@ -11,10 +12,10 @@ interface OptimizedImageProps {
 }
 
 /**
- * OptimizedImage component with WebP support and lazy loading
+ * OptimizedImage component with AVIF/WebP support and lazy loading
  *
  * Features:
- * - Automatically uses .webp version if available
+ * - Serves .avif first, then .webp, then the original file
  * - Fallback to original format for older browsers
  * - Optional thumbnail version for smaller displays
  * - Blur-up loading effect
@@ -32,17 +33,9 @@ export const OptimizedImage: React.FC<OptimizedImageProps> = ({
   const [hasError, setHasError] = useState(false);
   const imgRef = useRef<HTMLImageElement>(null);
 
-  // Generate WebP path from original path
-  const getWebPPath = (originalPath: string, thumb = false): string => {
-    const lastDot = originalPath.lastIndexOf('.');
-    if (lastDot === -1) return originalPath;
-
-    const basePath = originalPath.substring(0, lastDot);
-    const suffix = thumb ? '-thumb' : '';
-    return `${basePath}${suffix}.webp`;
-  };
-
+  const avifSrc = getAvifPath(src, useThumbnail);
   const webpSrc = getWebPPath(src, useThumbnail);
+  const thumbAvifSrc = useThumbnail ? getAvifPath(src, true) : null;
   const thumbSrc = useThumbnail ? getWebPPath(src, true) : null;
 
   useEffect(() => {
@@ -78,6 +71,13 @@ export const OptimizedImage: React.FC<OptimizedImageProps> = ({
   return (
     <picture>
       {/* Thumbnail for smaller viewports */}
+      {thumbAvifSrc && (
+        <source
+          srcSet={thumbAvifSrc}
+          type="image/avif"
+          media="(max-width: 640px)"
+        />
+      )}
       {thumbSrc && (
         <source
           srcSet={thumbSrc}
@@ -85,7 +85,8 @@ export const OptimizedImage: React.FC<OptimizedImageProps> = ({
           media="(max-width: 640px)"
         />
       )}
-      {/* WebP for modern browsers */}
+      {/* AVIF first, WebP next, original as the last resort */}
+      <source srcSet={avifSrc} type="image/avif" />
       <source srcSet={webpSrc} type="image/webp" />
       {/* Fallback for older browsers */}
       <img

@@ -40,11 +40,8 @@ export const ContactsPage: React.FC = () => {
       <section className="relative h-[50vh] min-h-[400px] flex items-center justify-center overflow-hidden">
         {/* Background */}
         <div
-          className="absolute inset-0 bg-cover bg-center"
-          style={{
-            backgroundImage: 'url(/imager-web/parallax-road.png)',
-            filter: 'brightness(0.8)',
-          }}
+          className="bg-image-parallax-road absolute inset-0 bg-cover bg-center"
+          style={{ filter: 'brightness(0.8)' }}
         />
 
       </section>

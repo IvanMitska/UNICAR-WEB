@@ -175,10 +175,7 @@ export const SignInPage: React.FC = () => {
 
       {/* Right side - Image (hidden on mobile) */}
       <div className="hidden lg:block lg:w-1/2 relative">
-        <div
-          className="absolute inset-0 bg-cover bg-center"
-          style={{ backgroundImage: 'url(/images/cta-bg.png?v=2)' }}
-        />
+        <div className="bg-image-cta-portrait absolute inset-0 bg-cover bg-center" />
         <div className="absolute inset-0 bg-gradient-to-r from-white via-white/50 to-transparent" />
       </div>
     </div>

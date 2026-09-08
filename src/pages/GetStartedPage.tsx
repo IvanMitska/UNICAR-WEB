@@ -54,10 +54,7 @@ export const GetStartedPage: React.FC = () => {
     <div className="min-h-screen bg-white flex">
       {/* Left side - Image (hidden on mobile) */}
       <div className="hidden lg:block lg:w-1/2 relative">
-        <div
-          className="absolute inset-0 bg-cover bg-center"
-          style={{ backgroundImage: 'url(/imager-web/hero-desctop.jpg)' }}
-        />
+        <div className="bg-image-hero-desktop absolute inset-0 bg-cover bg-center" />
         <div className="absolute inset-0 bg-gradient-to-l from-white via-white/20 to-transparent" />
       </div>
 
