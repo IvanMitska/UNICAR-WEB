@@ -119,9 +119,8 @@ export const CarDetailsPage: React.FC = () => {
     setIsLoading(false);
   }, [id]);
 
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, [id]);
+  // Прокруткой при переходах занимается ScrollManager в App.tsx:
+  // он же восстанавливает позицию при возврате назад.
 
   const nextImage = useCallback(() => {
     if (car) {

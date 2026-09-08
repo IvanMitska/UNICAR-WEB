@@ -1,23 +1,77 @@
-import { Suspense, lazy, useEffect } from 'react';
-import { BrowserRouter, Routes, Route, useLocation, Navigate } from 'react-router-dom';
+import { Suspense, lazy, useEffect, useLayoutEffect } from 'react';
+import { BrowserRouter, Routes, Route, useLocation, useNavigationType, Navigate } from 'react-router-dom';
 import { Layout } from './components/layout/Layout';
 import { HomePage } from './pages/HomePage';
 import { CarsPage } from './pages/CarsPage';
 import { AuthProvider } from './contexts/AuthContext';
 import { FavoritesProvider } from './contexts/FavoritesContext';
 
-// Scroll to top on route change - instant, no animation
-const ScrollToTop = () => {
-  const { pathname } = useLocation();
+/**
+ * Управление прокруткой между страницами.
+ *
+ * Переход вперёд (клик по ссылке) — в начало страницы.
+ * Возврат назад/вперёд по истории — на то место, где пользователь ушёл:
+ * открыл карточку машины из середины каталога и вернулся — каталог
+ * остаётся там же, а не отматывается в начало.
+ */
+const SCROLL_KEY_PREFIX = 'scroll:';
 
+const readScroll = (key: string): number | null => {
+  try {
+    const value = sessionStorage.getItem(SCROLL_KEY_PREFIX + key);
+    return value === null ? null : Number(value);
+  } catch {
+    return null;
+  }
+};
+
+const writeScroll = (key: string, offset: number) => {
+  try {
+    sessionStorage.setItem(SCROLL_KEY_PREFIX + key, String(offset));
+  } catch {
+    // приватный режим — просто не запоминаем позицию
+  }
+};
+
+const ScrollManager = () => {
+  const { key } = useLocation();
+  const navigationType = useNavigationType();
+
+  // Запоминаем позицию текущей страницы, пока пользователь на ней
   useEffect(() => {
-    // Disable browser scroll restoration
+    const save = () => writeScroll(key, window.scrollY);
+    window.addEventListener('scroll', save, { passive: true });
+    return () => {
+      save();
+      window.removeEventListener('scroll', save);
+    };
+  }, [key]);
+
+  useLayoutEffect(() => {
     if ('scrollRestoration' in history) {
       history.scrollRestoration = 'manual';
     }
-    // Instant scroll without animation
-    window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
-  }, [pathname]);
+
+    const saved = navigationType === 'POP' ? readScroll(key) : null;
+
+    if (saved === null) {
+      window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+      return;
+    }
+
+    // Контент может дорисовываться (ленивые чанки, изображения), поэтому
+    // повторяем несколько кадров, пока страница не дорастёт до нужной высоты
+    let frames = 0;
+    let raf = 0;
+    const restore = () => {
+      window.scrollTo({ top: saved, left: 0, behavior: 'instant' });
+      if (Math.abs(window.scrollY - saved) > 2 && frames++ < 30) {
+        raf = requestAnimationFrame(restore);
+      }
+    };
+    restore();
+    return () => cancelAnimationFrame(raf);
+  }, [key, navigationType]);
 
   return null;
 };
@@ -48,7 +102,7 @@ function App() {
     <BrowserRouter>
       <AuthProvider>
         <FavoritesProvider>
-          <ScrollToTop />
+          <ScrollManager />
           <Suspense fallback={<PageLoader />}>
             <Routes>
             {/* Auth pages - without Layout */}
