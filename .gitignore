@@ -30,3 +30,7 @@ dist-ssr
 
 # Large source image archives (kept out of VCS)
 image cars-*.zip
+
+# Internal materials, not part of the site
+marketing/
+UNICAR-цены-автопарк.xlsx
