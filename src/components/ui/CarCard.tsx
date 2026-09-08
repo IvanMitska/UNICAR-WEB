@@ -4,7 +4,7 @@ import { motion } from 'framer-motion';
 import { Check, Heart } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import type { Car } from '../../types/index';
-import { formatPrice, calculateDays, getDailyRateForDuration, calculateRentalTotal, getMinDailyRate } from '../../utils/formatters';
+import { formatPrice, calculateDays, getDailyRateForDuration, calculateRentalTotal, getMinDailyRate, getPromoDailyRate, getPromoRentalTotal, MIN_RATE_DAYS } from '../../utils/formatters';
 import { useFavorites } from '../../contexts/FavoritesContext';
 import { useAuth } from '../../contexts/AuthContext';
 import { useBookingStore } from '../../store/useBookingStore';
@@ -59,17 +59,17 @@ const CarCardComponent: React.FC<CarCardProps> = ({ car, index = 0 }) => {
   // Расчёт цены за период только если пользователь явно выбрал даты через поиск
   const hasDates = searchPerformed && startDate && endDate;
   const days = hasDates ? calculateDays(new Date(startDate), new Date(endDate)) : 0;
-  const baseDailyRate = hasDates ? getDailyRateForDuration(car.pricePerDay, days) : car.pricePerDay;
-  const baseTotalPrice = hasDates ? calculateRentalTotal(car.pricePerDay, days) : 0;
+  const baseDailyRate = hasDates ? getDailyRateForDuration(car.pricePerDay, days, car.id) : car.pricePerDay;
+  const baseTotalPrice = hasDates ? calculateRentalTotal(car.pricePerDay, days, car.id) : 0;
 
   // Акция: показываем итоговую цену, а базовую — зачёркнутой рядом
   const { active: promoActive } = usePromo();
-  const dailyRate = applyPromo(baseDailyRate);
-  const totalPrice = hasDates ? dailyRate * days : 0;
+  const dailyRate = hasDates ? getPromoDailyRate(car.pricePerDay, days, car.id) : applyPromo(baseDailyRate);
+  const totalPrice = hasDates ? getPromoRentalTotal(car.pricePerDay, days, car.id) : 0;
 
   // Без выбранных дат показываем цену «от» — минимальную суточную ставку
-  const baseMinDailyRate = getMinDailyRate(car.pricePerDay);
-  const minDailyRate = applyPromo(baseMinDailyRate);
+  const baseMinDailyRate = getMinDailyRate(car.pricePerDay, car.id);
+  const minDailyRate = getPromoDailyRate(car.pricePerDay, MIN_RATE_DAYS, car.id);
 
   const handleFavoriteClick = async (e: React.MouseEvent) => {
     e.preventDefault();

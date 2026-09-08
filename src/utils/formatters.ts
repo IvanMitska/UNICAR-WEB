@@ -1,4 +1,5 @@
 import { applyPromo } from '../config/promo';
+import { getPriceAnchors, type PriceAnchors } from '../config/carPricing';
 
 export const formatPrice = (price: number, showOnRequest = true): string => {
   if (price === 0 && showOnRequest) {
@@ -86,11 +87,49 @@ const DAILY_RATE_COEFFICIENTS: number[] = [
 ];
 
 /**
+ * Опорные суточные ставки индивидуального тарифа: день 1 — базовая цена,
+ * остальные — из таблицы (стоимость за срок / число дней).
+ */
+const anchorRates = (basePrice: number, anchors: PriceAnchors): Array<[number, number]> => {
+  const points = new Map<number, number>([[1, basePrice]]);
+  Object.entries(anchors).forEach(([day, total]) => {
+    points.set(Number(day), total / Number(day));
+  });
+  return [...points.entries()].sort((a, b) => a[0] - b[0]);
+};
+
+/**
+ * Суточная ставка по индивидуальному тарифу.
+ * Ставку не округляем: тогда ставка × дни точно даёт заявленную цену за срок.
+ */
+const getCustomDailyRate = (basePrice: number, days: number, anchors: PriceAnchors): number => {
+  const points = anchorRates(basePrice, anchors);
+  const first = points[0];
+  const last = points[points.length - 1];
+
+  if (days <= first[0]) return first[1];
+  if (days >= last[0]) return last[1];
+
+  for (let i = 1; i < points.length; i++) {
+    const [prevDays, prevRate] = points[i - 1];
+    const [nextDays, nextRate] = points[i];
+    if (days <= nextDays) {
+      return prevRate + ((nextRate - prevRate) * (days - prevDays)) / (nextDays - prevDays);
+    }
+  }
+
+  return last[1];
+};
+
+/**
  * Возвращает цену за день в зависимости от срока аренды
  * Плавная сетка: каждый день имеет свой коэффициент
  */
-export const getDailyRateForDuration = (basePrice: number, days: number): number => {
+export const getDailyRateForDuration = (basePrice: number, days: number, carId?: string): number => {
   if (days <= 0) return basePrice;
+
+  const anchors = getPriceAnchors(carId);
+  if (anchors) return getCustomDailyRate(basePrice, days, anchors);
 
   // Для дней 1-30 используем коэффициенты из таблицы
   if (days <= 30) {
@@ -106,20 +145,20 @@ export const getDailyRateForDuration = (basePrice: number, days: number): number
 /**
  * Рассчитывает общую стоимость аренды с учётом плавной сетки тарифов
  */
-export const calculateRentalTotal = (basePrice: number, days: number): number => {
-  const dailyRate = getDailyRateForDuration(basePrice, days);
+export const calculateRentalTotal = (basePrice: number, days: number, carId?: string): number => {
+  const dailyRate = getDailyRateForDuration(basePrice, days, carId);
   return dailyRate * days;
 };
 
 /**
  * Возвращает информацию о тарифе: цену за день и общую стоимость
  */
-export const getRentalPriceInfo = (basePrice: number, days: number): {
+export const getRentalPriceInfo = (basePrice: number, days: number, carId?: string): {
   dailyRate: number;
   totalPrice: number;
   discountPercent: number;
 } => {
-  const dailyRate = getDailyRateForDuration(basePrice, days);
+  const dailyRate = getDailyRateForDuration(basePrice, days, carId);
   const discountPercent = Math.round((1 - dailyRate / basePrice) * 100);
   return {
     dailyRate,
@@ -133,8 +172,14 @@ export const getRentalPriceInfo = (basePrice: number, days: number): {
  * Базовые функции выше остаются «чистыми» — они нужны, чтобы показать
  * старую цену зачёркнутой рядом с акционной.
  */
-export const getPromoDailyRate = (basePrice: number, days: number): number =>
-  applyPromo(getDailyRateForDuration(basePrice, days));
+export const getPromoDailyRate = (basePrice: number, days: number, carId?: string): number => {
+  // У машин с индивидуальным тарифом скидку считаем от суммы за весь срок:
+  // округление суточной ставки до 100 ฿ увело бы итог от заявленной цены.
+  if (getPriceAnchors(carId) && days > 0) {
+    return applyPromo(calculateRentalTotal(basePrice, days, carId)) / days;
+  }
+  return applyPromo(getDailyRateForDuration(basePrice, days, carId));
+};
 
 /**
  * Минимальная суточная ставка — та, что получается при аренде на 30 дней.
@@ -142,8 +187,10 @@ export const getPromoDailyRate = (basePrice: number, days: number): number =>
  */
 export const MIN_RATE_DAYS = 30;
 
-export const getMinDailyRate = (basePrice: number): number =>
-  getDailyRateForDuration(basePrice, MIN_RATE_DAYS);
+export const getMinDailyRate = (basePrice: number, carId?: string): number =>
+  getDailyRateForDuration(basePrice, MIN_RATE_DAYS, carId);
 
-export const getPromoRentalTotal = (basePrice: number, days: number): number =>
-  getPromoDailyRate(basePrice, days) * days;
+export const getPromoRentalTotal = (basePrice: number, days: number, carId?: string): number => {
+  if (getPriceAnchors(carId)) return applyPromo(calculateRentalTotal(basePrice, days, carId));
+  return getPromoDailyRate(basePrice, days, carId) * days;
+};

@@ -25,7 +25,7 @@ import {
 } from 'lucide-react';
 import { Button } from '../ui/Button';
 import { useBookingStore } from '../../store/useBookingStore';
-import { formatCurrency, getDailyRateForDuration, calculateRentalTotal } from '../../utils/formatters';
+import { formatCurrency, getDailyRateForDuration, calculateRentalTotal, getPromoDailyRate, getPromoRentalTotal } from '../../utils/formatters';
 import { applyPromo } from '../../config/promo';
 import { usePromo } from '../../hooks/usePromo';
 import { PromoBadge } from '../ui/PromoBadge';
@@ -134,26 +134,34 @@ export const BookingForm: React.FC = () => {
   // Базовая ставка по сетке сроков — нужна, чтобы показать её зачёркнутой
   const baseDailyRate = useMemo(() => {
     if (!selectedCar || rentalDays === 0) return selectedCar?.pricePerDay || 0;
-    return getDailyRateForDuration(selectedCar.pricePerDay, rentalDays);
+    return getDailyRateForDuration(selectedCar.pricePerDay, rentalDays, selectedCar.id);
   }, [selectedCar, rentalDays]);
 
   // Ставка с учётом акции — по ней и считается заказ
-  const dailyRate = useMemo(() => applyPromo(baseDailyRate), [baseDailyRate]);
+  const dailyRate = useMemo(() => {
+    if (!selectedCar || rentalDays === 0) return applyPromo(baseDailyRate);
+    return getPromoDailyRate(selectedCar.pricePerDay, rentalDays, selectedCar.id);
+  }, [selectedCar, rentalDays, baseDailyRate]);
 
   const carPriceBeforePromo = useMemo(
-    () => (selectedCar ? calculateRentalTotal(selectedCar.pricePerDay, rentalDays) : 0),
+    () => (selectedCar ? calculateRentalTotal(selectedCar.pricePerDay, rentalDays, selectedCar.id) : 0),
+    [selectedCar, rentalDays]
+  );
+
+  const carPriceAfterPromo = useMemo(
+    () => (selectedCar ? getPromoRentalTotal(selectedCar.pricePerDay, rentalDays, selectedCar.id) : 0),
     [selectedCar, rentalDays]
   );
 
   const promoSaving = useMemo(
-    () => Math.max(0, carPriceBeforePromo - dailyRate * rentalDays),
-    [carPriceBeforePromo, dailyRate, rentalDays]
+    () => Math.max(0, carPriceBeforePromo - carPriceAfterPromo),
+    [carPriceBeforePromo, carPriceAfterPromo]
   );
 
   const calculateTotal = useMemo(() => {
     if (!selectedCar) return 0;
 
-    const carPrice = dailyRate * rentalDays;
+    const carPrice = carPriceAfterPromo;
     const servicesPrice = selectedServices.reduce((total, serviceId) => {
       const service = services.find(s => s.id === serviceId);
       if (service) {
@@ -163,7 +171,7 @@ export const BookingForm: React.FC = () => {
     }, 0);
 
     return carPrice + servicesPrice;
-  }, [selectedCar, rentalDays, selectedServices, dailyRate]);
+  }, [selectedCar, rentalDays, selectedServices, carPriceAfterPromo]);
 
   const handleServiceToggle = (serviceId: string) => {
     setSelectedServices(prev =>

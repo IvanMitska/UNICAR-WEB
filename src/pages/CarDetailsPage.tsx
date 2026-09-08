@@ -23,14 +23,13 @@ import {
   ArrowRight,
   Loader2
 } from 'lucide-react';
-import { formatPrice, calculateDays, getDailyRateForDuration, calculateRentalTotal, getMinDailyRate, MIN_RATE_DAYS } from '../utils/formatters';
+import { formatPrice, calculateDays, getDailyRateForDuration, calculateRentalTotal, getMinDailyRate, getPromoDailyRate, getPromoRentalTotal, MIN_RATE_DAYS } from '../utils/formatters';
 import { useFavorites } from '../contexts/FavoritesContext';
 import { useAuth } from '../contexts/AuthContext';
 import { useBookingStore } from '../store/useBookingStore';
 import { format, addDays } from 'date-fns';
 import { cn } from '../utils/cn';
 import { SimilarCars } from '../components/sections/SimilarCars';
-import { applyPromo } from '../config/promo';
 import { usePromo } from '../hooks/usePromo';
 import { PromoBadge } from '../components/ui/PromoBadge';
 import { Picture } from '../components/ui/Picture';
@@ -173,10 +172,10 @@ export const CarDetailsPage: React.FC = () => {
 
   const days = calculateDays(new Date(startDate), new Date(endDate));
   // Базовые цены (сетка по сроку) + цены с учётом акции
-  const baseDailyRate = getDailyRateForDuration(car.pricePerDay, days);
-  const baseTotalPrice = calculateRentalTotal(car.pricePerDay, days);
-  const dailyRate = applyPromo(baseDailyRate);
-  const totalPrice = dailyRate * days;
+  const baseDailyRate = getDailyRateForDuration(car.pricePerDay, days, car.id);
+  const baseTotalPrice = calculateRentalTotal(car.pricePerDay, days, car.id);
+  const dailyRate = getPromoDailyRate(car.pricePerDay, days, car.id);
+  const totalPrice = getPromoRentalTotal(car.pricePerDay, days, car.id);
   const promoSaving = baseTotalPrice - totalPrice;
 
   const locations = [
@@ -451,14 +450,14 @@ export const CarDetailsPage: React.FC = () => {
                     <PromoBadge />
                   </div>
                   <p className="text-4xl font-light text-primary-900">
-                    {formatPrice(applyPromo(getMinDailyRate(car.pricePerDay)))}
+                    {formatPrice(getPromoDailyRate(car.pricePerDay, MIN_RATE_DAYS, car.id))}
                     <span className="text-lg text-primary-400 ml-2">{t('price.perDay')}</span>
                   </p>
                   <p className="mt-1.5 text-sm text-primary-400">
                     {promoActive && (
                       <>
                         <span className="line-through">
-                          {formatPrice(getMinDailyRate(car.pricePerDay))}
+                          {formatPrice(getMinDailyRate(car.pricePerDay, car.id))}
                         </span>
                         <span className="mx-2 text-primary-300">·</span>
                       </>
@@ -615,19 +614,19 @@ export const CarDetailsPage: React.FC = () => {
                     <div className="bg-white rounded-2xl p-5 text-center">
                       <p className="text-primary-400 text-sm mb-1">{t('price.pricePerDay')}</p>
                       <p className="text-2xl md:text-3xl font-light text-primary-900">
-                        {formatPrice(applyPromo(getDailyRateForDuration(car.pricePerDay, sliderDays)))}
+                        {formatPrice(getPromoDailyRate(car.pricePerDay, sliderDays, car.id))}
                       </p>
                       {promoActive ? (
                         <p className="text-sm mt-1">
                           <span className="text-primary-400 line-through">
-                            {formatPrice(getDailyRateForDuration(car.pricePerDay, sliderDays))}
+                            {formatPrice(getDailyRateForDuration(car.pricePerDay, sliderDays, car.id))}
                           </span>
                           <PromoBadge className="ml-2 align-middle" />
                         </p>
                       ) : (
                         sliderDays > 1 && (
                           <p className="text-green-600 text-sm mt-1 font-medium">
-                            -{Math.round((1 - getDailyRateForDuration(car.pricePerDay, sliderDays) / car.pricePerDay) * 100)}%
+                            -{Math.round((1 - getDailyRateForDuration(car.pricePerDay, sliderDays, car.id) / car.pricePerDay) * 100)}%
                           </p>
                         )
                       )}
@@ -635,11 +634,11 @@ export const CarDetailsPage: React.FC = () => {
                     <div className="bg-primary-900 rounded-2xl p-5 text-center">
                       <p className="text-white/60 text-sm mb-1">{t('price.total')}</p>
                       <p className="text-2xl md:text-3xl font-light text-white">
-                        {formatPrice(applyPromo(getDailyRateForDuration(car.pricePerDay, sliderDays)) * sliderDays)}
+                        {formatPrice(getPromoRentalTotal(car.pricePerDay, sliderDays, car.id))}
                       </p>
                       {promoActive && (
                         <p className="text-white/40 text-sm mt-1 line-through">
-                          {formatPrice(calculateRentalTotal(car.pricePerDay, sliderDays))}
+                          {formatPrice(calculateRentalTotal(car.pricePerDay, sliderDays, car.id))}
                         </p>
                       )}
                       <p className="text-white/50 text-sm mt-1">

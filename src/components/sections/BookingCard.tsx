@@ -32,8 +32,8 @@ export const BookingCard: React.FC<BookingCardProps> = ({ car }) => {
   const [returnLocation, setReturnLocation] = useState<string>(LOCATION_OPTIONS[0]);
 
   const days = calculateDays(new Date(startDate), new Date(endDate));
-  const dailyRate = getDailyRateForDuration(car.pricePerDay, days);
-  const totalPrice = calculateRentalTotal(car.pricePerDay, days);
+  const dailyRate = getDailyRateForDuration(car.pricePerDay, days, car.id);
+  const totalPrice = calculateRentalTotal(car.pricePerDay, days, car.id);
 
   const handleBooking = () => {
     setSelectedCar(car);
