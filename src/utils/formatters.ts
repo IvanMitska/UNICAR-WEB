@@ -136,5 +136,14 @@ export const getRentalPriceInfo = (basePrice: number, days: number): {
 export const getPromoDailyRate = (basePrice: number, days: number): number =>
   applyPromo(getDailyRateForDuration(basePrice, days));
 
+/**
+ * Минимальная суточная ставка — та, что получается при аренде на 30 дней.
+ * Её показываем в карточках как цену «от».
+ */
+export const MIN_RATE_DAYS = 30;
+
+export const getMinDailyRate = (basePrice: number): number =>
+  getDailyRateForDuration(basePrice, MIN_RATE_DAYS);
+
 export const getPromoRentalTotal = (basePrice: number, days: number): number =>
   getPromoDailyRate(basePrice, days) * days;

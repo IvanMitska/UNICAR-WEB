@@ -61,7 +61,9 @@
     "onRequest": "По запросу",
     "priceFrom": "Стоимость аренды от",
     "pricePerDay": "Цена за день",
-    "days": "дн."
+    "days": "дн.",
+    "from": "от",
+    "minRateHint": "при аренде от {{days}} дней"
   },
   "promo": {
     "label": "Акция месяца",

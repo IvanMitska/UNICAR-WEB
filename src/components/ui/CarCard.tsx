@@ -4,7 +4,7 @@ import { motion } from 'framer-motion';
 import { Check, Heart } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import type { Car } from '../../types/index';
-import { formatPrice, calculateDays, getDailyRateForDuration, calculateRentalTotal } from '../../utils/formatters';
+import { formatPrice, calculateDays, getDailyRateForDuration, calculateRentalTotal, getMinDailyRate } from '../../utils/formatters';
 import { useFavorites } from '../../contexts/FavoritesContext';
 import { useAuth } from '../../contexts/AuthContext';
 import { useBookingStore } from '../../store/useBookingStore';
@@ -66,6 +66,10 @@ const CarCardComponent: React.FC<CarCardProps> = ({ car, index = 0 }) => {
   const { active: promoActive } = usePromo();
   const dailyRate = applyPromo(baseDailyRate);
   const totalPrice = hasDates ? dailyRate * days : 0;
+
+  // Без выбранных дат показываем цену «от» — минимальную суточную ставку
+  const baseMinDailyRate = getMinDailyRate(car.pricePerDay);
+  const minDailyRate = applyPromo(baseMinDailyRate);
 
   const handleFavoriteClick = async (e: React.MouseEvent) => {
     e.preventDefault();
@@ -132,7 +136,10 @@ const CarCardComponent: React.FC<CarCardProps> = ({ car, index = 0 }) => {
                   ) : (
                     <div className="flex flex-wrap items-baseline gap-x-2 gap-y-1">
                       <span className="text-2xl font-bold text-gray-900">
-                        {formatPrice(dailyRate)}
+                        <span className="text-gray-400 text-sm font-normal mr-1">
+                          {t('price.from')}
+                        </span>
+                        {formatPrice(minDailyRate)}
                         <span className="text-gray-400 text-sm font-normal ml-1">
                           {t('price.perDay')}
                         </span>
@@ -140,7 +147,7 @@ const CarCardComponent: React.FC<CarCardProps> = ({ car, index = 0 }) => {
                       {promoActive && (
                         <>
                           <span className="text-sm text-gray-400 line-through">
-                            {formatPrice(car.pricePerDay)}
+                            {formatPrice(baseMinDailyRate)}
                           </span>
                           <PromoBadge size="md" className="translate-y-[-1px]" />
                         </>

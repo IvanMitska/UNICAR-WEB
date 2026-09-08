@@ -61,7 +61,9 @@
     "onRequest": "On Request",
     "priceFrom": "Price from",
     "pricePerDay": "Price per day",
-    "days": "d."
+    "days": "d.",
+    "from": "from",
+    "minRateHint": "for rentals of {{days}} days or more"
   },
   "promo": {
     "label": "Offer of the month",

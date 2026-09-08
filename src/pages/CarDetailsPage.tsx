@@ -23,7 +23,7 @@ import {
   ArrowRight,
   Loader2
 } from 'lucide-react';
-import { formatPrice, calculateDays, getDailyRateForDuration, calculateRentalTotal } from '../utils/formatters';
+import { formatPrice, calculateDays, getDailyRateForDuration, calculateRentalTotal, getMinDailyRate, MIN_RATE_DAYS } from '../utils/formatters';
 import { useFavorites } from '../contexts/FavoritesContext';
 import { useAuth } from '../contexts/AuthContext';
 import { useBookingStore } from '../store/useBookingStore';
@@ -451,16 +451,26 @@ export const CarDetailsPage: React.FC = () => {
                     <PromoBadge />
                   </div>
                   <p className="text-4xl font-light text-primary-900">
-                    {formatPrice(applyPromo(car.pricePerDay))}
+                    {formatPrice(applyPromo(getMinDailyRate(car.pricePerDay)))}
                     <span className="text-lg text-primary-400 ml-2">{t('price.perDay')}</span>
                   </p>
-                  {promoActive && (
-                    <p className="mt-1.5 text-sm text-primary-400">
-                      <span className="line-through">{formatPrice(car.pricePerDay)}</span>
-                      <span className="mx-2 text-primary-300">·</span>
-                      {t('promo.until', { date: promoEndsOn })}
-                    </p>
-                  )}
+                  <p className="mt-1.5 text-sm text-primary-400">
+                    {promoActive && (
+                      <>
+                        <span className="line-through">
+                          {formatPrice(getMinDailyRate(car.pricePerDay))}
+                        </span>
+                        <span className="mx-2 text-primary-300">·</span>
+                      </>
+                    )}
+                    {t('price.minRateHint', { days: MIN_RATE_DAYS })}
+                    {promoActive && (
+                      <>
+                        <span className="mx-2 text-primary-300">·</span>
+                        {t('promo.until', { date: promoEndsOn })}
+                      </>
+                    )}
+                  </p>
                 </div>
                 <div className={cn(
                   "px-4 py-2 rounded-full text-sm font-medium",

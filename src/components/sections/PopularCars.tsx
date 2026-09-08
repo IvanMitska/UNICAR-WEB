@@ -2,7 +2,7 @@ import React, { useRef, useState, useEffect, useCallback, memo, useMemo } from '
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { cars } from '../../data/cars';
-import { formatPrice } from '../../utils/formatters';
+import { formatPrice, getMinDailyRate } from '../../utils/formatters';
 import { ChevronLeft, ChevronRight, ArrowRight } from 'lucide-react';
 import { getAvifPath, getWebPPath } from '../../utils/imageFormats';
 import { applyPromo } from '../../config/promo';
@@ -198,13 +198,14 @@ const PopularCarsComponent: React.FC = () => {
                     </p>
                     <div className="flex flex-wrap items-baseline gap-x-2 gap-y-1">
                       <p className="text-gray-900 font-medium">
-                        {formatPrice(applyPromo(car.pricePerDay))}
+                        <span className="text-gray-400 font-normal">from </span>
+                        {formatPrice(applyPromo(getMinDailyRate(car.pricePerDay)))}
                         <span className="text-gray-400 font-normal">/day</span>
                       </p>
                       {promoActive && (
                         <>
                           <span className="text-sm text-gray-400 line-through">
-                            {formatPrice(car.pricePerDay)}
+                            {formatPrice(getMinDailyRate(car.pricePerDay))}
                           </span>
                           <PromoBadge size="md" />
                         </>

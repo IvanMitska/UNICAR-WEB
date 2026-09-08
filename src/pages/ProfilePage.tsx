@@ -28,6 +28,7 @@ import { api } from '../lib/api';
 import { cars as carsData } from '../data/cars';
 import { Picture } from '../components/ui/Picture';
 import { applyPromo } from '../config/promo';
+import { getMinDailyRate } from '../utils/formatters';
 
 type TabType = 'bookings' | 'favorites' | 'notifications' | 'security' | 'settings';
 
@@ -295,10 +296,10 @@ export const ProfilePage: React.FC = () => {
                       <div>
                         <p className="text-gray-900 font-medium">{car.brand} {car.model}</p>
                         <p className="text-sm text-gray-500">
-                          {car.year} • ฿{applyPromo(car.pricePerDay).toLocaleString()}/day
-                          {applyPromo(car.pricePerDay) < car.pricePerDay && (
+                          {car.year} • from ฿{applyPromo(getMinDailyRate(car.pricePerDay)).toLocaleString()}/day
+                          {applyPromo(getMinDailyRate(car.pricePerDay)) < getMinDailyRate(car.pricePerDay) && (
                             <span className="ml-2 text-gray-400 line-through">
-                              ฿{car.pricePerDay.toLocaleString()}
+                              ฿{getMinDailyRate(car.pricePerDay).toLocaleString()}
                             </span>
                           )}
                         </p>
