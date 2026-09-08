@@ -37,14 +37,19 @@ const ScrollManager = () => {
   const { key } = useLocation();
   const navigationType = useNavigationType();
 
-  // Запоминаем позицию текущей страницы, пока пользователь на ней
+  /**
+   * Позиция покидаемой страницы сохраняется в cleanup layout-эффекта: он
+   * срабатывает раньше, чем следующий экран успевает сдвинуть страницу.
+   * Слушать scroll нельзя — событие от нашей же прокрутки в начало
+   * записывало ноль поверх позиции каталога, и возврат уходил в шапку.
+   */
+  useLayoutEffect(() => () => writeScroll(key, window.scrollY), [key]);
+
+  // На случай закрытия или перезагрузки вкладки
   useEffect(() => {
     const save = () => writeScroll(key, window.scrollY);
-    window.addEventListener('scroll', save, { passive: true });
-    return () => {
-      save();
-      window.removeEventListener('scroll', save);
-    };
+    window.addEventListener('pagehide', save);
+    return () => window.removeEventListener('pagehide', save);
   }, [key]);
 
   useLayoutEffect(() => {
@@ -52,24 +57,21 @@ const ScrollManager = () => {
       history.scrollRestoration = 'manual';
     }
 
-    const saved = navigationType === 'POP' ? readScroll(key) : null;
-
-    if (saved === null) {
-      window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
-      return;
-    }
+    // Назад/вперёд — возвращаем позицию, обычный переход — в начало
+    const target = (navigationType === 'POP' ? readScroll(key) : null) ?? 0;
 
     // Контент может дорисовываться (ленивые чанки, изображения), поэтому
     // повторяем несколько кадров, пока страница не дорастёт до нужной высоты
     let frames = 0;
     let raf = 0;
-    const restore = () => {
-      window.scrollTo({ top: saved, left: 0, behavior: 'instant' });
-      if (Math.abs(window.scrollY - saved) > 2 && frames++ < 30) {
-        raf = requestAnimationFrame(restore);
+    const apply = () => {
+      window.scrollTo({ top: target, left: 0, behavior: 'instant' });
+      if (Math.abs(window.scrollY - target) > 2 && frames++ < 30) {
+        raf = requestAnimationFrame(apply);
       }
     };
-    restore();
+    apply();
+
     return () => cancelAnimationFrame(raf);
   }, [key, navigationType]);
 
