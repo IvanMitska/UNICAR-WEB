@@ -31,12 +31,13 @@ import { format, addDays } from 'date-fns';
 import { cn } from '../utils/cn';
 import { SimilarCars } from '../components/sections/SimilarCars';
 import { usePromo } from '../hooks/usePromo';
+import { isPromoEligible } from '../config/promo';
 import { PromoBadge } from '../components/ui/PromoBadge';
 import { Picture } from '../components/ui/Picture';
 
 export const CarDetailsPage: React.FC = () => {
   const { t, i18n } = useTranslation();
-  const { active: promoActive, percent: promoPercent, endsOn: promoEndsOn } = usePromo();
+  const { active: promoOn, percent: promoPercent, endsOn: promoEndsOn } = usePromo();
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const { toggleFavorite, isFavorite } = useFavorites();
@@ -171,6 +172,8 @@ export const CarDetailsPage: React.FC = () => {
   }
 
   const days = calculateDays(new Date(startDate), new Date(endDate));
+  // Эконом в акцию не входит: ни бейджа, ни зачёркнутой цены, ни строки скидки
+  const promoActive = promoOn && isPromoEligible(car);
   // Базовые цены (сетка по сроку) + цены с учётом акции
   const baseDailyRate = getDailyRateForDuration(car.pricePerDay, days, car.id);
   const baseTotalPrice = calculateRentalTotal(car.pricePerDay, days, car.id);
@@ -447,7 +450,7 @@ export const CarDetailsPage: React.FC = () => {
                 <div>
                   <div className="flex items-center gap-3 mb-1">
                     <p className="text-primary-400 text-sm">{t('price.priceFrom')}</p>
-                    <PromoBadge />
+                    {promoActive && <PromoBadge />}
                   </div>
                   <p className="text-4xl font-light text-primary-900">
                     {formatPrice(getPromoDailyRate(car.pricePerDay, MIN_RATE_DAYS, car.id))}
@@ -696,7 +699,7 @@ export const CarDetailsPage: React.FC = () => {
                 <div className="p-6 bg-primary-900 text-white rounded-t-3xl">
                   <div className="flex items-center justify-between gap-3 mb-1">
                     <p className="text-white/70 text-sm">{t('booking.quickBooking')}</p>
-                    <PromoBadge tone="onDark" />
+                    {promoActive && <PromoBadge tone="onDark" />}
                   </div>
                   <p className="text-3xl font-light">
                     {formatPrice(dailyRate)}

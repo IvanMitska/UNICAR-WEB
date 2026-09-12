@@ -68,14 +68,14 @@
   "promo": {
     "label": "Offer of the month",
     "badge": "−{{percent}}%",
-    "headline": "on the entire fleet",
-    "subtitle": "The discount is already included in every price.",
+    "headline": "on the whole fleet, economy aside",
+    "subtitle": "The discount is already included in the prices.",
     "cta": "Choose a car",
     "until": "until {{date}}",
     "discountLine": "Promo discount",
     "badgeLabel": "offer",
-    "untilSentence": "Valid until {{date}}. No promo codes, no conditions.",
-    "stripNote": "The discount is already included in every price and runs until {{date}}."
+    "untilSentence": "Valid until {{date}}. No promo codes needed.",
+    "stripNote": "The discount is already included in the prices and runs until {{date}}."
   },
   "car": {
     "available": "Available",

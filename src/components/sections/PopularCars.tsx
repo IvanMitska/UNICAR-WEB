@@ -2,16 +2,17 @@ import React, { useRef, useState, useEffect, useCallback, memo, useMemo } from '
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { cars } from '../../data/cars';
-import { formatPrice, getMinDailyRate } from '../../utils/formatters';
+import { formatPrice, getMinDailyRate, getPromoDailyRate, MIN_RATE_DAYS } from '../../utils/formatters';
 import { ChevronLeft, ChevronRight, ArrowRight } from 'lucide-react';
 import { getAvifPath, getWebPPath } from '../../utils/imageFormats';
-import { applyPromo } from '../../config/promo';
+import { isPromoEligible } from '../../config/promo';
 import { usePromo } from '../../hooks/usePromo';
 import { PromoBadge } from '../ui/PromoBadge';
 
 // Explicitly define which cars to show in Popular Models
 // По одной машине на модель — чтобы в карусели не шли четыре Мустанга подряд
 const POPULAR_CAR_IDS = [
+  'bmw-430i-convertible-2025',
   'mustang-yellow-2021',
   'mercedes-c300-chameleon',
   'bmw-x5-2020',
@@ -199,13 +200,13 @@ const PopularCarsComponent: React.FC = () => {
                     <div className="flex flex-wrap items-baseline gap-x-2 gap-y-1">
                       <p className="text-gray-900 font-medium">
                         <span className="text-gray-400 font-normal">from </span>
-                        {formatPrice(applyPromo(getMinDailyRate(car.pricePerDay)))}
+                        {formatPrice(getPromoDailyRate(car.pricePerDay, MIN_RATE_DAYS, car.id))}
                         <span className="text-gray-400 font-normal">/day</span>
                       </p>
-                      {promoActive && (
+                      {promoActive && isPromoEligible(car) && (
                         <>
                           <span className="text-sm text-gray-400 line-through">
-                            {formatPrice(getMinDailyRate(car.pricePerDay))}
+                            {formatPrice(getMinDailyRate(car.pricePerDay, car.id))}
                           </span>
                           <PromoBadge size="md" />
                         </>

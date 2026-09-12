@@ -9,7 +9,7 @@ import { useFavorites } from '../../contexts/FavoritesContext';
 import { useAuth } from '../../contexts/AuthContext';
 import { useBookingStore } from '../../store/useBookingStore';
 import { getAvifPath, getWebPPath } from '../../utils/imageFormats';
-import { applyPromo } from '../../config/promo';
+import { applyPromo, isPromoEligible } from '../../config/promo';
 import { usePromo } from '../../hooks/usePromo';
 import { PromoBadge } from './PromoBadge';
 
@@ -62,9 +62,13 @@ const CarCardComponent: React.FC<CarCardProps> = ({ car, index = 0 }) => {
   const baseDailyRate = hasDates ? getDailyRateForDuration(car.pricePerDay, days, car.id) : car.pricePerDay;
   const baseTotalPrice = hasDates ? calculateRentalTotal(car.pricePerDay, days, car.id) : 0;
 
-  // Акция: показываем итоговую цену, а базовую — зачёркнутой рядом
-  const { active: promoActive } = usePromo();
-  const dailyRate = hasDates ? getPromoDailyRate(car.pricePerDay, days, car.id) : applyPromo(baseDailyRate);
+  // Акция: показываем итоговую цену, а базовую — зачёркнутой рядом.
+  // На классы вне акции (эконом) скидки нет — там просто базовая цена.
+  const { active: promoOn } = usePromo();
+  const promoActive = promoOn && isPromoEligible(car);
+  const dailyRate = hasDates
+    ? getPromoDailyRate(car.pricePerDay, days, car.id)
+    : (promoActive ? applyPromo(baseDailyRate) : baseDailyRate);
   const totalPrice = hasDates ? getPromoRentalTotal(car.pricePerDay, days, car.id) : 0;
 
   // Без выбранных дат показываем цену «от» — минимальную суточную ставку

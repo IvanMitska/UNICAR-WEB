@@ -15,6 +15,15 @@ const sortOptions = [
   { value: 'popular', label: 'Most Popular' },
 ];
 
+// Новинки автопарка: всегда идут первыми, какая бы сортировка ни стояла.
+// Порядок внутри списка = порядок карточек в начале сетки.
+const PINNED_CAR_IDS = ['bmw-430i-convertible-2025'];
+
+const pinnedRank = (id: string) => {
+  const index = PINNED_CAR_IDS.indexOf(id);
+  return index === -1 ? PINNED_CAR_IDS.length : index;
+};
+
 const categoryTabs = [
   { value: '', label: 'All' },
   { value: 'premium', label: 'Luxury Cars' },
@@ -80,6 +89,10 @@ export const CarsPage: React.FC = () => {
 
     const sortFn = sortFns[filters.sortBy];
     if (sortFn) result.sort(sortFn);
+
+    // Закреплённые машины поднимаем наверх уже после сортировки,
+    // порядок остальных при этом не меняется.
+    result.sort((a, b) => pinnedRank(a.id) - pinnedRank(b.id));
 
     return result;
   }, [filters]);

@@ -26,7 +26,7 @@ import {
 import { Button } from '../ui/Button';
 import { useBookingStore } from '../../store/useBookingStore';
 import { formatCurrency, getDailyRateForDuration, calculateRentalTotal, getPromoDailyRate, getPromoRentalTotal } from '../../utils/formatters';
-import { applyPromo } from '../../config/promo';
+import { applyPromo, isPromoEligible } from '../../config/promo';
 import { usePromo } from '../../hooks/usePromo';
 import { PromoBadge } from '../ui/PromoBadge';
 import { services } from '../../data/services';
@@ -88,7 +88,7 @@ function pluralizeDays(days: number, t: (k: string) => string): string {
 export const BookingForm: React.FC = () => {
   const navigate = useNavigate();
   const { t } = useTranslation(['pages', 'common']);
-  const { active: promoActive, percent: promoPercent } = usePromo();
+  const { active: promoOn, percent: promoPercent } = usePromo();
   const [currentStep, setCurrentStep] = useState(1);
   const [selectedServices, setSelectedServices] = useState<string[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -137,11 +137,16 @@ export const BookingForm: React.FC = () => {
     return getDailyRateForDuration(selectedCar.pricePerDay, rentalDays, selectedCar.id);
   }, [selectedCar, rentalDays]);
 
+  // Эконом в акцию не входит — на него скидку не считаем и бейдж не показываем
+  const promoActive = promoOn && isPromoEligible(selectedCar ?? undefined);
+
   // Ставка с учётом акции — по ней и считается заказ
   const dailyRate = useMemo(() => {
-    if (!selectedCar || rentalDays === 0) return applyPromo(baseDailyRate);
+    if (!selectedCar || rentalDays === 0) {
+      return promoActive ? applyPromo(baseDailyRate) : baseDailyRate;
+    }
     return getPromoDailyRate(selectedCar.pricePerDay, rentalDays, selectedCar.id);
-  }, [selectedCar, rentalDays, baseDailyRate]);
+  }, [selectedCar, rentalDays, baseDailyRate, promoActive]);
 
   const carPriceBeforePromo = useMemo(
     () => (selectedCar ? calculateRentalTotal(selectedCar.pricePerDay, rentalDays, selectedCar.id) : 0),
@@ -317,7 +322,7 @@ export const BookingForm: React.FC = () => {
                 </span>
               )}
             </span>
-            <PromoBadge />
+            {promoActive && <PromoBadge />}
           </p>
         </div>
 

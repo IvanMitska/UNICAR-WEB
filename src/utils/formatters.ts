@@ -1,5 +1,21 @@
-import { applyPromo } from '../config/promo';
+import { applyPromo, isPromoEligible } from '../config/promo';
 import { getPriceAnchors, type PriceAnchors } from '../config/carPricing';
+import { cars } from '../data/cars';
+
+/** Класс машины по id — по нему и по id решаем, попадает ли она под акцию. */
+const carCategories = new Map(cars.map((car) => [car.id, car.category]));
+
+/** Действует ли акция на эту машину. */
+export const isPromoCar = (carId?: string): boolean =>
+  isPromoEligible(carId ? { id: carId, category: carCategories.get(carId) } : undefined);
+
+/**
+ * Скидка по акции с оглядкой на класс машины.
+ * Все цены на сайте проходят через эту функцию, поэтому исключённый класс
+ * невозможно случайно посчитать со скидкой, забыв проверку на месте вызова.
+ */
+const applyCarPromo = (amount: number, carId?: string): number =>
+  isPromoCar(carId) ? applyPromo(amount) : amount;
 
 export const formatPrice = (price: number, showOnRequest = true): string => {
   if (price === 0 && showOnRequest) {
@@ -176,9 +192,9 @@ export const getPromoDailyRate = (basePrice: number, days: number, carId?: strin
   // У машин с индивидуальным тарифом скидку считаем от суммы за весь срок:
   // округление суточной ставки до 100 ฿ увело бы итог от заявленной цены.
   if (getPriceAnchors(carId) && days > 0) {
-    return applyPromo(calculateRentalTotal(basePrice, days, carId)) / days;
+    return applyCarPromo(calculateRentalTotal(basePrice, days, carId), carId) / days;
   }
-  return applyPromo(getDailyRateForDuration(basePrice, days, carId));
+  return applyCarPromo(getDailyRateForDuration(basePrice, days, carId), carId);
 };
 
 /**
@@ -191,6 +207,6 @@ export const getMinDailyRate = (basePrice: number, carId?: string): number =>
   getDailyRateForDuration(basePrice, MIN_RATE_DAYS, carId);
 
 export const getPromoRentalTotal = (basePrice: number, days: number, carId?: string): number => {
-  if (getPriceAnchors(carId)) return applyPromo(calculateRentalTotal(basePrice, days, carId));
+  if (getPriceAnchors(carId)) return applyCarPromo(calculateRentalTotal(basePrice, days, carId), carId);
   return getPromoDailyRate(basePrice, days, carId) * days;
 };

@@ -2,6 +2,61 @@ import type { Car } from '../types/index';
 
 export const cars: Car[] = [
   // ============================================================================
+  // NEW ARRIVAL — держим первой во всех списках
+  // ============================================================================
+
+  // BMW 430i Convertible 2025
+  // Характеристики — по официальным данным BMW (G23 LCI, 430i):
+  // 2.0 TwinPower Turbo B48 с 48-вольтовым мягким гибридом, 190 кВт/258 л.с.,
+  // 400 Нм, задний привод, 8-ст. Steptronic, 0-100 за 6.2 с, 250 км/ч.
+  // Мягкий верх складывается за 18 с на скорости до 50 км/ч.
+  // Багажник: 300 л с опущенным верхом, 385 л с поднятым.
+  {
+    id: 'bmw-430i-convertible-2025',
+    brand: 'BMW',
+    model: '430i Convertible',
+    year: 2025,
+    category: 'premium',
+    // 15 000 ฿/сут за 1-3 дня — это цена со скидкой −20%, база до скидки 18 750.
+    // Ставка первого дня берётся именно отсюда, остальные — из CAR_PRICE_ANCHORS.
+    pricePerDay: 18750,
+    // Съёмка пришла в 16:9, и машина занимает почти весь кадр по ширине.
+    // Слот обложки в карточке почти квадратный, поэтому object-cover срезал бы
+    // машине нос и корму. cover.jpg — тот же кадр, достроенный по вертикали до
+    // 4:3 (1446x1080, как у всего автопарка), машина в нём помещается целиком.
+    // В галерею при этом идут исходные 16:9 — там слот aspect-video.
+    image: '/images/cars/bmw-430i-convertible-2025/cover.jpg',
+    images: [
+      '/images/cars/bmw-430i-convertible-2025/g0.jpg',
+      '/images/cars/bmw-430i-convertible-2025/g1.jpg',
+      '/images/cars/bmw-430i-convertible-2025/g2.jpg',
+      '/images/cars/bmw-430i-convertible-2025/g3.jpg',
+      '/images/cars/bmw-430i-convertible-2025/g4.jpg',
+      '/images/cars/bmw-430i-convertible-2025/g5.jpg',
+    ],
+    features: ['M Sport Package', 'Soft Top in 18 sec', 'Live Cockpit Professional', '48V Mild Hybrid'],
+    transmission: 'automatic',
+    fuel: 'petrol',
+    seats: 4,
+    luggage: 2,
+    available: true,
+    rating: 5.0,
+    reviews: 0,
+    description: {
+      ru: 'Новый кабриолет BMW 430i M Sport 2025 года в фиолетовом цвете: мягкий верх складывается за 18 секунд прямо на ходу.',
+      en: 'Brand-new 2025 BMW 430i M Sport Convertible in purple — the soft top folds away in 18 seconds on the move.',
+    },
+    color: 'Purple',
+    licensePlate: 'BMW 430i',
+    specifications: {
+      engine: '2.0L TwinPower Turbo',
+      power: '258 hp',
+      acceleration: '6.2 sec',
+      topSpeed: '250 km/h',
+    },
+  },
+
+  // ============================================================================
   // PREMIUM / SPORT CLASS
   // ============================================================================
 

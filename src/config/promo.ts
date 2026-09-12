@@ -1,5 +1,5 @@
 /**
- * Акция на весь автопарк — единая точка правды.
+ * Акция — единая точка правды.
  *
  * Меняешь значения здесь → меняются все цены, бейджи и баннеры на сайте.
  * Чтобы выключить акцию досрочно: enabled: false (или просто дождаться endsAt).
@@ -7,8 +7,24 @@
 export const PROMO = {
   /** Полный выключатель кампании */
   enabled: true,
-  /** Размер скидки в процентах на все автомобили */
+  /** Размер скидки в процентах */
   percent: 20,
+  /**
+   * Классы, которые в акцию не входят: на эконом поставщики скидку не дают,
+   * он идёт по своим ценам. Машины вне акции показываем без бейджа,
+   * без зачёркнутой цены и считаем по базовому тарифу.
+   */
+  excludedCategories: ['economy'] as readonly string[],
+  /**
+   * Отдельные машины вне акции — скидки на них поставщик тоже не даёт,
+   * хотя по классу они подошли бы. Перечисляем поштучно.
+   */
+  excludedCarIds: [
+    'juke-1',
+    'juke-2',        // Nissan Juke
+    'mg-zs-blue',
+    'mg-zs-black-2', // MG 3
+  ] as readonly string[],
   /** Окно акции по времени Пхукета (UTC+7) */
   startsAt: new Date('2026-09-07T00:00:00+07:00'),
   endsAt: new Date('2026-10-07T23:59:59+07:00'),
@@ -17,6 +33,17 @@ export const PROMO = {
 /** Идёт ли акция прямо сейчас */
 export const isPromoActive = (now: Date = new Date()): boolean =>
   PROMO.enabled && now >= PROMO.startsAt && now <= PROMO.endsAt;
+
+/**
+ * Распространяется ли акция на эту машину — по id и по классу.
+ * Машина неизвестна (мотоциклы, не из каталога) — считаем, что да,
+ * чтобы исключение никогда не срабатывало «само собой».
+ */
+export const isPromoEligible = (car?: { id?: string; category?: string }): boolean => {
+  if (!car) return true;
+  if (car.id && PROMO.excludedCarIds.includes(car.id)) return false;
+  return !car.category || !PROMO.excludedCategories.includes(car.category);
+};
 
 /**
  * Применяет скидку к сумме в батах и округляет до «красивых» 100 ฿,
