@@ -35,6 +35,12 @@ import { isPromoEligible } from '../config/promo';
 import { PromoBadge } from '../components/ui/PromoBadge';
 import { Picture } from '../components/ui/Picture';
 
+// Диапазон калькулятора. Им же ограничен и сам ползунок, и его шкала —
+// держим одним числом, чтобы они не разъехались.
+const CALC_MIN_DAYS = 1;
+const CALC_MAX_DAYS = 30;
+const clampCalcDays = (days: number) => Math.min(CALC_MAX_DAYS, Math.max(CALC_MIN_DAYS, days));
+
 export const CarDetailsPage: React.FC = () => {
   const { t, i18n } = useTranslation();
   const { active: promoOn, percent: promoPercent, endsOn: promoEndsOn } = usePromo();
@@ -72,15 +78,17 @@ export const CarDetailsPage: React.FC = () => {
 
   // Pricing state - sync with booking dates
   const currentDays = calculateDays(new Date(startDate), new Date(endDate));
-  const [sliderDays, setSliderDays] = useState(currentDays || 3);
+  const [sliderDays, setSliderDays] = useState(() => clampCalcDays(currentDays || 3));
 
-  // Sync slider with dates when dates change
+  // Ползунок следует за датами, но не может выйти за свой диапазон: из поиска
+  // может прийти срок длиннее шкалы, и тогда он показывал, например, 48 дней,
+  // а при первом же касании схлопывался до 30 — значение чинил сам <input>.
   useEffect(() => {
     const days = calculateDays(new Date(startDate), new Date(endDate));
-    if (days > 0 && days <= 30 && days !== sliderDays) {
-      setSliderDays(days);
-    }
-  }, [startDate, endDate]);
+    if (days <= 0) return;
+    const next = clampCalcDays(days);
+    if (next !== sliderDays) setSliderDays(next);
+  }, [startDate, endDate, sliderDays]);
 
   // Update end date when slider changes
   const handleSliderChange = (newDays: number) => {
@@ -101,8 +109,8 @@ export const CarDetailsPage: React.FC = () => {
   const handleEndDateChange = (newEndDate: string) => {
     setEndDate(newEndDate);
     const days = calculateDays(new Date(startDate), new Date(newEndDate));
-    if (days > 0 && days <= 30) {
-      setSliderDays(days);
+    if (days > 0) {
+      setSliderDays(clampCalcDays(days));
     }
   };
 
@@ -579,10 +587,10 @@ export const CarDetailsPage: React.FC = () => {
                   <div className="relative mb-8">
                     <input
                       type="range"
-                      min="1"
-                      max="30"
+                      min={CALC_MIN_DAYS}
+                      max={CALC_MAX_DAYS}
                       value={sliderDays}
-                      onChange={(e) => handleSliderChange(Number(e.target.value))}
+                      onChange={(e) => handleSliderChange(clampCalcDays(Number(e.target.value)))}
                       className="w-full h-2 bg-primary-200 rounded-full appearance-none cursor-pointer
                         [&::-webkit-slider-thumb]:appearance-none
                         [&::-webkit-slider-thumb]:w-6
@@ -599,7 +607,7 @@ export const CarDetailsPage: React.FC = () => {
                         [&::-moz-range-thumb]:border-0
                         [&::-moz-range-thumb]:cursor-pointer"
                       style={{
-                        background: `linear-gradient(to right, #111827 0%, #111827 ${((sliderDays - 1) / 29) * 100}%, #e5e7eb ${((sliderDays - 1) / 29) * 100}%, #e5e7eb 100%)`
+                        background: `linear-gradient(to right, #111827 0%, #111827 ${((sliderDays - CALC_MIN_DAYS) / (CALC_MAX_DAYS - CALC_MIN_DAYS)) * 100}%, #e5e7eb ${((sliderDays - CALC_MIN_DAYS) / (CALC_MAX_DAYS - CALC_MIN_DAYS)) * 100}%, #e5e7eb 100%)`
                       }}
                     />
                     {/* Scale markers */}
